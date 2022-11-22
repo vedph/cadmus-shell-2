@@ -1,0 +1,69 @@
+<form [formGroup]="form" (submit)="apply()" ng-disabled="disabled">
+  <!-- subject -->
+  <div>
+    subject
+    <cadmus-graph-node-lookup
+      (nodeChange)="onSubjectNodeChange($event)"
+    ></cadmus-graph-node-lookup>
+  </div>
+  <!-- predicate -->
+  <div>
+    predicate
+    <cadmus-graph-node-lookup
+      (nodeChange)="onPredicateNodeChange($event)"
+    ></cadmus-graph-node-lookup>
+  </div>
+  <!-- object, objectLit -->
+  <div>
+    <mat-checkbox [formControl]="literal">literal</mat-checkbox>
+  </div>
+  <div *ngIf="literal?.value">
+    <mat-label>literal</mat-label>
+    <mat-form-field>
+      <input matInput [formControl]="objectLit" maxlength="500" />
+    </mat-form-field>
+  </div>
+  <div *ngIf="!literal?.value">
+    object
+    <cadmus-graph-node-lookup
+      (nodeChange)="onObjectNodeChange($event)"
+    ></cadmus-graph-node-lookup>
+  </div>
+  <!-- sid, sidPrefix -->
+  <div>
+    <mat-form-field>
+      <mat-label>sid</mat-label>
+      <input matInput [formControl]="sid" maxlength="500" />
+    </mat-form-field>
+    &nbsp;
+    <mat-checkbox [formControl]="sidPrefix">prefix</mat-checkbox>
+  </div>
+  <!-- tag -->
+  <br />
+  <div
+    class="btn-group"
+    role="group"
+    aria-label="toolbar"
+    style="margin-bottom: 10px"
+  >
+    <button
+      mat-icon-button
+      type="button"
+      (click)="reset()"
+      color="warn"
+      matTooltip="Reset filters"
+      [disabled]="disabled"
+    >
+      <mat-icon>clear</mat-icon>
+    </button>
+    <button
+      type="submit"
+      mat-icon-button
+      color="primary"
+      [disabled]="disabled"
+      matTooltip="Apply filters"
+    >
+      <mat-icon>check_circle</mat-icon>
+    </button>
+  </div>
+</form>

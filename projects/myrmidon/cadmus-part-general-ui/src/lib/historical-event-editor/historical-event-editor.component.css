@@ -1,0 +1,19 @@
+.long-text {
+  width: 90%;
+  max-width: 800px;
+}
+th {
+  font-weight: normal;
+  color: silver;
+}
+fieldset {
+  border: 1px solid silver;
+  border-radius: 8px;
+  padding: 8px;
+}
+.sel-type {
+  background-color: #e1e7fb;
+  border-radius: 4px;
+  padding: 6px;
+  margin-bottom: 8px;
+}

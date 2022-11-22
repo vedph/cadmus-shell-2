@@ -1,0 +1,113 @@
+<form [formGroup]="form" (submit)="save()">
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <div mat-card-avatar>
+        <mat-icon>picture_in_picture</mat-icon>
+      </div>
+      <mat-card-title>Events Part</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-tab-group [(selectedIndex)]="tabIndex">
+        <mat-tab label="events">
+          <div>
+            <button
+              type="button"
+              mat-icon-button
+              color="primary"
+              (click)="addEvent()"
+            >
+              <mat-icon>add_circle</mat-icon>
+            </button>
+          </div>
+          <table *ngIf="events?.value?.length">
+            <thead>
+              <tr>
+                <th></th>
+                <th>type</th>
+                <th>ID</th>
+                <th>place</th>
+                <th>date</th>
+                <th>rel.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let entry of events?.value;
+                  let i = index;
+                  let first = first;
+                  let last = last
+                "
+              >
+                <td>
+                  <button
+                    type="button"
+                    mat-icon-button
+                    color="primary"
+                    matTooltip="Edit this Event"
+                    (click)="editEvent(i)"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    type="button"
+                    mat-icon-button
+                    matTooltip="Move this Event up"
+                    [disabled]="first"
+                    (click)="moveEventUp(i)"
+                  >
+                    <mat-icon>arrow_upward</mat-icon>
+                  </button>
+                  <button
+                    type="button"
+                    mat-icon-button
+                    matTooltip="Move this Event down"
+                    [disabled]="last"
+                    (click)="moveEventDown(i)"
+                  >
+                    <mat-icon>arrow_downward</mat-icon>
+                  </button>
+                  <button
+                    type="button"
+                    mat-icon-button
+                    color="warn"
+                    matTooltip="Delete this Event"
+                    (click)="deleteEvent(i)"
+                  >
+                    <mat-icon>remove_circle</mat-icon>
+                  </button>
+                </td>
+                <td>{{ entry.type }}</td>
+                <td>{{ entry.eid }}</td>
+                <td>{{ entry.chronotope?.place?.value }}</td>
+                <td>{{ entry.chronotope?.date | historicalDate }}</td>
+                <td>{{ entry.relatedEntities?.length || 0 }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-tab>
+
+        <mat-tab label="event" *ngIf="editedEvent">
+          <cadmus-historical-event-editor
+            [eventTypeEntries]="eventTypeEntries"
+            [relationEntries]="relationEntries"
+            [ctTagEntries]="ctTagEntries"
+            [assTagEntries]="assTagEntries"
+            [refTagEntries]="refTagEntries"
+            [refTypeEntries]="refTypeEntries"
+            [model]="editedEvent"
+            (modelChange)="onEventSave($event)"
+            (editorClose)="onEventClose()"
+          ></cadmus-historical-event-editor>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+    <mat-card-actions>
+      <cadmus-close-save-buttons
+        [form]="form"
+        [noSave]="userLevel < 2"
+        (closeRequest)="close()"
+      ></cadmus-close-save-buttons>
+    </mat-card-actions>
+  </mat-card>
+</form>

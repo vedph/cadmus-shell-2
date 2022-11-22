@@ -1,0 +1,53 @@
+<form [formGroup]="form" (submit)="save()">
+  <div style="display: flex; flex-wrap: wrap; gap: 16px">
+    <!-- S -->
+    <fieldset style="flex: 1 1 auto">
+      <legend>subject</legend>
+      <!-- picker -->
+      <cadmus-graph-node-lookup
+        (nodeChange)="onSubjectChange($event)"
+      ></cadmus-graph-node-lookup>
+    </fieldset>
+    <!-- P -->
+    <fieldset style="flex: 1 1 auto">
+      <legend>predicate</legend>
+      <!-- picker -->
+      <cadmus-graph-node-lookup
+        tag="property"
+        (nodeChange)="onPredicateChange($event)"
+      ></cadmus-graph-node-lookup>
+    </fieldset>
+    <!-- O -->
+    <fieldset style="flex: 1 1 auto">
+      <legend>object</legend>
+      <!-- literal -->
+      <mat-checkbox [formControl]="isLiteral">literal</mat-checkbox>
+      <!-- picker -->
+      <cadmus-graph-node-lookup
+        *ngIf="!isLiteral?.value"
+        (nodeChange)="onObjectChange($event)"
+      ></cadmus-graph-node-lookup>
+      <!-- objectNode -->
+      <mat-form-field style="width: 100%" *ngIf="isLiteral?.value">
+        <mat-label>object</mat-label>
+        <textarea matInput [formControl]="objectNode"></textarea>
+      </mat-form-field>
+    </fieldset>
+  </div>
+
+  <!-- buttons -->
+  <div>
+    <button color="warn" mat-icon-button type="button" (click)="cancel()">
+      <mat-icon>cancel</mat-icon>
+    </button>
+    &nbsp;
+    <button
+      color="primary"
+      mat-icon-button
+      type="submit"
+      [disabled]="form.invalid"
+    >
+      <mat-icon>check_circle</mat-icon> save
+    </button>
+  </div>
+</form>

@@ -1,0 +1,115 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title> Thesauri </mat-card-title>
+  </mat-card-header>
+  <mat-card-content
+    gdAreas="spinner spinner | filters list | . paginator"
+    gdAreas.lt-md="spinner | list | paginator | filters"
+    gdColumns="220px 1fr"
+    gdColumns.lt-md="1fr"
+    gdGap="8px"
+  >
+    <!-- spinner-->
+    <div
+      *ngIf="(status$ | async)?.value === 'pending'"
+      gdArea="spinner"
+      gdAlignColumns="center"
+      gdAlignRows="center"
+    >
+      <mat-spinner [diameter]="48" [strokeWidth]="4"></mat-spinner>
+    </div>
+
+    <!-- filters -->
+    <div gdArea="filters" gdAlignRows.lt-md="center">
+      <cadmus-thesaurus-filter></cadmus-thesaurus-filter>
+    </div>
+
+    <!-- list -->
+    <div gdArea="list" *ngIf="pagination$ | async as pagination">
+      <div fxFill fxLayout="column">
+        <table>
+          <thead>
+            <th></th>
+            <th
+              *ngIf="
+                user?.roles?.includes('admin') ||
+                user?.roles?.includes('editor')
+              "
+            ></th>
+            <th>id</th>
+            <th>entries</th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let thesaurus of pagination.data">
+              <td class="command">
+                <button
+                  mat-icon-button
+                  type="button"
+                  matTooltip="Edit {{ thesaurus.id }}"
+                  color="primary"
+                  (click)="editThesaurus(thesaurus)"
+                >
+                  <mat-icon>mode_edit</mat-icon>
+                </button>
+              </td>
+              <td
+                class="command"
+                *ngIf="
+                  user?.roles?.includes('admin') ||
+                  user?.roles?.includes('editor')
+                "
+              >
+                <button
+                  *ngIf="userLevel > 2"
+                  mat-icon-button
+                  type="button"
+                  matTooltip="Delete {{ thesaurus.id }}"
+                  color="warn"
+                  (click)="deleteThesaurus(thesaurus)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+              <td>{{ thesaurus.id }}</td>
+              <td>
+                {{ thesaurus.entries?.length || 0 }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- pagination -->
+        <mat-paginator
+          gdArea="pagination"
+          gdAlignColumns="center"
+          gdAlignRows="start"
+          [length]="pagination.total"
+          [pageSize]="pagination.perPage"
+          [pageSizeOptions]="[20, 50, 75, 100]"
+          [pageIndex]="pagination.currentPage - 1"
+          [showFirstLastButtons]="true"
+          (page)="pageChange($event)"
+        ></mat-paginator>
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions
+    *ngIf="
+      user?.roles?.includes('admin') ||
+      user?.roles?.includes('editor') ||
+      user?.roles?.includes('operator')
+    "
+  >
+    <button
+      *ngIf="userLevel > 1"
+      type="button"
+      color="primary"
+      mat-raised-button
+      matTooltip="Add a new thesaurus"
+      (click)="addThesaurus()"
+    >
+      <mat-icon>add_circle</mat-icon>
+      add thesaurus
+    </button>
+  </mat-card-actions>
+</mat-card>
