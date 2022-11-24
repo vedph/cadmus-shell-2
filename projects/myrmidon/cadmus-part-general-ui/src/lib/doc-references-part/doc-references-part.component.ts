@@ -8,17 +8,14 @@ import {
 
 import { AuthJwtService } from '@myrmidon/auth-jwt-login';
 import { EditedObject, ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
-import {
-  CadmusValidators,
-  ThesauriSet,
-  ThesaurusEntry,
-} from '@myrmidon/cadmus-core';
+import { ThesauriSet, ThesaurusEntry } from '@myrmidon/cadmus-core';
 import { DocReference } from '@myrmidon/cadmus-refs-doc-references';
 
 import {
   DocReferencesPart,
   DOC_REFERENCES_PART_TYPEID,
 } from '../doc-references-part';
+import { NgToolsValidators } from '@myrmidon/ng-tools';
 
 /**
  * Document references part editor.
@@ -44,7 +41,7 @@ export class DocReferencesPartComponent
     this.initialRefs = [];
     // form
     this.references = formBuilder.control([], {
-      validators: CadmusValidators.strictMinLengthValidator(1),
+      validators: NgToolsValidators.strictMinLengthValidator(1),
       nonNullable: true,
     });
   }

@@ -6,11 +6,7 @@ import {
   UntypedFormGroup,
 } from '@angular/forms';
 
-import {
-  ThesaurusEntry,
-  CadmusValidators,
-  ThesauriSet,
-} from '@myrmidon/cadmus-core';
+import { ThesaurusEntry, ThesauriSet } from '@myrmidon/cadmus-core';
 import { AuthJwtService } from '@myrmidon/auth-jwt-login';
 
 import { EditedObject, ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
@@ -19,6 +15,7 @@ import {
   EXTERNAL_IDS_PART_TYPEID,
 } from '../external-ids-part';
 import { AssertedId } from '@myrmidon/cadmus-refs-asserted-ids';
+import { NgToolsValidators } from '@myrmidon/ng-tools';
 
 /**
  * External IDs part editor component. This is just a collection of asserted
@@ -56,7 +53,7 @@ export class ExternalIdsPartComponent
     this.initialIds = [];
     // form
     this.ids = formBuilder.control([], {
-      validators: CadmusValidators.strictMinLengthValidator(1),
+      validators: NgToolsValidators.strictMinLengthValidator(1),
       nonNullable: true,
     });
   }

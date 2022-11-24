@@ -7,12 +7,13 @@ import {
 } from '@angular/forms';
 
 import { AuthJwtService } from '@myrmidon/auth-jwt-login';
-import { CadmusValidators, ThesaurusEntry } from '@myrmidon/cadmus-core';
+import { ThesaurusEntry } from '@myrmidon/cadmus-core';
 import {
   EditedObject,
   ModelEditorComponentBase,
   renderLabelFromLastColon,
 } from '@myrmidon/cadmus-ui';
+import { NgToolsValidators } from '@myrmidon/ng-tools';
 
 import { CategoriesPart, CATEGORIES_PART_TYPEID } from '../categories-part';
 
@@ -36,7 +37,7 @@ export class CategoriesPartComponent
     super(authService, formBuilder);
     // form controls
     this.categories = formBuilder.control([], {
-      validators: CadmusValidators.strictMinLengthValidator(1),
+      validators: NgToolsValidators.strictMinLengthValidator(1),
       nonNullable: true,
     });
   }

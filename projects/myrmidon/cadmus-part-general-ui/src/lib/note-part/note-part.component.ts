@@ -44,10 +44,6 @@ export class NotePartComponent
     // form
     this.tag = formBuilder.control(null, Validators.maxLength(100));
     this.text = formBuilder.control(null, Validators.required);
-    this.form = formBuilder.group({
-      tag: this.tag,
-      text: this.text,
-    });
   }
 
   public override ngOnInit(): void {

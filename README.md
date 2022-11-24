@@ -35,6 +35,10 @@ Quick Docker image build:
 
 ## History
 
+- 2022-11-24:
+  - minor fixes to `@myrmidon/cadmus-item-list` and `@myrmidon/cadmus-ui`.
+  - `@myrmidon/cadmus-item-editor`: wider buttons space.
+  - removed `CadmusValidators` (they are now under `@myrmidon/ng-tools` as `NgToolsValidators`)
 - 2022-11-08:
   - updated Angular.
   - changed prefix building in historical event editor.

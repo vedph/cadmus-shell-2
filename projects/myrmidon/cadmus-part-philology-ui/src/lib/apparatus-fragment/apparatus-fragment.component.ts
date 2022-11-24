@@ -10,15 +10,12 @@ import {
 import { DialogService } from '@myrmidon/ng-mat-tools';
 import { AuthJwtService } from '@myrmidon/auth-jwt-login';
 import { EditedObject, ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
-import {
-  CadmusValidators,
-  ThesauriSet,
-  ThesaurusEntry,
-} from '@myrmidon/cadmus-core';
+import { ThesauriSet, ThesaurusEntry } from '@myrmidon/cadmus-core';
 
 import { ApparatusEntryType, ApparatusEntry } from '../apparatus-fragment';
 import { ApparatusEntrySummaryService } from './apparatus-entry-summary.service';
 import { ApparatusFragment } from '../apparatus-fragment';
+import { NgToolsValidators } from '@myrmidon/ng-tools';
 
 /**
  * Critical apparatus fragment.
@@ -65,7 +62,7 @@ export class ApparatusFragmentComponent
     this._editedEntryIndex = -1;
     // form
     this.entries = formBuilder.control([], {
-      validators: CadmusValidators.strictMinLengthValidator(1),
+      validators: NgToolsValidators.strictMinLengthValidator(1),
       nonNullable: true,
     });
     this.tag = formBuilder.control(null, Validators.maxLength(50));
