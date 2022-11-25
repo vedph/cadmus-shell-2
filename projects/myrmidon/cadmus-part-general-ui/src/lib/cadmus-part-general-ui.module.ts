@@ -12,6 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -54,6 +55,7 @@ import { TiledDataComponent } from './tiled-data/tiled-data.component';
 import { TiledTextPartComponent } from './tiled-text-part/tiled-text-part.component';
 import { HistoricalEventsPartComponent } from './historical-events-part/historical-events-part.component';
 import { NamesPartComponent } from './names-part/names-part.component';
+import { PinLinksPartComponent } from './pin-links-part/pin-links-part.component';
 
 @NgModule({
   imports: [
@@ -74,6 +76,7 @@ import { NamesPartComponent } from './names-part/names-part.component';
     MatIconModule,
     MatInputModule,
     MatPaginatorModule,
+    MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSelectModule,
     MatTabsModule,
@@ -110,6 +113,7 @@ import { NamesPartComponent } from './names-part/names-part.component';
     MetadataPartComponent,
     NamesPartComponent,
     NotePartComponent,
+    PinLinksPartComponent,
     TextTileComponent,
     TiledTextPartComponent,
     TiledDataComponent,
@@ -132,6 +136,7 @@ import { NamesPartComponent } from './names-part/names-part.component';
     MetadataPartComponent,
     NamesPartComponent,
     NotePartComponent,
+    PinLinksPartComponent,
     TiledDataComponent,
     TextTileComponent,
     TiledTextPartComponent,

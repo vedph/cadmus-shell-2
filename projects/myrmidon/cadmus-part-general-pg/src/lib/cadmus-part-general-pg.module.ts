@@ -34,6 +34,7 @@ import {
   TOKEN_TEXT_PART_TYPEID,
   CHRONOTOPES_PART_TYPEID,
   EXTERNAL_IDS_PART_TYPEID,
+  PIN_LINKS_PART_TYPEID,
 } from '@myrmidon/cadmus-part-general-ui';
 import { CadmusStateModule } from '@myrmidon/cadmus-state';
 import {
@@ -47,9 +48,11 @@ import { NgMatToolsModule } from '@myrmidon/ng-mat-tools';
 import { BibliographyPartFeatureComponent } from './bibliography-part-feature/bibliography-part-feature.component';
 import { CategoriesPartFeatureComponent } from './categories-part-feature/categories-part-feature.component';
 import { ChronologyFragmentFeatureComponent } from './chronology-fragment-feature/chronology-fragment-feature.component';
+import { ChronotopesPartFeatureComponent } from './chronotopes-part-feature/chronotopes-part-feature.component';
 import { CommentFragmentFeatureComponent } from './comment-fragment-feature/comment-fragment-feature.component';
 import { CommentPartFeatureComponent } from './comment-part-feature/comment-part-feature.component';
 import { DocReferencesPartFeatureComponent } from './doc-references-part-feature/doc-references-part-feature.component';
+import { ExternalIdsPartFeatureComponent } from './external-ids-part-feature/external-ids-part-feature.component';
 import { HistoricalDatePartFeatureComponent } from './historical-date-part-feature/historical-date-part-feature.component';
 import { HistoricalEventsPartFeatureComponent } from './historical-events-part-feature/historical-events-part-feature.component';
 import { IndexKeywordsPartFeatureComponent } from './index-keywords-part-feature/index-keywords-part-feature.component';
@@ -57,13 +60,11 @@ import { KeywordsPartFeatureComponent } from './keywords-part-feature/keywords-p
 import { MetadataPartFeatureComponent } from './metadata-part-feature/metadata-part-feature.component';
 import { NamesPartFeatureComponent } from './names-part-feature/names-part-feature.component';
 import { NotePartFeatureComponent } from './note-part-feature/note-part-feature.component';
+import { PinLinksPartFeatureComponent } from './pin-links-part-feature/pin-links-part-feature.component';
 import { TiledTextPartFeatureComponent } from './tiled-text-part-feature/tiled-text-part-feature.component';
 import { TiledTextLayerPartFeatureComponent } from './tiled-text-layer-part-feature/tiled-text-layer-part-feature.component';
 import { TokenTextLayerPartFeatureComponent } from './token-text-layer-part-feature/token-text-layer-part-feature.component';
 import { TokenTextPartFeatureComponent } from './token-text-part-feature/token-text-part-feature.component';
-import { ChronotopesPartFeatureComponent } from './chronotopes-part-feature/chronotopes-part-feature.component';
-import { ExternalIdsPartFeatureComponent } from './external-ids-part-feature/external-ids-part-feature.component';
-import { DirtyCheckGuard } from '@myrmidon/ngx-dirty-check';
 
 // https://github.com/ng-packagr/ng-packagr/issues/778
 export const RouterModuleForChild = RouterModule.forChild([
@@ -143,6 +144,12 @@ export const RouterModuleForChild = RouterModule.forChild([
     path: `${NOTE_PART_TYPEID}/:pid`,
     pathMatch: 'full',
     component: NotePartFeatureComponent,
+    canDeactivate: [PendingChangesGuard],
+  },
+  {
+    path: `${PIN_LINKS_PART_TYPEID}/:pid`,
+    pathMatch: 'full',
+    component: PinLinksPartFeatureComponent,
     canDeactivate: [PendingChangesGuard],
   },
   {
@@ -227,6 +234,7 @@ export const RouterModuleForChild = RouterModule.forChild([
     MetadataPartFeatureComponent,
     NamesPartFeatureComponent,
     NotePartFeatureComponent,
+    PinLinksPartFeatureComponent,
     TiledTextLayerPartFeatureComponent,
     TiledTextPartFeatureComponent,
     TokenTextLayerPartFeatureComponent,
@@ -248,6 +256,7 @@ export const RouterModuleForChild = RouterModule.forChild([
     MetadataPartFeatureComponent,
     NamesPartFeatureComponent,
     NotePartFeatureComponent,
+    PinLinksPartFeatureComponent,
     TiledTextLayerPartFeatureComponent,
     TiledTextPartFeatureComponent,
     TokenTextLayerPartFeatureComponent,

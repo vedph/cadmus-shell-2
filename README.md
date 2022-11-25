@@ -35,6 +35,7 @@ Quick Docker image build:
 
 ## History
 
+- 2022-11-25: added `PinLinksPart`.
 - 2022-11-24:
   - minor fixes to `@myrmidon/cadmus-item-list` and `@myrmidon/cadmus-ui`.
   - `@myrmidon/cadmus-item-editor`: wider buttons space.

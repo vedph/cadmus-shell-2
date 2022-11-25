@@ -49,6 +49,9 @@ export * from './lib/names-part/names-part.component';
 export * from './lib/note-part';
 export * from './lib/note-part/note-part.component';
 
+export * from './lib/pin-links-part';
+export * from './lib/pin-links-part/pin-links-part.component';
+
 export * from './lib/text-tile/text-tile.component';
 export * from './lib/tiled-data/tiled-data.component';
 export * from './lib/tiled-text-part';

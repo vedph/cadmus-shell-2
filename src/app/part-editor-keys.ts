@@ -16,6 +16,7 @@ import {
   TILED_TEXT_PART_TYPEID,
   CHRONOTOPES_PART_TYPEID,
   EXTERNAL_IDS_PART_TYPEID,
+  PIN_LINKS_PART_TYPEID,
 } from '@myrmidon/cadmus-part-general-ui';
 import {
   APPARATUS_FRAGMENT_TYPEID,
@@ -74,6 +75,9 @@ export const PART_EDITOR_KEYS: PartEditorKeys = {
     part: GENERAL,
   },
   [NOTE_PART_TYPEID]: {
+    part: GENERAL,
+  },
+  [PIN_LINKS_PART_TYPEID]: {
     part: GENERAL,
   },
   [TILED_TEXT_PART_TYPEID]: {
