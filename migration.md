@@ -28,9 +28,50 @@ npm i @myrmidon/ngx-dirty-check --force
 
 5. update all the Cadmus-related packages to their latest versions in `package.json`, and then run `npm i --force`.
 
-6. update parts and fragments as specified below.
+6. ensure that `placholder` attributes in material controls are replaced with `mat-label` inside `mat-form-field`, e.g. this code:
 
-7. remove Akita packages and modules imports.
+```html
+<mat-form-field *ngIf="witEntries?.length">
+  <mat-select formControlName="id" placeholder="ID">
+    <mat-option *ngFor="let e of witEntries" [value]="e.id">{{
+      e.value
+    }}</mat-option>
+  </mat-select>
+  <mat-error
+    *ngIf="
+      $any(item)['controls'].id.errors?.required &&
+      ($any(item)['controls'].id.dirty ||
+        $any(item)['controls'].id.touched)
+    "
+    >ID required</mat-error
+  >
+</mat-form-field>
+```
+
+becomes (removing `placholder` and adding `mat-label`):
+
+```html
+<mat-form-field *ngIf="witEntries?.length">
+  <mat-label>ID</mat-label>
+  <mat-select formControlName="id">
+    <mat-option *ngFor="let e of witEntries" [value]="e.id">{{
+      e.value
+    }}</mat-option>
+  </mat-select>
+  <mat-error
+    *ngIf="
+      $any(item)['controls'].id.errors?.required &&
+      ($any(item)['controls'].id.dirty ||
+        $any(item)['controls'].id.touched)
+    "
+    >ID required</mat-error
+  >
+</mat-form-field>
+```
+
+7. update parts and fragments as specified below.
+
+8. remove Akita packages and modules imports.
 
 ## Part/Fragment Editors
 
