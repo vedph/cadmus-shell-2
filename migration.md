@@ -71,7 +71,48 @@ becomes (removing `placholder` and adding `mat-label`):
 
 7. update parts and fragments as specified below.
 
-8. remove Akita packages and modules imports.
+8. in `app.module.ts`, remove Akita packages and modules imports and add the following imports:
+
+```ts
+// ELF
+import { devTools } from '@ngneat/elf-devtools';
+import { Actions } from '@ngneat/effects-ng';
+
+// myrmidon
+import { NgxDirtyCheckModule } from '@myrmidon/ngx-dirty-check';
+```
+
+Add the corresponding modules to your app `imports` array:
+
+```ts
+NgxDirtyCheckModule,
+```
+
+Add the following entry to the providers array to enable ELF dev tools:
+
+```ts
+    // ELF dev tools
+    {
+      provide: APP_INITIALIZER,
+      multi: true,
+      useFactory: initElfDevTools,
+      deps: [Actions],
+    },
+```
+
+9. Just before the `@NgModule` attribute introducing the app module, add this function to enable ELF dev tools:
+
+```ts
+// https://ngneat.github.io/elf/docs/dev-tools/
+export function initElfDevTools(actions: Actions) {
+  return () => {
+    devTools({
+      name: 'Cadmus TGR',
+      actionsDispatcher: actions,
+    });
+  };
+}
+```
 
 >Note: due to changes in Angular Material styles, which often result in slightly bigger controls, if your UI defined custom sizes for some controls you might need to adjust them to fit.
 
@@ -151,6 +192,8 @@ protected getValue(): OrthographyFragment {
 }
 ```
 
+8. for fragments, in the template replace the location and base text references from `model?.location` and `model?.baseText` to `data?.value?.location` and `data?.baseText`.
+
 >Note: `CadmusValidators` has been removed from core, as its functionalities are found in `NgToolsValidators` (from `@myrmidon/ng-tools`). So, if your code was using these validators, just replace the validators class.
 
 ## Part Wrappers
@@ -215,6 +258,11 @@ protected override getReqThesauriIds(): string[] {
 2. replace the constructor:
 
 ```ts
+import {
+  EditFragmentFeatureBase,
+  FragmentEditorService,
+} from '@myrmidon/cadmus-state';
+
   constructor(
     router: Router,
     route: ActivatedRoute,
@@ -227,6 +275,14 @@ protected override getReqThesauriIds(): string[] {
 ```
 
 3. replace `ngOnInit` with `getReqThesauriIds` override when thesauri are required, else just remove it.
+
+```ts
+protected override getReqThesauriIds(): string[] {
+  return [
+    // ...
+  ];
+}
+```
 
 4. change the template like this:
 
