@@ -73,6 +73,8 @@ becomes (removing `placholder` and adding `mat-label`):
 
 8. remove Akita packages and modules imports.
 
+>Note: due to changes in Angular Material styles, which often result in slightly bigger controls, if your UI defined custom sizes for some controls you might need to adjust them to fit.
+
 ## Part/Fragment Editors
 
 1. pass `formBuilder` to the super ctor.
@@ -148,6 +150,8 @@ protected getValue(): OrthographyFragment {
   return fr;
 }
 ```
+
+>Note: `CadmusValidators` has been removed from core, as its functionalities are found in `NgToolsValidators` (from `@myrmidon/ng-tools`). So, if your code was using these validators, just replace the validators class.
 
 ## Part Wrappers
 
