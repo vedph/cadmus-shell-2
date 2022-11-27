@@ -1,5 +1,37 @@
 # Migrating Code
 
+## App
+
+1. update Angular packages: run `ng update` and then update the listed packages, which typically are:
+
+```bash
+ng update @angular/core @angular/cli @angular/cdk @angular/material --force
+```
+
+2. for Angular 15 you also need to migrate Material (choose all directories and all components):
+
+```bash
+ng generate @angular/material:mdc-migration
+```
+
+3. install ELF packages:
+
+```bash
+npm i @ngneat/effects-ng @ngneat/elf @ngneat/elf-cli-ng @ngneat/elf-devtools @ngneat/elf-entities @ngneat/elf-pagination @ngneat/elf-requests --force
+```
+
+4. install other Cadmus packages:
+
+```bash
+npm i @myrmidon/ngx-dirty-check --force
+```
+
+5. update all the Cadmus-related packages to their latest versions in `package.json`, and then run `npm i --force`.
+
+6. update parts and fragments as specified below.
+
+7. remove Akita packages and modules imports.
+
 ## Part/Fragment Editors
 
 1. pass `formBuilder` to the super ctor.

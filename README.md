@@ -27,6 +27,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 As development progresses, `@angular/flex-layout`, which has been obsoleted, will be removed and replaced by pure CSS with some media queries where required.
 
+For pre-Angular-15 projects, see the [migration instructions](migration.md).
+
 Quick Docker image build:
 
 1. `npm run build-lib`.
