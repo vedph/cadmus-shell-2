@@ -226,8 +226,8 @@
                 <th style="width: 200px"></th>
                 <th>type</th>
                 <th>role</th>
-                <th fxHide.xs>modified</th>
-                <th fxHide.xs>user</th>
+                <th class="noif-lt-xs">modified</th>
+                <th class="noif-lt-xs">user</th>
               </tr>
             </thead>
             <tbody>
@@ -238,7 +238,6 @@
                     mat-icon-button
                     type="button"
                     color="primary"
-                    matTooltip="Edit this part"
                     [disabled]="busy"
                     (click)="editPart(part)"
                   >
@@ -248,7 +247,6 @@
                   <button
                     mat-icon-button
                     type="button"
-                    matTooltip="Delete this part"
                     [disabled]="userLevel < 2 || busy"
                     (click)="deletePart(part)"
                     *ngIf="
@@ -301,10 +299,10 @@
                     [typeThesaurus]="(typeThesaurus$ | async) || undefined"
                   ></cadmus-part-badge>
                 </td>
-                <td fxHide.xs>
+                <td class="noif-lt-xs">
                   {{ part.timeModified | date: "yyyy-MM-dd HH:mm:ss" }}
                 </td>
-                <td fxHide.xs>{{ part.userId }}</td>
+                <td class="noif-lt-xs">{{ part.userId }}</td>
               </tr>
             </tbody>
           </table>

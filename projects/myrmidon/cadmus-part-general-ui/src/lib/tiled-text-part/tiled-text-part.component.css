@@ -8,3 +8,9 @@ div.tile-placeholder {
   min-width: 60px;
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+.unmuted-hovering {
+  opacity: 0.2;
+}
+.unmuted-hovering:hover {
+  opacity: 1;
+}

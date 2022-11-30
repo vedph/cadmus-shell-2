@@ -116,7 +116,7 @@
             <div>
               <button
                 type="button"
-                mat-icon-button
+                mat-flat-button
                 color="primary"
                 (click)="addKeyword()"
               >
@@ -124,6 +124,7 @@
                 add keyword
               </button>
             </div>
+            <!-- keyword -->
             <div
               *ngFor="
                 let item of keywords.controls;
@@ -133,13 +134,13 @@
               "
             >
               <!-- child form -->
-              <div [formGroupName]="i">
+              <div [formGroupName]="i" class="form-row">
                 <!-- child actions -->
-                {{ i + 1 }}.
+                <span>{{ i + 1 }}.</span>
                 <button
                   mat-icon-button
                   type="button"
-                  matTooltip="Remove this Keyword"
+                  matTooltip="Remove this keyword"
                   color="warn"
                   (click)="removeKeyword(i)"
                 >
@@ -149,7 +150,7 @@
                   [disabled]="first"
                   mat-icon-button
                   type="button"
-                  matTooltip="Move Keyword up"
+                  matTooltip="Move keyword up"
                   (click)="moveKeywordUp(i)"
                 >
                   <mat-icon>arrow_upward</mat-icon>
@@ -158,7 +159,7 @@
                   [disabled]="last"
                   mat-icon-button
                   type="button"
-                  matTooltip="Move Keyword down"
+                  matTooltip="Move keyword down"
                   (click)="moveKeywordDown(i)"
                 >
                   <mat-icon>arrow_downward</mat-icon>
@@ -187,7 +188,7 @@
                     >ID too long</mat-error
                   >
                 </mat-form-field>
-                &nbsp;
+
                 <!-- tag (bound) -->
                 <mat-form-field
                   *ngIf="keyTagEntries?.length"
@@ -219,93 +220,81 @@
                   >
                 </mat-form-field>
 
-                <div class="ind-long-text">
-                  <!-- language (bound) -->
-                  <mat-form-field
-                    *ngIf="langEntries?.length"
-                    style="width: 8em"
+                <!-- language (bound) -->
+                <mat-form-field *ngIf="langEntries?.length" style="width: 8em">
+                  <mat-label>language</mat-label>
+                  <mat-select formControlName="language">
+                    <mat-option *ngFor="let e of langEntries" [value]="e.id">{{
+                      e.value
+                    }}</mat-option>
+                  </mat-select>
+                  <mat-error
+                    *ngIf="
+                      $any(item)['controls'].language.errors?.required &&
+                      ($any(item)['controls'].language.dirty ||
+                        $any(item)['controls'].language.touched)
+                    "
+                    >language required</mat-error
                   >
-                    <mat-label>language</mat-label>
-                    <mat-select formControlName="language">
-                      <mat-option
-                        *ngFor="let e of langEntries"
-                        [value]="e.id"
-                        >{{ e.value }}</mat-option
-                      >
-                    </mat-select>
-                    <mat-error
-                      *ngIf="
-                        $any(item)['controls'].language.errors?.required &&
-                        ($any(item)['controls'].language.dirty ||
-                          $any(item)['controls'].language.touched)
-                      "
-                      >language required</mat-error
-                    >
-                  </mat-form-field>
+                </mat-form-field>
 
-                  <!-- language (free) -->
-                  <mat-form-field
-                    *ngIf="!langEntries?.length"
-                    style="width: 8em"
+                <!-- language (free) -->
+                <mat-form-field *ngIf="!langEntries?.length" style="width: 8em">
+                  <mat-label>language</mat-label>
+                  <input matInput formControlName="language" />
+                  <mat-error
+                    *ngIf="
+                      $any(item)['controls'].language.errors?.required &&
+                      ($any(item)['controls'].language.dirty ||
+                        $any(item)['controls'].language.touched)
+                    "
+                    >language required</mat-error
                   >
-                    <mat-label>language</mat-label>
-                    <input matInput formControlName="language" />
-                    <mat-error
-                      *ngIf="
-                        $any(item)['controls'].language.errors?.required &&
-                        ($any(item)['controls'].language.dirty ||
-                          $any(item)['controls'].language.touched)
-                      "
-                      >language required</mat-error
-                    >
-                    <mat-error
-                      *ngIf="
-                        $any(item)['controls'].language.errors?.maxLength &&
-                        ($any(item)['controls'].language.dirty ||
-                          $any(item)['controls'].language.touched)
-                      "
-                      >language too long</mat-error
-                    >
-                  </mat-form-field>
+                  <mat-error
+                    *ngIf="
+                      $any(item)['controls'].language.errors?.maxLength &&
+                      ($any(item)['controls'].language.dirty ||
+                        $any(item)['controls'].language.touched)
+                    "
+                    >language too long</mat-error
+                  >
+                </mat-form-field>
 
-                  &nbsp;
-                  <!-- value -->
-                  <mat-form-field>
-                    <mat-label>value</mat-label>
-                    <input matInput formControlName="value" />
-                    <mat-error
-                      *ngIf="
-                        $any(item)['controls'].value.errors?.required &&
-                        ($any(item)['controls'].value.dirty ||
-                          $any(item)['controls'].value.touched)
-                      "
-                      >value required</mat-error
-                    >
-                    <mat-error
-                      *ngIf="
-                        $any(item)['controls'].value.errors?.maxLength &&
-                        ($any(item)['controls'].value.dirty ||
-                          $any(item)['controls'].value.touched)
-                      "
-                      >value too long</mat-error
-                    >
-                  </mat-form-field>
-                </div>
-                <div>
-                  <!-- note -->
-                  <mat-form-field class="ind-long-text">
-                    <mat-label>note</mat-label>
-                    <textarea matInput formControlName="note"></textarea>
-                    <mat-error
-                      *ngIf="
-                        $any(item)['controls'].note.errors?.maxLength &&
-                        ($any(item)['controls'].note.dirty ||
-                          $any(item)['controls'].note.touched)
-                      "
-                      >note too long</mat-error
-                    >
-                  </mat-form-field>
-                </div>
+                <!-- value -->
+                <mat-form-field>
+                  <mat-label>value</mat-label>
+                  <input matInput formControlName="value" />
+                  <mat-error
+                    *ngIf="
+                      $any(item)['controls'].value.errors?.required &&
+                      ($any(item)['controls'].value.dirty ||
+                        $any(item)['controls'].value.touched)
+                    "
+                    >value required</mat-error
+                  >
+                  <mat-error
+                    *ngIf="
+                      $any(item)['controls'].value.errors?.maxLength &&
+                      ($any(item)['controls'].value.dirty ||
+                        $any(item)['controls'].value.touched)
+                    "
+                    >value too long</mat-error
+                  >
+                </mat-form-field>
+
+                <!-- note -->
+                <mat-form-field>
+                  <mat-label>note</mat-label>
+                  <input matInput formControlName="note" />
+                  <mat-error
+                    *ngIf="
+                      $any(item)['controls'].note.errors?.maxLength &&
+                      ($any(item)['controls'].note.dirty ||
+                        $any(item)['controls'].note.touched)
+                    "
+                    >note too long</mat-error
+                  >
+                </mat-form-field>
               </div>
             </div>
           </div>

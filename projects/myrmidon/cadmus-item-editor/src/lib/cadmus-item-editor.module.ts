@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { NgToolsModule } from '@myrmidon/ng-tools';
 import { NgMatToolsModule } from '@myrmidon/ng-mat-tools';
@@ -52,6 +53,7 @@ export const RouterModuleForChild = RouterModule.forChild([
     MatProgressBarModule,
     MatSelectModule,
     MatTabsModule,
+    MatTooltipModule,
     // cadmus
     CadmusCoreModule,
     CadmusApiModule,

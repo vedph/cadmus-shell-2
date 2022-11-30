@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 // material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -46,7 +45,6 @@ import { GraphTripleEditorComponent } from './components/graph-triple-editor/gra
     FormsModule,
     RouterModule,
     ReactiveFormsModule,
-    FlexLayoutModule,
     // material
     MatAutocompleteModule,
     MatButtonModule,

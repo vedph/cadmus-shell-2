@@ -108,9 +108,6 @@
           <!-- paginator -->
           <mat-paginator
             *ngIf="pagination.data?.length"
-            gdArea="pagination"
-            gdAlignColumns="center"
-            gdAlignRows="start"
             [length]="pagination.total"
             [pageSize]="pagination.perPage"
             [pageSizeOptions]="[20, 50, 75, 100]"

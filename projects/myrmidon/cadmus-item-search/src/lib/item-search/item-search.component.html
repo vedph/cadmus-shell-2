@@ -2,125 +2,119 @@
   <mat-card-header>
     <mat-card-title>Item Search</mat-card-title>
   </mat-card-header>
-  <mat-card-content
-    gdAreas="spinner spinner | query list"
-    gdAreas.lt-md="spinner | query | list"
-    gdColumns="300px 1fr"
-    gdColumns.lt-md="1fr"
-    gdGap="8px"
-  >
-    <!-- spinner -->
-    <div
-      *ngIf="loading$ | async"
-      gdArea="spinner"
-      gdAlignColumns="center"
-      gdAlignRows="center"
-    >
-      <mat-spinner [diameter]="48" [strokeWidth]="4"></mat-spinner>
-    </div>
+  <mat-card-content>
+    <div id="container">
+      <!-- query -->
+      <div style="grid-area: query">
+        <cadmus-item-query
+          [lastQueries]="(lastQueries$ | async) || []"
+          (querySubmit)="submitQuery($event)"
+        ></cadmus-item-query>
+      </div>
 
-    <!-- query -->
-    <div gdArea="query">
-      <cadmus-item-query
-        [lastQueries]="(lastQueries$ | async) || []"
-        (querySubmit)="submitQuery($event)"
-      ></cadmus-item-query>
-    </div>
-
-    <!-- list -->
-    <div gdArea="list" *ngIf="pagination$ | async as pagination">
-      <div *ngIf="error$ | async as error">{{ error }}</div>
-      <table *ngIf="pagination.data.length">
-        <thead>
-          <th></th>
-          <th
-            *ngIf="
-              user?.roles?.includes('admin') || user?.roles?.includes('editor')
-            "
-          ></th>
-          <th>facet</th>
-          <th>flags</th>
-          <th>title</th>
-          <th>description</th>
-          <th fxHide.lt-md>group</th>
-          <th fxHide.lt-md>user</th>
-          <th fxHide.lt-md>last saved</th>
-          <th fxHide.lt-md>creator</th>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of pagination.data">
-            <td class="command">
-              <button
-                mat-icon-button
-                type="button"
-                color="primary"
-                (click)="editItem(item)"
-              >
-                <mat-icon>mode_edit</mat-icon>
-              </button>
-            </td>
-            <td
-              class="command"
+      <!-- list -->
+      <div style="grid-area: list" *ngIf="pagination$ | async as pagination">
+        <div *ngIf="loading$ | async">
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
+        <div *ngIf="error$ | async as error">{{ error }}</div>
+        <table *ngIf="pagination.data.length">
+          <thead>
+            <th></th>
+            <th
               *ngIf="
                 user?.roles?.includes('admin') ||
                 user?.roles?.includes('editor')
               "
-            >
-              <button
-                *ngIf="userLevel > 2"
-                mat-icon-button
-                type="button"
-                color="warn"
-                (click)="deleteItem(item)"
+            ></th>
+            <th>facet</th>
+            <th>flags</th>
+            <th>title</th>
+            <th>description</th>
+            <th class="noif-lt-md">group</th>
+            <th class="noif-lt-md">user</th>
+            <th class="noif-lt-md">last saved</th>
+            <th class="noif-lt-md">creator</th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of pagination.data">
+              <td class="command">
+                <button
+                  mat-icon-button
+                  type="button"
+                  color="primary"
+                  (click)="editItem(item)"
+                >
+                  <mat-icon>mode_edit</mat-icon>
+                </button>
+              </td>
+              <td
+                class="command"
+                *ngIf="
+                  user?.roles?.includes('admin') ||
+                  user?.roles?.includes('editor')
+                "
               >
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-            <td>
-              <cadmus-facet-badge
-                [facetId]="item.facetId"
-                [facetDefinitions]="$any(facetDefinitions$ | async)"
-              ></cadmus-facet-badge>
-            </td>
-            <td>
-              <cadmus-flags-badge
-                [flags]="item.flags"
-                [flagDefinitions]="$any(flagDefinitions$ | async)"
-              ></cadmus-flags-badge>
-            </td>
-            <td>{{ item.title }}</td>
-            <td>{{ item.description }}</td>
-            <td fxHide.lt-md>{{ item.groupId }}</td>
-            <td fxHide.lt-md>{{ item.userId }}</td>
-            <td fxHide.lt-md>
-              {{ item.timeModified | date: "yyyy-MM-dd HH:mm:ss" }}
-            </td>
-            <td fxHide.lt-md>{{ item.creatorId }}</td>
-          </tr>
-        </tbody>
-      </table>
+                <button
+                  *ngIf="userLevel > 2"
+                  mat-icon-button
+                  type="button"
+                  color="warn"
+                  (click)="deleteItem(item)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+              <td>
+                <cadmus-facet-badge
+                  [facetId]="item.facetId"
+                  [facetDefinitions]="$any(facetDefinitions$ | async)"
+                ></cadmus-facet-badge>
+              </td>
+              <td>
+                <cadmus-flags-badge
+                  [flags]="item.flags"
+                  [flagDefinitions]="$any(flagDefinitions$ | async)"
+                ></cadmus-flags-badge>
+              </td>
+              <td>{{ item.title }}</td>
+              <td>{{ item.description }}</td>
+              <td class="noif-lt-md">{{ item.groupId }}</td>
+              <td class="noif-lt-md">{{ item.userId }}</td>
+              <td class="noif-lt-md">
+                {{ item.timeModified | date: "yyyy-MM-dd HH:mm:ss" }}
+              </td>
+              <td class="noif-lt-md">{{ item.creatorId }}</td>
+            </tr>
+          </tbody>
+        </table>
 
-      <!-- paginator -->
-      <mat-paginator
-        *ngIf="pagination.data.length"
-        [length]="pagination.total"
-        [pageSize]="pagination.perPage"
-        [pageSizeOptions]="[20, 50, 75, 100]"
-        [pageIndex]="pagination.currentPage - 1"
-        [showFirstLastButtons]="true"
-        (page)="pageChange($event)"
-      ></mat-paginator>
+        <!-- paginator -->
+        <div
+          style="grid-area: paginator; justify-content: end"
+          class="form-row"
+        >
+          <button
+            type="button"
+            mat-icon-button
+            color="warn"
+            matTooltip="Clear items cache"
+            (click)="clearCache()"
+          >
+            <mat-icon>autorenew</mat-icon>
+          </button>
+
+          <mat-paginator
+            *ngIf="pagination.data.length"
+            [length]="pagination.total"
+            [pageSize]="pagination.perPage"
+            [pageSizeOptions]="[20, 50, 75, 100]"
+            [pageIndex]="pagination.currentPage - 1"
+            [showFirstLastButtons]="true"
+            (page)="pageChange($event)"
+          ></mat-paginator>
+        </div>
+      </div>
     </div>
   </mat-card-content>
-  <mat-card-actions>
-    <button
-      type="button"
-      mat-icon-button
-      color="warn"
-      matTooltip="Clear items cache"
-      (click)="clearCache()"
-    >
-      <mat-icon>autorenew</mat-icon>
-    </button>
-  </mat-card-actions>
 </mat-card>

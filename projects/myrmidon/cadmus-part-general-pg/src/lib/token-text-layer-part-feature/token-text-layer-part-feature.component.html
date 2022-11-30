@@ -82,9 +82,10 @@
     </mat-toolbar>
   </mat-card-actions>
   <mat-card-content fxLayout="row">
-    <div *ngIf="loading$ | async" fxFlex fxLayoutAlign="center center">
-      <mat-spinner [diameter]="48" [strokeWidth]="4"></mat-spinner>
-    </div>
+    <mat-progress-bar
+      mode="indeterminate"
+      *ngIf="loading$ | async"
+    ></mat-progress-bar>
 
     <div [style.font-size]="textSize + 'px'">
       <cadmus-decorated-token-text
@@ -113,7 +114,7 @@
     </mat-expansion-panel-header>
     <cadmus-layer-hints
       [hints]="layerHints"
-      [disabled]="((loading$ | async) || (saving$ | async)) ? true : false"
+      [disabled]="(loading$ | async) || (saving$ | async) ? true : false"
       [readonly]="userLevel < 2"
       [targetLocation]="pickedLocation"
       (requestEdit)="editFragmentFromHint($event)"

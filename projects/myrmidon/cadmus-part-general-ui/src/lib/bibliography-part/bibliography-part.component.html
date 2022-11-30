@@ -12,12 +12,11 @@
         <mat-tab label="Bibliography">
           <button
             type="button"
-            mat-button
-            matTooltip="Add a new entry"
+            mat-flat-button
             color="primary"
             (click)="addEntry()"
           >
-            <mat-icon>add_circle</mat-icon>
+            <mat-icon>add_circle</mat-icon> add entry
           </button>
           <table *ngIf="entries.value.length">
             <thead>

@@ -16,23 +16,6 @@
       <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     </div>
 
-    <!-- bar-->
-    <div>
-      <button
-        color="primary"
-        type="button"
-        mat-icon-button
-        matTooltip="Clear cache"
-        (click)="clearCache()"
-        color="warn"
-      >
-        <mat-icon>autorenew</mat-icon>
-      </button>
-      <button color="primary" type="button" mat-button (click)="addTriple()">
-        <mat-icon>add_circle</mat-icon>
-        add triple
-      </button>
-    </div>
     <!-- list -->
     <div *ngIf="pagination$ | async as pagination">
       <table>
@@ -79,17 +62,40 @@
           </tr>
         </tbody>
       </table>
+      <div>
+        <button
+          color="primary"
+          type="button"
+          mat-flat-button
+          (click)="addTriple()"
+        >
+          <mat-icon>add_circle</mat-icon>
+          add triple
+        </button>
+      </div>
 
       <!-- pagination -->
-      <mat-paginator
-        style="grid-area: paginator"
-        [length]="pagination.total"
-        [pageSize]="pagination.perPage"
-        [pageSizeOptions]="[20, 50, 75, 100]"
-        [pageIndex]="pagination.currentPage - 1"
-        [showFirstLastButtons]="true"
-        (page)="pageChange($event)"
-      ></mat-paginator>
+      <div style="grid-area: paginator; justify-content: end" class="form-row">
+        <button
+          color="primary"
+          type="button"
+          mat-icon-button
+          matTooltip="Clear cache"
+          (click)="clearCache()"
+          color="warn"
+        >
+          <mat-icon>autorenew</mat-icon>
+        </button>
+
+        <mat-paginator
+          [length]="pagination.total"
+          [pageSize]="pagination.perPage"
+          [pageSizeOptions]="[20, 50, 75, 100]"
+          [pageIndex]="pagination.currentPage - 1"
+          [showFirstLastButtons]="true"
+          (page)="pageChange($event)"
+        ></mat-paginator>
+      </div>
     </div>
 
     <!-- editor -->

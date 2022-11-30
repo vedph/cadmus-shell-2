@@ -13,7 +13,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { CadmusCoreModule, PendingChangesGuard } from '@myrmidon/cadmus-core';
 import { CadmusUiModule } from '@myrmidon/cadmus-ui';
@@ -79,7 +78,6 @@ export const RouterModuleForChild = RouterModule.forChild([
     MatSelectModule,
     MatTooltipModule,
     MatToolbarModule,
-    FlexLayoutModule,
     // cadmus
     CadmusCoreModule,
     CadmusUiModule,

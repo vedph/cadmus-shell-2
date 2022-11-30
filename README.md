@@ -2,6 +2,7 @@
 
 - [Cadmus Shell](#cadmus-shell)
   - [History](#history)
+    - [4.0.0](#400)
     - [3.1.5](#315)
     - [3.1.4](#314)
     - [3.1.3](#313)
@@ -24,22 +25,24 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 - [Akita](https://github.com/salesforce/akita) has been replaced by [ELF](https://ngneat.github.io/elf/). This implies changing the store model behind each editor and list. New documentation will follow on this. This change was required by Akita obsolescence. Further, ELF has the advantage of being more modern and framework independent.
 - the dirty change mechanism has been refactored and now uses [this solution](https://github.com/vedph/ngx-dirty-check).
 - Angular Material has been upgraded to 15, which implies a number of style adjustments.
+- `@angular/flex-layout`, which has been obsoleted, has been removed and replaced by pure CSS with some media queries where required.
 
-As development progresses, `@angular/flex-layout`, which has been obsoleted, will be removed and replaced by pure CSS with some media queries where required.
-
-For pre-Angular-15 projects, see the [migration instructions](migration.md).
+💡 For pre-Angular-15 projects, see the [migration instructions](migration.md).
 
 Quick Docker image build:
 
 1. `npm run build-lib`.
 2. update version in `env.js` and then `ng build`.
-3. `docker build . -t vedph2020/cadmus-shell:3.1.5 -t vedph2020/cadmus-shell:latest` (replace with the current version).
+3. `docker build . -t vedph2020/cadmus-shell:4.0.0 -t vedph2020/cadmus-shell:latest` (replace with the current version).
 
 ## History
 
+### 4.0.0
+
 - 2022-11-30:
   - **breaking change**: renamed thesaurus `categories` as `comment-categories` for comment part/fragment. This allows using different categories for comments and categories parts. Should you need to use the same categories, just create a thesaurus alias.
-  - removed `@angular/flex-layout` from `@myrmidon/cadmus-graph-ui`.
+  - removed `@angular/flex-layout` from `@myrmidon/cadmus-graph-ui`, `@myrmidon/cadmus-item-editor`, `@myrmidon/cadmus-item-list`, `@myrmidon/cadmus-item-search`, `@myrmidon/cadmus-thesaurus-list`, `@myrmidon/cadmus-thesaurus-ui`, tiled text layer part and token text layer part.
+  - removed `@angular/flex-layout` package from app.
 - 2022-11-25: added `PinLinksPart`.
 - 2022-11-24:
   - minor fixes to `@myrmidon/cadmus-item-list` and `@myrmidon/cadmus-ui`.

@@ -2,31 +2,18 @@
   <mat-card-header>
     <mat-card-title> Thesauri </mat-card-title>
   </mat-card-header>
-  <mat-card-content
-    gdAreas="spinner spinner | filters list | . paginator"
-    gdAreas.lt-md="spinner | list | paginator | filters"
-    gdColumns="220px 1fr"
-    gdColumns.lt-md="1fr"
-    gdGap="8px"
-  >
-    <!-- spinner-->
-    <div
-      *ngIf="(status$ | async)?.value === 'pending'"
-      gdArea="spinner"
-      gdAlignColumns="center"
-      gdAlignRows="center"
-    >
-      <mat-spinner [diameter]="48" [strokeWidth]="4"></mat-spinner>
-    </div>
+  <mat-card-content>
+    <div id="container">
+      <!-- filters -->
+      <div style="grid-area: filters">
+        <cadmus-thesaurus-filter></cadmus-thesaurus-filter>
+      </div>
 
-    <!-- filters -->
-    <div gdArea="filters" gdAlignRows.lt-md="center">
-      <cadmus-thesaurus-filter></cadmus-thesaurus-filter>
-    </div>
-
-    <!-- list -->
-    <div gdArea="list" *ngIf="pagination$ | async as pagination">
-      <div fxFill fxLayout="column">
+      <!-- list -->
+      <div style="grid-area: list" *ngIf="pagination$ | async as pagination">
+        <div *ngIf="(status$ | async)?.value === 'pending'">
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
         <table>
           <thead>
             <th></th>
@@ -80,9 +67,7 @@
 
         <!-- pagination -->
         <mat-paginator
-          gdArea="pagination"
-          gdAlignColumns="center"
-          gdAlignRows="start"
+          style="grid-area: paginator"
           [length]="pagination.total"
           [pageSize]="pagination.perPage"
           [pageSizeOptions]="[20, 50, 75, 100]"

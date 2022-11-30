@@ -2,112 +2,100 @@
   <mat-card-header>
     <mat-card-title> Items </mat-card-title>
   </mat-card-header>
-  <mat-card-content
-    gdAreas="spinner spinner | filters list | . paginator"
-    gdAreas.lt-md="spinner | list | paginator | filters"
-    gdColumns="auto 1fr"
-    gdColumns.lt-md="1fr"
-    gdGap="8px"
-  >
-    <!-- spinner -->
-    <div
-      *ngIf="(status$ | async)?.value === 'pending'"
-      gdArea="spinner"
-      gdAlignColumns="center"
-      gdAlignRows="center"
-    >
-      <mat-spinner [diameter]="48" [strokeWidth]="4"></mat-spinner>
-    </div>
+  <mat-card-content>
+    <div id="container">
+      <!-- filters -->
+      <div style="grid-area: filters">
+        <cadmus-item-filter></cadmus-item-filter>
+      </div>
 
-    <!-- filters -->
-    <div gdArea="filters" gdAlignRows.lt-md="center">
-      <cadmus-item-filter></cadmus-item-filter>
-    </div>
-
-    <!-- list -->
-    <div gdArea="list" *ngIf="pagination$ | async as pagination">
-      <table>
-        <thead>
-          <th></th>
-          <th
-            *ngIf="
-              user?.roles?.includes('admin') || user?.roles?.includes('editor')
-            "
-          ></th>
-          <th>facet</th>
-          <th>flags</th>
-          <th>title</th>
-          <th>description</th>
-          <th fxHide.lt-md>group</th>
-          <th fxHide.lt-md>user</th>
-          <th fxHide.lt-md>last saved</th>
-          <th fxHide.lt-md>creator</th>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of pagination.data">
-            <td class="command">
-              <button
-                mat-icon-button
-                type="button"
-                color="primary"
-                (click)="editItem(item)"
-              >
-                <mat-icon>mode_edit</mat-icon>
-              </button>
-            </td>
-            <td
-              class="command"
+      <!-- list -->
+      <div style="grid-area: list" *ngIf="pagination$ | async as pagination">
+        <div *ngIf="(status$ | async)?.value === 'pending'">
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
+        <table>
+          <thead>
+            <th></th>
+            <th
               *ngIf="
                 user?.roles?.includes('admin') ||
                 user?.roles?.includes('editor')
               "
-            >
-              <button
-                *ngIf="userLevel > 2"
-                mat-icon-button
-                type="button"
-                color="warn"
-                (click)="deleteItem(item)"
+            ></th>
+            <th>facet</th>
+            <th>flags</th>
+            <th>title</th>
+            <th>description</th>
+            <th class="noif-lt-md">group</th>
+            <th class="noif-lt-md">user</th>
+            <th class="noif-lt-md">last saved</th>
+            <th class="noif-lt-md">creator</th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of pagination.data">
+              <td class="command">
+                <button
+                  mat-icon-button
+                  type="button"
+                  color="primary"
+                  (click)="editItem(item)"
+                >
+                  <mat-icon>mode_edit</mat-icon>
+                </button>
+              </td>
+              <td
+                class="command"
+                *ngIf="
+                  user?.roles?.includes('admin') ||
+                  user?.roles?.includes('editor')
+                "
               >
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-            <td>
-              <cadmus-facet-badge
-                [facetId]="item.facetId"
-                [facetDefinitions]="app.facets"
-              ></cadmus-facet-badge>
-            </td>
-            <td>
-              <cadmus-flags-badge
-                [flags]="item.flags"
-                [flagDefinitions]="app.flags"
-              ></cadmus-flags-badge>
-            </td>
-            <td>{{ item.title }}</td>
-            <td>{{ item.description }}</td>
-            <td fxHide.lt-md>{{ item.groupId }}</td>
-            <td fxHide.lt-md>{{ item.userId }}</td>
-            <td fxHide.lt-md>
-              {{ item.timeModified | date: "yyyy-MM-dd HH:mm" }}
-            </td>
-            <td fxHide.lt-md>{{ item.creatorId }}</td>
-          </tr>
-        </tbody>
-      </table>
+                <button
+                  *ngIf="userLevel > 2"
+                  mat-icon-button
+                  type="button"
+                  color="warn"
+                  (click)="deleteItem(item)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+              <td>
+                <cadmus-facet-badge
+                  [facetId]="item.facetId"
+                  [facetDefinitions]="app.facets"
+                ></cadmus-facet-badge>
+              </td>
+              <td>
+                <cadmus-flags-badge
+                  [flags]="item.flags"
+                  [flagDefinitions]="app.flags"
+                ></cadmus-flags-badge>
+              </td>
+              <td>{{ item.title }}</td>
+              <td>{{ item.description }}</td>
+              <td class="noif-lt-md">{{ item.groupId }}</td>
+              <td class="noif-lt-md">{{ item.userId }}</td>
+              <td class="noif-lt-md">
+                {{ item.timeModified | date: "yyyy-MM-dd HH:mm" }}
+              </td>
+              <td class="noif-lt-md">{{ item.creatorId }}</td>
+            </tr>
+          </tbody>
+        </table>
 
-      <!-- pagination -->
-      <mat-paginator
-        gdArea="pagination"
-        gdAlignColumns="center"
-        gdAlignRows="start"
-        [length]="pagination.total"
-        [pageSize]="pagination.perPage"
-        [pageSizeOptions]="[20, 50, 75, 100]"
-        [pageIndex]="pagination.currentPage - 1"
-        [showFirstLastButtons]="true"
-        (page)="pageChange($event)"
-      ></mat-paginator>
+        <!-- pagination -->
+        <mat-paginator
+          style="grid-area: paginator"
+          [length]="pagination.total"
+          [pageSize]="pagination.perPage"
+          [pageSizeOptions]="[20, 50, 75, 100]"
+          [pageIndex]="pagination.currentPage - 1"
+          [showFirstLastButtons]="true"
+          (page)="pageChange($event)"
+        ></mat-paginator>
+      </div>
     </div>
   </mat-card-content>
   <mat-card-actions>

@@ -1,11 +1,6 @@
-<form
-  role="form"
-  [formGroup]="form"
-  (submit)="apply()"
-  gdAreas="title | description | facet | flags | user | min-date | max-date | actions"
->
+<form role="form" [formGroup]="form" (submit)="apply()">
   <!-- title -->
-  <div gdArea="title">
+  <div>
     <mat-form-field>
       <mat-label>title</mat-label>
       <input matInput [formControl]="title" maxlength="500" />
@@ -13,7 +8,7 @@
   </div>
 
   <!-- description -->
-  <div gdArea="description">
+  <div>
     <mat-form-field>
       <mat-label>description</mat-label>
       <input matInput [formControl]="description" maxlength="500" />
@@ -21,7 +16,7 @@
   </div>
 
   <!-- facet -->
-  <div *ngIf="app.facets$ | async as facets" gdArea="facet">
+  <div *ngIf="app.facets$ | async as facets">
     <div>
       <mat-form-field>
         <mat-label>facet</mat-label>
@@ -42,7 +37,7 @@
     </div>
 
     <!-- flags -->
-    <div *ngIf="app.flags$ | async as flags" gdArea="flags">
+    <div *ngIf="app.flags$ | async as flags">
       <div>
         <mat-form-field>
           <mat-label>flags</mat-label>
@@ -68,7 +63,7 @@
     </div>
 
     <!-- user -->
-    <div gdArea="user">
+    <div>
       <cadmus-ref-lookup
         [item]="currentUser"
         [service]="userLookupService"
@@ -80,34 +75,32 @@
   </div>
 
   <!-- min date -->
-  <div gdArea="min-date">
+  <div style="margin-top: 16px;">
     <mat-form-field>
       <mat-label>min.date</mat-label>
-      <input
-        matInput
-        [matDatepicker]="minPicker"
-        [formControl]="minModified"
-      />
-      <mat-datepicker-toggle matSuffix [for]="minPicker"></mat-datepicker-toggle>
+      <input matInput [matDatepicker]="minPicker" [formControl]="minModified" />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="minPicker"
+      ></mat-datepicker-toggle>
     </mat-form-field>
     <mat-datepicker #minPicker></mat-datepicker>
   </div>
 
   <!-- max date -->
-  <div gdArea="max-date">
+  <div>
     <mat-form-field>
       <mat-label>max.date</mat-label>
-      <input
-        matInput
-        [matDatepicker]="maxPicker"
-        [formControl]="maxModified"
-      />
-      <mat-datepicker-toggle matSuffix [for]="maxPicker"></mat-datepicker-toggle>
+      <input matInput [matDatepicker]="maxPicker" [formControl]="maxModified" />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="maxPicker"
+      ></mat-datepicker-toggle>
     </mat-form-field>
     <mat-datepicker #maxPicker></mat-datepicker>
   </div>
 
-  <div gdArea="actions" gdAlignRows="center">
+  <div>
     <div>
       <button
         type="button"

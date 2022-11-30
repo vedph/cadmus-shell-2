@@ -8,7 +8,6 @@
     </mat-card-header>
 
     <mat-card-content>
-      <!-- note 2-way databinding for selectedIndex: it's a bug in Angular, need it -->
       <mat-tab-group [(selectedIndex)]="currentTabIndex">
         <mat-tab label="Text">
           <!-- citation -->
@@ -24,6 +23,7 @@
               ></mat-error>
             </mat-form-field>
           </div>
+
           <!-- rows -->
           <div *ngIf="rows" cdkDropListGroup>
             <!-- row -->
@@ -37,17 +37,18 @@
                 let last = last
               "
               (cdkDropListDropped)="drop($any($event), row)"
-              fxLayout="row"
-              fxLayoutAlign="start center"
+              style="display: flex; flex-flow: row wrap"
             >
+              <!-- nr -->
               <span class="row-nr">{{ i + 1 }}</span>
+
               <!-- tile -->
               <cadmus-text-tile
                 *ngFor="let tile of row.tiles || []"
                 [tile]="tile"
                 [selected]="tile === selectedTile"
                 cdkDrag
-                fxFlex="none"
+                style="flex: 0 0 auto"
                 (click)="selectedTile = tile"
                 (editData)="editTileData(tile)"
                 (tileChange)="onTileChange($event)"
@@ -55,49 +56,51 @@
                 <div class="tile-placeholder" *cdkDragPlaceholder></div>
               </cadmus-text-tile>
               <!-- row tail buttons -->
-              <button
-                type="button"
-                mat-icon-button
-                (click)="addTile(row)"
-                matTooltip="Append new tile"
-              >
-                <mat-icon>add_circle</mat-icon>
-              </button>
-              <button
-                type="button"
-                mat-icon-button
-                (click)="moveRowUp(i)"
-                [disabled]="first"
-                matTooltip="Move this row up"
-              >
-                <mat-icon>arrow_upward</mat-icon>
-              </button>
-              <button
-                type="button"
-                mat-icon-button
-                (click)="moveRowDown(i)"
-                [disabled]="last"
-                matTooltip="Move this row down"
-              >
-                <mat-icon>arrow_downward</mat-icon>
-              </button>
-              <button
-                type="button"
-                mat-icon-button
-                matTooltip="Delete whole row"
-                color="warn"
-                (click)="deleteRow(i)"
-              >
-                <mat-icon>remove_circle</mat-icon>
-              </button>
-              <button
-                type="button"
-                mat-icon-button
-                matTooltip="Edit row's data"
-                (click)="editRowData(row)"
-              >
-                <mat-icon>list</mat-icon>
-              </button>
+              <div class="unmuted-hovering">
+                <button
+                  type="button"
+                  mat-icon-button
+                  (click)="addTile(row)"
+                  matTooltip="Append new tile"
+                >
+                  <mat-icon>add_circle</mat-icon>
+                </button>
+                <button
+                  type="button"
+                  mat-icon-button
+                  (click)="moveRowUp(i)"
+                  [disabled]="first"
+                  matTooltip="Move this row up"
+                >
+                  <mat-icon>arrow_upward</mat-icon>
+                </button>
+                <button
+                  type="button"
+                  mat-icon-button
+                  (click)="moveRowDown(i)"
+                  [disabled]="last"
+                  matTooltip="Move this row down"
+                >
+                  <mat-icon>arrow_downward</mat-icon>
+                </button>
+                <button
+                  type="button"
+                  mat-icon-button
+                  matTooltip="Delete whole row"
+                  color="warn"
+                  (click)="deleteRow(i)"
+                >
+                  <mat-icon>remove_circle</mat-icon>
+                </button>
+                <button
+                  type="button"
+                  mat-icon-button
+                  matTooltip="Edit row's data"
+                  (click)="editRowData(row)"
+                >
+                  <mat-icon>list</mat-icon>
+                </button>
+              </div>
             </div>
           </div>
           <!-- bottom buttons -->

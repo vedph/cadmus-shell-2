@@ -8,3 +8,34 @@ th {
 td.command {
   width: 24px;
 }
+.form-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.form-row * {
+  flex: 0 0 auto;
+}
+
+div#container {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  grid-template-columns: 1fr 2fr;
+  grid-template-areas:
+    "query list"
+    ". paginator";
+  gap: 8px;
+}
+/* lt-md */
+@media only screen and (max-width: 959px) {
+  div#container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "list"
+      "paginator";
+  }
+  .noif-lt-md {
+    display: none;
+  }
+}

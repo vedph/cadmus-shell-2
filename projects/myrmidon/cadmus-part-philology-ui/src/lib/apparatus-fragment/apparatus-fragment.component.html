@@ -115,10 +115,9 @@
               type="button"
               color="primary"
               (click)="addEntry()"
-              mat-icon-button
-              matTooltip="Add a new entry"
+              mat-flat-button
             >
-              <mat-icon>add_circle</mat-icon>
+              <mat-icon>add_circle</mat-icon> add entry
             </button>
           </div>
           <div *ngIf="summary" [innerHtml]="summary | safeHtml: 'html'"></div>

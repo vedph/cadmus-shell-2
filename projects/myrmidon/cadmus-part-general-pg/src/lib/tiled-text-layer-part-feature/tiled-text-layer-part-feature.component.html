@@ -73,18 +73,18 @@
     </mat-toolbar>
   </mat-card-actions>
 
-  <mat-card-content fxLayout="row">
-    <div *ngIf="loading$ | async" fxFlex fxLayoutAlign="center center">
-      <mat-spinner [diameter]="48" [strokeWidth]="4"></mat-spinner>
-    </div>
+  <mat-card-content>
+    <mat-progress-bar
+      mode="indeterminate"
+      *ngIf="loading$ | async"
+    ></mat-progress-bar>
 
     <!-- rows -->
     <div *ngIf="view">
       <div
         *ngFor="let row of view.rows; let iy = index"
         class="tile-row"
-        fxLayout="row"
-        fxLayoutAlign="start center"
+        style="display: flex; flex-flow: row wrap"
       >
         <span class="row-nr">{{ iy + 1 }}</span>
         <!-- tile -->
@@ -96,7 +96,7 @@
           [checkable]="true"
           [checked]="tile.checked"
           [color]="tile.frIndex > -1 ? 'yellow' : 'transparent'"
-          fxFlex="none"
+          style="flex: 0 0 auto"
           (click)="selectedTile = tile"
           (checkedChange)="onTileChecked(iy + 1, ix + 1, $event.checked)"
           (keydown.control.arrowleft)="selectPrevTile()"

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -17,7 +18,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { MarkdownModule } from 'ngx-markdown';
@@ -64,8 +64,8 @@ import { PinLinksPartComponent } from './pin-links-part/pin-links-part.component
     ReactiveFormsModule,
     MonacoEditorModule,
     MarkdownModule,
-    FlexLayoutModule,
     // material
+    DragDropModule,
     MatBadgeModule,
     MatButtonModule,
     MatCardModule,
@@ -81,7 +81,6 @@ import { PinLinksPartComponent } from './pin-links-part/pin-links-part.component
     MatSelectModule,
     MatTabsModule,
     MatTooltipModule,
-    FlexLayoutModule,
     // cadmus
     NgToolsModule,
     NgMatToolsModule,

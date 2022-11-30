@@ -15,6 +15,16 @@ td {
 td.command {
   width: 24px;
 }
+.form-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.form-row * {
+  flex: 0 0 auto;
+}
+
 div#container {
   display: grid;
   grid-template-rows: 1fr auto auto;
@@ -25,7 +35,6 @@ div#container {
     ". editor";
   gap: 8px;
 }
-
 /* lt-md */
 @media only screen and (max-width: 959px) {
   div#container {
@@ -36,10 +45,7 @@ div#container {
       "filters"
       "editor";
   }
-  th.noif-lt-md {
-    display: none;
-  }
-  td.noif-lt-md {
+  .noif-lt-md {
     display: none;
   }
 }

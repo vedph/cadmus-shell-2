@@ -14,9 +14,9 @@ import {
 import { UserLevelService } from '@myrmidon/cadmus-api';
 import { AppRepository } from '@myrmidon/cadmus-state';
 
-import { ItemSearchRepository } from '../state/item-search.repository';
-import { StatusState } from '@ngneat/elf-requests';
 import { PaginationData } from '@ngneat/elf-pagination';
+
+import { ItemSearchRepository } from '../state/item-search.repository';
 
 @Component({
   selector: 'cadmus-item-search',
