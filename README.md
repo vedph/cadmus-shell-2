@@ -37,6 +37,7 @@ Quick Docker image build:
 
 ## History
 
+- 2022-11-30: renamed thesaurus categories in `comment-categories` for comment part/fragment. This allows using different categories for comments and categories parts. Should you need to use the same categories, just create a thesaurus alias.
 - 2022-11-25: added `PinLinksPart`.
 - 2022-11-24:
   - minor fixes to `@myrmidon/cadmus-item-list` and `@myrmidon/cadmus-ui`.

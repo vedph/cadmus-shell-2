@@ -32,7 +32,7 @@ export class CommentFragmentFeatureComponent
       'comment-tags',
       'doc-reference-tags',
       'doc-reference-types',
-      'categories',
+      'comment-categories',
       'languages',
       'keyword-indexes',
       'keyword-tags',

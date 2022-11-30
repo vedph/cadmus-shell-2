@@ -14,7 +14,6 @@ import {
   renderLabelFromLastColon,
 } from '@myrmidon/cadmus-ui';
 import { ThesauriSet, ThesaurusEntry } from '@myrmidon/cadmus-core';
-import { deepCopy } from '@myrmidon/ng-tools';
 import { AuthJwtService } from '@myrmidon/auth-jwt-login';
 import { DocReference } from '@myrmidon/cadmus-refs-doc-references';
 import { AssertedId } from '@myrmidon/cadmus-refs-asserted-ids';
@@ -25,7 +24,7 @@ import { CommentFragment } from '../comment-fragment';
 
 /**
  * Comment part/fragment editor component.
- * Thesauri: comment-tags, doc-reference-tags, doc-reference-types, categories,
+ * Thesauri: comment-tags, doc-reference-tags, doc-reference-types, comment-categories,
  * languages, keyword-indexes, keyword-tags, comment-id-scopes, comment-id-tags
  * (all optional).
  */
@@ -54,7 +53,7 @@ export class CommentEditorComponent
   public docTagEntries: ThesaurusEntry[] | undefined;
   // doc-reference-types
   public docTypeEntries: ThesaurusEntry[] | undefined;
-  // categories
+  // comment-categories
   public catEntries: ThesaurusEntry[] | undefined;
   // languages
   public langEntries: ThesaurusEntry[] | undefined;
@@ -130,7 +129,7 @@ export class CommentEditorComponent
       this.docTypeEntries = undefined;
     }
 
-    key = 'categories';
+    key = 'comment-categories';
     if (this.hasThesaurus(key)) {
       this.catEntries = thesauri[key].entries;
     } else {

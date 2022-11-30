@@ -114,12 +114,16 @@ export function initElfDevTools(actions: Actions) {
 }
 ```
 
-10. in `app.component.ts` replace AppQuery and AppService with AppRepository:
+10. in `app.component.ts` replace `AppQuery` and `AppService` with `AppRepository`:
 
 ```ts
 import { AppRepository } from '@myrmidon/cadmus-state';
+```
 
+11. remove Akita packages:
 
+```bash
+npm uninstall @datorama/akita-ngdevtools @datorama/akita --force
 ```
 
 >Note: due to changes in Angular Material styles, which often result in slightly bigger controls, if your UI defined custom sizes for some controls you might need to adjust them to fit.
