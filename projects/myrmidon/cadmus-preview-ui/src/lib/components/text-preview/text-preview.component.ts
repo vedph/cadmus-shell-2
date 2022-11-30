@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { forkJoin, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
@@ -10,13 +11,12 @@ import {
   RenditionResult,
 } from '@myrmidon/cadmus-api';
 import { Item, LayerPartInfo, ThesaurusEntry } from '@myrmidon/cadmus-core';
-
-import { PartPreviewSource } from '../part-preview/part-preview.component';
-import { FormBuilder, FormControl } from '@angular/forms';
 import {
   TextBlock,
   TextBlockEventArgs,
 } from '@myrmidon/cadmus-text-block-view';
+
+import { PartPreviewSource } from '../part-preview/part-preview.component';
 
 /**
  * Layered text preview component.

@@ -28,7 +28,7 @@ npm i @myrmidon/ngx-dirty-check --force
 
 5. update all the Cadmus-related packages to their latest versions in `package.json`, and then run `npm i --force`.
 
-6. ensure that `placholder` attributes in material controls are replaced with `mat-label` inside `mat-form-field`, e.g. this code:
+6. ensure that `placeholder` attributes in material controls are replaced with `mat-label` inside `mat-form-field`, e.g. this code:
 
 ```html
 <mat-form-field *ngIf="witEntries?.length">
