@@ -15,7 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -59,7 +59,7 @@ import { GraphTripleEditorComponent } from './components/graph-triple-editor/gra
     MatInputModule,
     MatPaginatorModule,
     MatSelectModule,
-    MatProgressSpinnerModule,
+    MatProgressBarModule,
     MatTooltipModule,
     // Cadmus
     CadmusApiModule,
