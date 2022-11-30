@@ -14,13 +14,7 @@
       <dt>part ID</dt>
       <dd>{{ source!.partId }}</dd>
     </dl>
-    <button
-      type="button"
-      mat-icon-button
-      color="primary"
-      (click)="refresh()"
-      [disabled]="busy"
-    >
+    <button type="button" mat-flat-button (click)="refresh()" [disabled]="busy">
       <mat-icon>refresh</mat-icon> refresh
     </button>
   </div>
