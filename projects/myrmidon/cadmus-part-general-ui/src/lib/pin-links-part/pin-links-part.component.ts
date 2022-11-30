@@ -77,7 +77,7 @@ export class PinLinksPartComponent
     });
   }
 
-  private updateForm(part?: PinLinksPart): void {
+  private updateForm(part?: PinLinksPart | null): void {
     if (!part) {
       this.form.reset();
       return;

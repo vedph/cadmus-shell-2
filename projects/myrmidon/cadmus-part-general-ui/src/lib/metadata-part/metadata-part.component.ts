@@ -81,7 +81,7 @@ export class MetadataPartComponent
     }
   }
 
-  private updateForm(part?: MetadataPart): void {
+  private updateForm(part?: MetadataPart | null): void {
     if (!part) {
       this.form.reset();
       return;

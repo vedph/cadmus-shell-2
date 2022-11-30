@@ -173,7 +173,7 @@ export class WitnessesFragmentComponent
     this.closeCurrentWitness();
   }
 
-  private updateForm(fragment?: WitnessesFragment): void {
+  private updateForm(fragment?: WitnessesFragment | null): void {
     if (!fragment) {
       this.form.reset();
       return;

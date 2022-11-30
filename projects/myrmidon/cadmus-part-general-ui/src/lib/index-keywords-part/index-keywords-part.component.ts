@@ -112,7 +112,7 @@ export class IndexKeywordsPartComponent
     return a.value.localeCompare(b.value);
   }
 
-  private updateForm(part?: IndexKeywordsPart): void {
+  private updateForm(part?: IndexKeywordsPart | null): void {
     if (!part) {
       this.form.reset();
       return;

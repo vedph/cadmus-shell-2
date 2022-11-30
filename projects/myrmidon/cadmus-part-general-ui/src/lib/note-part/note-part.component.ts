@@ -66,7 +66,7 @@ export class NotePartComponent
     }
   }
 
-  private updateForm(part?: NotePart): void {
+  private updateForm(part?: NotePart | null): void {
     if (!part) {
       this.form.reset();
       return;

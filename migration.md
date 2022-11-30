@@ -169,7 +169,7 @@ private updateThesauri(thesauri: ThesauriSet): void {
   }
 ```
 
-5. ensure that `updateForm` is ok and call it from `OnDataSet`.
+5. ensure that `updateForm` is ok (ensure that it receives a part/fragment which can also be `undefined` or `null`) and call it from `OnDataSet`.
 
 6. rename `onModelSet` to `onDataSet` and adjust it as required, like:
 

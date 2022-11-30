@@ -106,7 +106,7 @@ export class BibliographyPartComponent
     }
   }
 
-  private updateForm(part?: BibliographyPart): void {
+  private updateForm(part?: BibliographyPart | null): void {
     if (!part) {
       this.form.reset();
       return;

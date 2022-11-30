@@ -58,7 +58,7 @@ export class HistoricalDatePartComponent
     });
   }
 
-  private updateForm(part?: HistoricalDatePart): void {
+  private updateForm(part?: HistoricalDatePart | null): void {
     if (!part) {
       this.form.reset();
       return;

@@ -88,7 +88,7 @@ export class OrthographyFragmentComponent
     });
   }
 
-  private updateForm(fragment?: OrthographyFragment): void {
+  private updateForm(fragment?: OrthographyFragment | null): void {
     if (!fragment) {
       this.form.reset();
     } else {

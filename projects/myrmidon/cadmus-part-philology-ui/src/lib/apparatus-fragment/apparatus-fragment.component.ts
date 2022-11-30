@@ -117,7 +117,7 @@ export class ApparatusFragmentComponent
     }
   }
 
-  private updateForm(fragment?: ApparatusFragment): void {
+  private updateForm(fragment?: ApparatusFragment | null): void {
     if (!fragment) {
       this.summary = undefined;
       this.form?.reset();

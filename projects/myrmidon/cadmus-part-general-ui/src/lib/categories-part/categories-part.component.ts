@@ -52,7 +52,7 @@ export class CategoriesPartComponent
     });
   }
 
-  private updateForm(part?: CategoriesPart): void {
+  private updateForm(part?: CategoriesPart | null): void {
     if (!part?.categories) {
       this.categories.reset();
       return;

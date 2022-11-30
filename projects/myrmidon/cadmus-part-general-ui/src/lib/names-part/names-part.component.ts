@@ -120,7 +120,7 @@ export class NamesPartComponent
     }
   }
 
-  private updateForm(part?: NamesPart): void {
+  private updateForm(part?: NamesPart | null): void {
     this._updatingForm = true;
     if (!part) {
       this.form.reset();

@@ -47,11 +47,11 @@ export class PartEditorService {
         thesauri: this._thesaurusService.getThesauriSet(unscopedIds),
       }).subscribe({
         next: (result) => {
-          const part: Part = result.part!;
+          const part: Part | null = result.part;
           const thesauri = result.thesauri;
 
           // if the loaded part has a thesaurus scope, reload the thesauri
-          if (part.thesaurusScope) {
+          if (part?.thesaurusScope) {
             const scopedIds: string[] = thesauriIds.map((id) => {
               return this._thesaurusService.getScopedId(
                 id,
@@ -108,7 +108,7 @@ export class PartEditorService {
           map((part: Part | null) => {
             return part
               ? {
-                  value: part!,
+                  value: part,
                   thesauri: {},
                 }
               : null;

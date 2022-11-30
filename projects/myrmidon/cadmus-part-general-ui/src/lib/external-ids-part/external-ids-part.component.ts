@@ -105,7 +105,7 @@ export class ExternalIdsPartComponent
     }
   }
 
-  private updateForm(part?: ExternalIdsPart): void {
+  private updateForm(part?: ExternalIdsPart | null): void {
     if (!part) {
       this.form.reset();
       return;

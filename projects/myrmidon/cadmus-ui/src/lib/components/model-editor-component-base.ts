@@ -49,7 +49,7 @@ export interface FragmentIdentity extends PartIdentity {
  * An edited part or fragment.
  */
 export interface EditedObject<T extends Part | Fragment> {
-  value: T;
+  value: T | null;
   thesauri: ThesauriSet;
   layerPart?: TextLayerPart;
   baseText?: string;

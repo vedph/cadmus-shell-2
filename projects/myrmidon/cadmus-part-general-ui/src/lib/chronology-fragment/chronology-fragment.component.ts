@@ -68,7 +68,7 @@ export class ChronologyFragmentComponent
     }
   }
 
-  private updateForm(fragment?: ChronologyFragment): void {
+  private updateForm(fragment?: ChronologyFragment | null): void {
     if (!fragment || !fragment.date) {
       this.form.reset();
     } else {

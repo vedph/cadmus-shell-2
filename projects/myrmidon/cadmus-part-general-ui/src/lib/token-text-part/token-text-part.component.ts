@@ -93,7 +93,7 @@ export class TokenTextPartComponent
     return lines;
   }
 
-  private updateForm(part?: TokenTextPart): void {
+  private updateForm(part?: TokenTextPart | null): void {
     if (!part) {
       this.form.reset();
       return;

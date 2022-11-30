@@ -72,7 +72,7 @@ export class DocReferencesPartComponent
     }
   }
 
-  private updateForm(part?: DocReferencesPart): void {
+  private updateForm(part?: DocReferencesPart | null): void {
     if (!part) {
       this.form.reset();
       return;

@@ -85,7 +85,7 @@ export class QuotationsFragmentComponent
     }
   }
 
-  private updateForm(fragment?: QuotationsFragment): void {
+  private updateForm(fragment?: QuotationsFragment | null): void {
     if (!fragment) {
       this.form!.reset();
       return;

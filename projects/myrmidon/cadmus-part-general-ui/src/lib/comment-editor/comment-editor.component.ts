@@ -172,7 +172,7 @@ export class CommentEditorComponent
     }
   }
 
-  private updateForm(model?: CommentPart | CommentFragment): void {
+  private updateForm(model?: CommentPart | CommentFragment | null): void {
     if (!model) {
       this.form!.reset();
       return;

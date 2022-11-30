@@ -65,7 +65,7 @@ export class TiledTextPartComponent
     });
   }
 
-  private updateForm(part?: TiledTextPart): void {
+  private updateForm(part?: TiledTextPart | null): void {
     if (!part) {
       this.form.reset();
       return;

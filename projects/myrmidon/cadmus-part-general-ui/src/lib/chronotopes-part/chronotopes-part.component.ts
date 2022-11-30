@@ -102,7 +102,7 @@ export class ChronotopesPartComponent
     }
   }
 
-  private updateForm(model?: ChronotopesPart): void {
+  private updateForm(model?: ChronotopesPart | null): void {
     if (!model) {
       this.form!.reset();
       return;

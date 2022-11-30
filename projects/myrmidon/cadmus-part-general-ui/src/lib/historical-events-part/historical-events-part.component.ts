@@ -129,7 +129,7 @@ export class HistoricalEventsPartComponent
     }
   }
 
-  private updateForm(part?: HistoricalEventsPart): void {
+  private updateForm(part?: HistoricalEventsPart | null): void {
     if (!part) {
       this.form.reset();
       return;

@@ -91,7 +91,7 @@ export class KeywordsPartComponent
     return a.value.localeCompare(b.value);
   }
 
-  private updateForm(part?: KeywordsPart): void {
+  private updateForm(part?: KeywordsPart | null): void {
     if (!part) {
       this.form.reset();
       return;
