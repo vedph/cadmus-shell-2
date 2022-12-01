@@ -34,9 +34,11 @@ Quick Docker image build:
 
 1. `npm run build-lib`.
 2. update version in `env.js` and then `ng build`.
-3. `docker build . -t vedph2020/cadmus-shell:4.0.1 -t vedph2020/cadmus-shell:latest` (replace with the current version).
+3. `docker build . -t vedph2020/cadmus-shell:4.0.2 -t vedph2020/cadmus-shell:latest` (replace with the current version).
 
 ## History
+
+### 4.0.2
 
 - 2022-12-01: updated packages.
 
