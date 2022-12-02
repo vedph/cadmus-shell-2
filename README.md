@@ -2,6 +2,7 @@
 
 - [Cadmus Shell](#cadmus-shell)
   - [History](#history)
+    - [4.0.4](#404)
     - [4.0.3](#403)
     - [4.0.2](#402)
     - [4.0.1](#401)
@@ -36,9 +37,15 @@ Quick Docker image build:
 
 1. `npm run build-lib`.
 2. update version in `env.js` and then `ng build`.
-3. `docker build . -t vedph2020/cadmus-shell:4.0.3 -t vedph2020/cadmus-shell:latest` (replace with the current version).
+3. `docker build . -t vedph2020/cadmus-shell:4.0.4 -t vedph2020/cadmus-shell:latest` (replace with the current version).
 
 ## History
+
+### 4.0.4
+
+- 2022-12-02:
+  - added repository reset to layer editors when initing them.
+  - added thesaurus to orthography tags.
 
 ### 4.0.3
 

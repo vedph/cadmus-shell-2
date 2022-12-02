@@ -25,4 +25,10 @@ export class OrthographyFragmentFeatureComponent
   ) {
     super(router, route, snackbar, editorService, libraryRouteService);
   }
+
+  protected override getReqThesauriIds(): string[] {
+    return [
+      'orthography-tags',
+    ];
+  }
 }

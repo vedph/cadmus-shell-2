@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { OrthographyFragment } from '../orthography-fragment';
 import {
   FormControl,
   FormGroup,
@@ -9,10 +8,16 @@ import {
   UntypedFormGroup,
 } from '@angular/forms';
 import { take } from 'rxjs/operators';
+import { Clipboard } from '@angular/cdk/clipboard';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { diff_match_patch } from 'diff-match-patch';
 
-import { EditedObject, ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
+import {
+  EditedObject,
+  ModelEditorComponentBase,
+  renderLabelFromLastColon,
+} from '@myrmidon/cadmus-ui';
 import {
   trigger,
   transition,
@@ -21,12 +26,18 @@ import {
   state,
 } from '@angular/animations';
 import { DialogService } from '@myrmidon/ng-mat-tools';
+import { AuthJwtService } from '@myrmidon/auth-jwt-login';
+import { ThesauriSet, ThesaurusEntry } from '@myrmidon/cadmus-core';
 
 import { DifferResultToMspAdapter } from '../differ-result-to-msp-adapter';
 import { MspOperation } from '../msp-operation';
 import { MspValidators } from '../msp-validators';
-import { AuthJwtService } from '@myrmidon/auth-jwt-login';
+import { OrthographyFragment } from '../orthography-fragment';
 
+/**
+ * Orthography fragment.
+ * Thesauri: orthography-tags (optional).
+ */
 @Component({
   selector: 'cadmus-orthography-fragment',
   templateUrl: './orthography-fragment.component.html',
@@ -61,10 +72,14 @@ export class OrthographyFragmentComponent
   public operations: FormArray;
   public currentOperation?: MspOperation;
 
+  public tagEntries: ThesaurusEntry[] | undefined;
+
   constructor(
     authService: AuthJwtService,
     private _formBuilder: FormBuilder,
-    private _dialogService: DialogService
+    private _dialogService: DialogService,
+    private _clipboard: Clipboard,
+    private _snackbar: MatSnackBar
   ) {
     super(authService, _formBuilder);
     this._currentOperationIndex = -1;
@@ -88,6 +103,15 @@ export class OrthographyFragmentComponent
     });
   }
 
+  private updateThesauri(thesauri: ThesauriSet): void {
+    let key = 'orthography-tags';
+    if (this.hasThesaurus(key)) {
+      this.tagEntries = thesauri[key].entries;
+    } else {
+      this.tagEntries = undefined;
+    }
+  }
+
   private updateForm(fragment?: OrthographyFragment | null): void {
     if (!fragment) {
       this.form.reset();
@@ -103,6 +127,11 @@ export class OrthographyFragmentComponent
   }
 
   protected override onDataSet(data?: EditedObject<OrthographyFragment>): void {
+    // thesauri
+    if (data?.thesauri) {
+      this.updateThesauri(data.thesauri);
+    }
+    // form
     this.updateForm(data?.value);
   }
 
@@ -237,5 +266,16 @@ export class OrthographyFragmentComponent
     for (const op of ops) {
       this.addOperation(op.toString());
     }
+  }
+
+  public renderLabel(label: string): string {
+    return renderLabelFromLastColon(label);
+  }
+
+  public onTagChange(tag: ThesaurusEntry): void {
+    this._clipboard.copy(tag.id);
+    this._snackbar.open('Tag copied: ' + tag.id, 'OK', {
+      duration: 2000,
+    });
   }
 }

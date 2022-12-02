@@ -107,6 +107,7 @@ export class TokenTextLayerPartFeatureComponent
     this._editedItemRepository.ensureItemLoaded(this.itemId);
 
     // load the layer part data
+    this._repository.reset();
     if (this.partId) {
       this._repository.load(this.itemId, this.partId);
     }

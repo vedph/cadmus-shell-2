@@ -36,6 +36,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 // vendor
 import { devTools } from '@ngneat/elf-devtools';
@@ -154,6 +155,7 @@ export function initElfDevTools(actions: Actions) {
     MatTooltipModule,
     MatToolbarModule,
     MatTreeModule,
+    ClipboardModule,
     // vendor
     MonacoEditorModule.forRoot(),
     MarkdownModule.forRoot(),

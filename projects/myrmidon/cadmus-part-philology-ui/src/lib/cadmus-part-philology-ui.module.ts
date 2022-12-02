@@ -15,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { MarkdownModule } from 'ngx-markdown';
@@ -53,6 +54,7 @@ import { WitnessesFragmentComponent } from './witnesses-fragment/witnesses-fragm
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
+    ClipboardModule,
     // cadmus
     CadmusCoreModule,
     CadmusUiModule,

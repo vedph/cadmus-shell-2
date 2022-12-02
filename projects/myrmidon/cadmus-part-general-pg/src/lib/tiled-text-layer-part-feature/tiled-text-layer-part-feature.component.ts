@@ -107,6 +107,7 @@ export class TiledTextLayerPartFeatureComponent
     this._editedItemRepository.ensureItemLoaded(this.itemId);
 
     // load the layer part
+    this._repository.reset();
     if (this.partId) {
       this._repository.load(this.itemId, this.partId);
     }

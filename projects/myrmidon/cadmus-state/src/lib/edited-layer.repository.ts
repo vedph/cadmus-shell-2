@@ -99,6 +99,10 @@ export class EditedLayerRepository {
     this.layerHints$ = this._store.pipe(select((state) => state.layerHints));
   }
 
+  public reset(): void {
+    this._store.reset();
+  }
+
   public getValue(): EditedLayerState {
     return this._store.getValue();
   }

@@ -4,9 +4,9 @@
       <!-- text -->
       <mat-form-field class="full-width">
         <mat-label>operation</mat-label>
-        <input matInput type="text" formControlName="text" />
+        <input matInput type="text" [formControl]="text" />
+        <mat-hint>"a"@AxR="b" [tag] &#123;note&#125;</mat-hint>
         <button
-          mat-button
           *ngIf="text.value"
           matSuffix
           mat-icon-button
@@ -15,12 +15,13 @@
         >
           <mat-icon>close</mat-icon>
         </button>
-        <!-- <mat-hint>operation (e.g. @1x2="v")</mat-hint> -->
         <mat-error
           *ngIf="text.hasError('required') && (text.touched || text.dirty)"
           >please enter an operation</mat-error
         >
       </mat-form-field>
+
+      <!-- visual -->
       <mat-expansion-panel [(expanded)]="visualExpanded">
         <mat-expansion-panel-header>
           <mat-panel-title> Visual </mat-panel-title>
@@ -30,7 +31,7 @@
           <!-- operator -->
           <div>
             <mat-form-field>
-              <mat-select formControlName="operator">
+              <mat-select [formControl]="operator">
                 <mat-option [value]="0">delete</mat-option>
                 <mat-option [value]="1">replace</mat-option>
                 <mat-option [value]="2">insert</mat-option>
@@ -41,10 +42,10 @@
           </div>
 
           <!-- range A -->
-          <div>
+          <div class="form-row">
             <mat-form-field>
               <mat-label>A-range</mat-label>
-              <input matInput type="text" formControlName="rangeA" />
+              <input matInput type="text" [formControl]="rangeA" />
               <mat-error
                 *ngIf="
                   rangeA.hasError('required') &&
@@ -63,7 +64,7 @@
             <!-- value A -->
             <mat-form-field>
               <mat-label>A-value</mat-label>
-              <input matInput type="text" formControlName="valueA" />
+              <input matInput type="text" [formControl]="valueA" />
               <mat-error
                 *ngIf="
                   valueA.hasError('maxLength') &&
@@ -75,10 +76,10 @@
           </div>
 
           <!-- range B -->
-          <div>
+          <div class="form-row">
             <mat-form-field>
               <mat-label>B-range</mat-label>
-              <input matInput type="text" formControlName="rangeB" />
+              <input matInput type="text" [formControl]="rangeB" />
               <mat-error
                 *ngIf="
                   rangeB.hasError('pattern') && (rangeB.touched || rangeB.dirty)
@@ -90,7 +91,7 @@
             <!-- value B -->
             <mat-form-field>
               <mat-label>B-value</mat-label>
-              <input matInput type="text" formControlName="valueB" />
+              <input matInput type="text" [formControl]="valueB" />
               <mat-error
                 *ngIf="
                   valueB.hasError('maxLength') &&
@@ -101,11 +102,11 @@
             </mat-form-field>
           </div>
 
-          <!-- tag -->
-          <div>
+          <div class="form-row">
+            <!-- tag -->
             <mat-form-field>
               <mat-label>tag</mat-label>
-              <input matInput type="text" formControlName="tag" />
+              <input matInput type="text" [formControl]="tag" />
               <mat-error
                 *ngIf="tag.hasError('maxLength') && (tag.touched || tag.dirty)"
                 >too long</mat-error
@@ -115,13 +116,11 @@
                 >invalid tag</mat-error
               >
             </mat-form-field>
-          </div>
 
-          <!-- note -->
-          <div>
+            <!-- note -->
             <mat-form-field>
               <mat-label>note</mat-label>
-              <input matInput type="text" formControlName="note" />
+              <input matInput type="text" [formControl]="note" />
               <mat-error
                 *ngIf="
                   note.hasError('maxLength') && (note.touched || note.dirty)
@@ -142,7 +141,7 @@
         mat-icon-button
         type="button"
         color="warn"
-        matTooltip="Close this operation"
+        matTooltip="Close operation"
         (click)="cancel()"
       >
         <mat-icon>cancel</mat-icon>
@@ -152,7 +151,7 @@
         color="primary"
         type="submit"
         [disabled]="form.invalid || form.pristine"
-        matTooltip="Save this operation"
+        matTooltip="Save operation"
       >
         <mat-icon>check_circle</mat-icon>
       </button>
