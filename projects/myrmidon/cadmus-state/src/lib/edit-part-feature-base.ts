@@ -151,11 +151,15 @@ export abstract class EditPartFeatureBase
    * @param part The part to be saved.
    */
   public save(part: Part): void {
+    console.log('Saving part ID: ' + part.id);
+
     this.editorService.save(part).then(
       (saved: Part) => {
         // update the route-defined part ID if it was null (new part)
+        console.log('Saved part ID: ' + saved.id);
         if (!this.identity.partId) {
           this.identity = { ...this.identity, partId: saved.id };
+          console.log('Updated identity: ' + JSON.stringify(this.identity));
         }
         console.log('Part saved: ' + saved.id);
         this.snackbar.open('Part saved', 'OK', {

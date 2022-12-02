@@ -1,6 +1,7 @@
 {
   "name": "@myrmidon/cadmus-state",
   "description": "Cadmus - state management.",
+  "version": "2.0.2",
   "keywords": [
     "Cadmus"
   ],
@@ -12,7 +13,6 @@
   "author": {
     "name": "Daniele Fusi"
   },
-  "version": "2.0.1",
   "peerDependencies": {
     "@angular/common": "^15.0.0",
     "@angular/core": "^15.0.0"

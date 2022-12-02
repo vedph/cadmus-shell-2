@@ -71,6 +71,7 @@ export abstract class ModelEditorComponentBase<T extends Part | Fragment>
   private _dirtySub?: Subscription;
   private _dirtyEvSub?: Subscription;
   private _authSub?: Subscription;
+  private _identity: PartIdentity | FragmentIdentity | undefined;
   private _data?: EditedObject<T>;
   private _dirtyStore$: BehaviorSubject<object>;
 
@@ -98,7 +99,19 @@ export abstract class ModelEditorComponentBase<T extends Part | Fragment>
    * The identity of the edited model.
    */
   @Input()
-  public identity: PartIdentity | FragmentIdentity | undefined;
+  public get identity(): PartIdentity | FragmentIdentity | undefined {
+    return this._identity;
+  }
+  public set identity(value: PartIdentity | FragmentIdentity | undefined) {
+    this._identity = value;
+    if (this.identity?.partId) {
+      const part = this._data?.value as Part;
+      if (part && !part.id) {
+        console.log('part identity updated');
+        part.id = this.identity.partId;
+      }
+    }
+  }
 
   /**
    * The data being edited.
