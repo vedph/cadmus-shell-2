@@ -1,6 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { FacetDefinition } from '@myrmidon/cadmus-core';
+
 import { ColorService } from '../../services/color.service';
+
+export interface FacetBadgeData {
+  definitions: FacetDefinition[];
+  facetId?: string;
+}
 
 @Component({
   selector: 'cadmus-facet-badge',
@@ -10,45 +16,30 @@ import { ColorService } from '../../services/color.service';
 export class FacetBadgeComponent {
   private _facetColors: { [key: string]: string };
   private _facetTips: { [key: string]: string };
-  private _facetId: string;
-  private _facetDefinitions: FacetDefinition[];
+  private _data?: FacetBadgeData | null;
 
   public color: string;
   public contrastColor: string;
   public tip?: string;
 
   /**
-   * The facet ID.
+   * The facet data.
    */
   @Input()
-  public get facetId(): string {
-    return this._facetId;
+  public get data(): FacetBadgeData | undefined | null {
+    return this._data;
   }
-  public set facetId(value: string) {
-    if (this._facetId === value) {
-      return;
-    }
-    this._facetId = value;
-    this.updateBadge();
-  }
-
-  /**
-   * The facets definitions.
-   */
-  @Input()
-  public get facetDefinitions(): FacetDefinition[] {
-    return this._facetDefinitions;
-  }
-  public set facetDefinitions(value: FacetDefinition[]) {
-    this._facetDefinitions = value;
+  public set data(value: FacetBadgeData | undefined | null) {
+    this._data = value;
     this._facetColors = {};
     this._facetTips = {};
     this.updateBadge();
   }
 
   constructor(private _colorService: ColorService) {
-    this._facetId = '';
-    this._facetDefinitions = [];
+    this._data = {
+      definitions: [],
+    };
     this._facetColors = {};
     this._facetTips = {};
     this.color = 'transparent';
@@ -59,11 +50,11 @@ export class FacetBadgeComponent {
     if (this._facetColors[facetId]) {
       return this._facetColors[facetId];
     }
-    if (!this._facetDefinitions) {
+    if (!this._data?.definitions?.length) {
       return 'transparent';
     }
 
-    const facet = this._facetDefinitions.find((f) => {
+    const facet = this._data.definitions.find((f) => {
       return f.id === facetId;
     });
     if (facet?.colorKey) {
@@ -79,11 +70,11 @@ export class FacetBadgeComponent {
       return this._facetTips[facetId];
     }
 
-    if (!this.facetDefinitions) {
+    if (!this._data?.definitions?.length) {
       return null;
     }
 
-    const facet = this.facetDefinitions.find((f) => {
+    const facet = this._data.definitions.find((f) => {
       return f.id === facetId;
     });
     if (!facet) {
@@ -105,8 +96,8 @@ export class FacetBadgeComponent {
   }
 
   private updateBadge() {
-    this.color = this.getFacetColor(this._facetId);
+    this.color = this.getFacetColor(this._data?.facetId || '');
     this.contrastColor = this._colorService.getContrastColor(this.color);
-    this.tip = this.getFacetTip(this._facetId) ?? undefined;
+    this.tip = this.getFacetTip(this._data?.facetId || '') ?? undefined;
   }
 }

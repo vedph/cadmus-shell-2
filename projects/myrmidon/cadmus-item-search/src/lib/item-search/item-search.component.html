@@ -18,7 +18,7 @@
           <mat-progress-bar mode="indeterminate"></mat-progress-bar>
         </div>
         <div *ngIf="error$ | async as error">{{ error }}</div>
-        <table *ngIf="pagination.data.length">
+        <table *ngIf="pagination.data.length" style="width: 100%">
           <thead>
             <th></th>
             <th
@@ -65,16 +65,14 @@
                   <mat-icon>delete</mat-icon>
                 </button>
               </td>
-              <td>
+              <td class="fit-width">
                 <cadmus-facet-badge
-                  [facetId]="item.facetId"
-                  [facetDefinitions]="$any(facetDefinitions$ | async)"
+                  [data]="{ definitions: app.facets, facetId: item.facetId }"
                 ></cadmus-facet-badge>
               </td>
-              <td>
+              <td class="fit-width">
                 <cadmus-flags-badge
-                  [flags]="item.flags"
-                  [flagDefinitions]="$any(flagDefinitions$ | async)"
+                  [data]="{ definitions: app.flags, flags: item.flags }"
                 ></cadmus-flags-badge>
               </td>
               <td>{{ item.title }}</td>
@@ -82,7 +80,7 @@
               <td class="noif-lt-md">{{ item.groupId }}</td>
               <td class="noif-lt-md">{{ item.userId }}</td>
               <td class="noif-lt-md">
-                {{ item.timeModified | date: "yyyy-MM-dd HH:mm:ss" }}
+                {{ item.timeModified | date : "yyyy-MM-dd HH:mm:ss" }}
               </td>
               <td class="noif-lt-md">{{ item.creatorId }}</td>
             </tr>

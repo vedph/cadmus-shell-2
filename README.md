@@ -2,6 +2,7 @@
 
 - [Cadmus Shell](#cadmus-shell)
   - [History](#history)
+    - [4.0.5](#405)
     - [4.0.4](#404)
     - [4.0.3](#403)
     - [4.0.2](#402)
@@ -37,14 +38,17 @@ Quick Docker image build:
 
 1. `npm run build-lib`.
 2. update version in `env.js` and then `ng build`.
-3. `docker build . -t vedph2020/cadmus-shell:4.0.4 -t vedph2020/cadmus-shell:latest` (replace with the current version).
+3. `docker build . -t vedph2020/cadmus-shell:4.0.5 -t vedph2020/cadmus-shell:latest` (replace with the current version).
 
 ## History
+
+### 4.0.5
 
 - 2022-12-03:
   - fixed flags not displayed correctly in item editor.
   - fixed item list not in synch after item saved from editor.
   - export repositories from item list and thesaurus list.
+  - changed input of flags and facets badge so that both definitions and value are input at the same time.
 
 ### 4.0.4
 

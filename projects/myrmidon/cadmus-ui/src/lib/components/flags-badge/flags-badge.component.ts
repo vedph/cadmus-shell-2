@@ -1,5 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FlagDefinition } from '@myrmidon/cadmus-core';
+
+/**
+ * Data for FlagsBadgeComponent, including flags and their definitions.
+ */
+export interface FlagsBadgeData {
+  definitions: FlagDefinition[];
+  flags: number;
+}
 
 /**
  * Badge with item's flags. Each flag is represented by a circle filled
@@ -10,48 +18,31 @@ import { FlagDefinition } from '@myrmidon/cadmus-core';
   templateUrl: './flags-badge.component.html',
   styleUrls: ['./flags-badge.component.css'],
 })
-export class FlagsBadgeComponent implements OnInit {
-  private _flags: number;
-  private _flagDefinitions: FlagDefinition[];
+export class FlagsBadgeComponent {
+  private _data?: FlagsBadgeData | null;
 
   public badgeFlags: FlagDefinition[];
 
   @Input()
-  public get flags(): number {
-    return this._flags;
+  public get data(): FlagsBadgeData | undefined | null {
+    return this._data;
   }
-  public set flags(value: number) {
-    if (this._flags === value) {
-      return;
-    }
-    this._flags = value;
-    this.updateBadge();
-  }
-
-  @Input()
-  public get flagDefinitions(): FlagDefinition[] {
-    return this._flagDefinitions;
-  }
-  public set flagDefinitions(value: FlagDefinition[]) {
-    this._flagDefinitions = value;
+  public set data(value: FlagsBadgeData | undefined | null) {
+    this._data = value;
     this.updateBadge();
   }
 
   constructor() {
-    this._flags = 0;
-    this._flagDefinitions = [];
     this.badgeFlags = [];
   }
 
-  ngOnInit(): void {}
-
   private updateBadge() {
-    if (!this._flagDefinitions) {
+    if (!this._data) {
       return;
     }
-    this.badgeFlags = this._flagDefinitions.filter((def) => {
+    this.badgeFlags = this._data.definitions.filter((def) => {
       // tslint:disable-next-line: no-bitwise
-      return def.id & this._flags;
+      return def.id & this._data!.flags;
     });
   }
 }

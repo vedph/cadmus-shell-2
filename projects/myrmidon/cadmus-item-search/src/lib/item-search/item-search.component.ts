@@ -6,13 +6,9 @@ import { take } from 'rxjs/operators';
 
 import { DialogService } from '@myrmidon/ng-mat-tools';
 import { AuthJwtService, User } from '@myrmidon/auth-jwt-login';
-import {
-  ItemInfo,
-  FlagDefinition,
-  FacetDefinition,
-} from '@myrmidon/cadmus-core';
+import { ItemInfo } from '@myrmidon/cadmus-core';
 import { UserLevelService } from '@myrmidon/cadmus-api';
-import { AppRepository } from '@myrmidon/cadmus-state';
+import { AppProps, AppRepository } from '@myrmidon/cadmus-state';
 
 import { PaginationData } from '@ngneat/elf-pagination';
 
@@ -26,13 +22,12 @@ import { ItemSearchRepository } from '../state/item-search.repository';
 export class ItemSearchComponent implements OnInit {
   public query$: Observable<string | undefined>;
   public pagination$: Observable<PaginationData & { data: ItemInfo[] }>;
-  public flagDefinitions$: Observable<FlagDefinition[]>;
-  public facetDefinitions$: Observable<FacetDefinition[]>;
   public user?: User;
   public userLevel: number;
   public loading$: Observable<boolean>;
   public error$: Observable<string | undefined>;
   public lastQueries$: Observable<string[]>;
+  public app: AppProps;
 
   constructor(
     private _repository: ItemSearchRepository,
@@ -40,17 +35,15 @@ export class ItemSearchComponent implements OnInit {
     private _router: Router,
     private _authService: AuthJwtService,
     private _userLevelService: UserLevelService,
-    private _appRepository: AppRepository
+    appRepository: AppRepository
   ) {
     this.userLevel = 0;
-    this.flagDefinitions$ = this._appRepository.flags$;
-    this.facetDefinitions$ = this._appRepository.facets$;
-
     this.pagination$ = this._repository.pagination$;
     this.query$ = this._repository.query$;
     this.lastQueries$ = this._repository.lastQueries$;
     this.error$ = this._repository.error$;
     this.loading$ = this._repository.loading$;
+    this.app = appRepository.getValue();
   }
 
   ngOnInit(): void {
