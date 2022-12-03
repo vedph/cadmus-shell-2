@@ -41,6 +41,11 @@ Quick Docker image build:
 
 ## History
 
+- 2022-12-03:
+  - fixed flags not displayed correctly in item editor.
+  - fixed item list not in synch after item saved from editor.
+  - export repositories from item list and thesaurus list.
+
 ### 4.0.4
 
 - 2022-12-02:

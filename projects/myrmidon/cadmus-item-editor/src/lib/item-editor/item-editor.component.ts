@@ -11,8 +11,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
-import { StatusState } from '@ngneat/elf-requests';
-
 import {
   Item,
   PartGroup,
@@ -24,11 +22,13 @@ import {
   LayerPartInfo,
   Thesaurus,
   ComponentCanDeactivate,
+  ItemInfo,
 } from '@myrmidon/cadmus-core';
 import { AppRepository } from '@myrmidon/cadmus-state';
 import { DialogService } from '@myrmidon/ng-mat-tools';
 import { AuthJwtService, User } from '@myrmidon/auth-jwt-login';
 import { ItemService, UserLevelService } from '@myrmidon/cadmus-api';
+import { ItemListRepository } from '@myrmidon/cadmus-item-list';
 
 import { PartScopeSetRequest } from '../parts-scope-editor/parts-scope-editor.component';
 import { EditedItemRepository } from '../state/edited-item.repository';
@@ -42,6 +42,8 @@ import { EditedItemRepository } from '../state/edited-item.repository';
   styleUrls: ['./item-editor.component.css'],
 })
 export class ItemEditorComponent implements OnInit, ComponentCanDeactivate {
+  private _flagsFrozen?: boolean;
+
   public flagDefinitions: FlagDefinition[];
 
   public id?: string;
@@ -81,6 +83,7 @@ export class ItemEditorComponent implements OnInit, ComponentCanDeactivate {
     private _appRepository: AppRepository,
     private _repository: EditedItemRepository,
     private _itemService: ItemService,
+    private _itemListRepository: ItemListRepository,
     private _libraryRouteService: LibraryRouteService,
     private _dialogService: DialogService,
     private _authService: AuthJwtService,
@@ -154,7 +157,9 @@ export class ItemEditorComponent implements OnInit, ComponentCanDeactivate {
 
     // when flags controls values change, update the flags value
     this.flagChecks.valueChanges.subscribe((_) => {
-      this.flags.setValue(this.getFlagsValue());
+      if (!this._flagsFrozen) {
+        this.flags.setValue(this.getFlagsValue());
+      }
     });
 
     // update the metadata form when item changes
@@ -231,6 +236,7 @@ export class ItemEditorComponent implements OnInit, ComponentCanDeactivate {
    * definitions and the current flags value.
    */
   private buildFlagsControls(): void {
+    this._flagsFrozen = true;
     this.flagChecks.clear();
 
     for (const def of this.flagDefinitions) {
@@ -239,6 +245,8 @@ export class ItemEditorComponent implements OnInit, ComponentCanDeactivate {
       const checked = (this.flags.value & flagValue) !== 0;
       this.flagChecks.push(this._formBuilder.control(checked));
     }
+
+    this._flagsFrozen = false;
   }
 
   /**
@@ -248,12 +256,15 @@ export class ItemEditorComponent implements OnInit, ComponentCanDeactivate {
     if (!this.flagDefinitions) {
       return;
     }
+    this._flagsFrozen = true;
+    const value = this.flags.value;
     for (let i = 0; i < this.flagDefinitions.length; i++) {
       const flagValue = this.flagDefinitions[i].id;
       // tslint:disable-next-line: no-bitwise
-      const checked = (this.flags.value & flagValue) !== 0;
+      const checked = (value & flagValue) !== 0;
       this.flagChecks.at(i).setValue(checked);
     }
+    this._flagsFrozen = false;
   }
 
   /**
@@ -329,6 +340,22 @@ export class ItemEditorComponent implements OnInit, ComponentCanDeactivate {
     this._repository
       .save(item as Item)
       .then((saved) => {
+        // update the entity in items list if present
+        // (e.g. flags might have been changed)
+        this._itemListRepository.updateEntity({
+          id: item.id,
+          title: item.title,
+          description: item.description,
+          facetId: item.facetId,
+          groupId: item.groupId,
+          sortKey: item.sortKey,
+          flags: item.flags,
+          timeCreated: item.timeCreated,
+          creatorId: item.creatorId,
+          timeModified: item.timeModified,
+          userId: item.userId,
+        } as ItemInfo);
+
         this.metadata.markAsPristine();
         if (!item.id) {
           this.id = saved.id;

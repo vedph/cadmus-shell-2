@@ -26,6 +26,7 @@ import {
   deleteAllEntities,
   deleteEntities,
   selectActiveEntity,
+  updateEntities,
   upsertEntities,
   withActiveId,
   withEntities,
@@ -151,6 +152,10 @@ export class ItemListRepository {
 
   clearCache() {
     this._store.update(deleteAllEntities(), deleteAllPages());
+  }
+
+  public updateEntity(entity: ItemInfo): void {
+    this._store.update(updateEntities(entity.id, entity));
   }
 
   public setFilter(filter: ItemFilter): void {
