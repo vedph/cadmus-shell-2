@@ -2,6 +2,7 @@
 
 - [Cadmus Shell](#cadmus-shell)
   - [History](#history)
+    - [4.0.6](#406)
     - [4.0.5](#405)
     - [4.0.4](#404)
     - [4.0.3](#403)
@@ -38,9 +39,15 @@ Quick Docker image build:
 
 1. `npm run build-lib`.
 2. update version in `env.js` and then `ng build`.
-3. `docker build . -t vedph2020/cadmus-shell:4.0.5 -t vedph2020/cadmus-shell:latest` (replace with the current version).
+3. `docker build . -t vedph2020/cadmus-shell:4.0.6 -t vedph2020/cadmus-shell:latest` (replace with the current version).
 
 ## History
+
+### 4.0.6
+
+- 2022-12-14:
+  - updated Angular.
+  - minor compilation fixes in item editor and item list.
 
 ### 4.0.5
 

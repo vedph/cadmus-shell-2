@@ -13,11 +13,6 @@ import { createStore, select, setProp, withProps } from '@ngneat/elf';
 import { ItemService } from '@myrmidon/cadmus-api';
 import { updateRequestStatus, withRequestsStatus } from '@ngneat/elf-requests';
 import { AppRepository } from '@myrmidon/cadmus-state';
-import {
-  RequestsStatusState,
-  selectRequestStatus,
-  StatusState,
-} from '@ngneat/elf-requests/lib/requests-status';
 
 /**
  * Edited item store properties.

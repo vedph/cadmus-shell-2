@@ -59,6 +59,6 @@ export const RouterModuleForChild = RouterModule.forChild([
     CadmusStateModule,
   ],
   declarations: [ItemListComponent, ItemFilterComponent],
-  exports: [ItemListComponent],
+  exports: [ItemListComponent, ItemFilterComponent],
 })
 export class CadmusItemListModule {}
