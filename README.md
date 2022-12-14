@@ -43,6 +43,8 @@ Quick Docker image build:
 
 ## History
 
+- 2022-12-14: fixed label position for note in `@myrmidon/cadmus-part-general-ui`.
+
 ### 4.0.6
 
 - 2022-12-14:
