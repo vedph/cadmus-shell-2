@@ -44,7 +44,7 @@
                     type="button"
                     mat-icon-button
                     color="primary"
-                    matTooltip="Edit this Event"
+                    matTooltip="Edit this event"
                     (click)="editEvent(i)"
                   >
                     <mat-icon>edit</mat-icon>
@@ -52,7 +52,7 @@
                   <button
                     type="button"
                     mat-icon-button
-                    matTooltip="Move this Event up"
+                    matTooltip="Move this event up"
                     [disabled]="first"
                     (click)="moveEventUp(i)"
                   >
@@ -61,7 +61,7 @@
                   <button
                     type="button"
                     mat-icon-button
-                    matTooltip="Move this Event down"
+                    matTooltip="Move this event down"
                     [disabled]="last"
                     (click)="moveEventDown(i)"
                   >
@@ -71,13 +71,17 @@
                     type="button"
                     mat-icon-button
                     color="warn"
-                    matTooltip="Delete this Event"
+                    matTooltip="Delete this event"
                     (click)="deleteEvent(i)"
                   >
                     <mat-icon>remove_circle</mat-icon>
                   </button>
                 </td>
-                <td>{{ entry.type }}</td>
+                <td>
+                  {{
+                    entry.type | flatLookup : eventTypeEntries : "id" : "value"
+                  }}
+                </td>
                 <td>{{ entry.eid }}</td>
                 <td>{{ entry.chronotope?.place?.value }}</td>
                 <td>{{ entry.chronotope?.date | historicalDate }}</td>
