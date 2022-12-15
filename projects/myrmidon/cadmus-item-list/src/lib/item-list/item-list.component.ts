@@ -77,5 +77,6 @@ export class ItemListComponent implements OnInit {
 
   public clearCache(): void {
     this._repository.clearCache();
+    this._repository.loadPage(1);
   }
 }

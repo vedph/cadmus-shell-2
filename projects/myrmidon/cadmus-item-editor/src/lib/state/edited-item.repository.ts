@@ -3,6 +3,7 @@ import {
   Item,
   LayerPartInfo,
   Part,
+  PartDefinition,
   PartGroup,
 } from '@myrmidon/cadmus-core';
 import { Injectable } from '@angular/core';
@@ -39,6 +40,11 @@ export interface EditedItemProps {
    * The facet definition assigned to the item.
    */
   facet?: FacetDefinition;
+  /**
+   * The part definitions for adding a new part, filtered by the selected
+   * facet and the parts already present in the item.
+   */
+  newPartDefinitions: PartDefinition[];
 }
 
 /**
@@ -53,6 +59,7 @@ export class EditedItemRepository {
   public partGroups$: Observable<PartGroup[]>;
   public layers$: Observable<LayerPartInfo[]>;
   public facet$: Observable<FacetDefinition | undefined>;
+  public newPartDefinitions$: Observable<PartDefinition[]>;
   // public status$: Observable<StatusState>;
 
   constructor(
@@ -65,6 +72,7 @@ export class EditedItemRepository {
         parts: [],
         partGroups: [],
         layerPartInfos: [],
+        newPartDefinitions: [],
       }),
       withRequestsStatus()
     );
@@ -74,6 +82,9 @@ export class EditedItemRepository {
     this.partGroups$ = this._store.pipe(select((state) => state.partGroups));
     this.layers$ = this._store.pipe(select((state) => state.layerPartInfos));
     this.facet$ = this._store.pipe(select((state) => state.facet));
+    this.newPartDefinitions$ = this._store.pipe(
+      select((state) => state.newPartDefinitions)
+    );
     // this.status$ = this._store.pipe(selectRequestStatus('edited-item'));
   }
 
@@ -87,6 +98,61 @@ export class EditedItemRepository {
 
   public getFacet(): FacetDefinition | undefined {
     return this._store.query((state) => state.facet);
+  }
+
+  private getExistingPartTypeAndRoleIds(): {
+    typeId: string;
+    roleId?: string;
+  }[] {
+    const groups = this.getPartGroups();
+    if (!groups) {
+      return [];
+    }
+    const results = [];
+    for (const group of groups) {
+      for (const part of group.parts) {
+        results.push({
+          typeId: part.typeId,
+          roleId: part.roleId,
+        });
+      }
+    }
+
+    return results;
+  }
+
+  private getNewPartDefinitions(): PartDefinition[] {
+    const facet = this.getFacet();
+    if (!facet) {
+      return [];
+    }
+
+    const existingTypeRoleIds = this.getExistingPartTypeAndRoleIds();
+
+    const defs: PartDefinition[] = [];
+    for (const def of facet.partDefinitions) {
+      // exclude layer parts, as these are in the layers tab
+      if (def.roleId?.startsWith('fr.')) {
+        continue;
+      }
+      // exclude parts present in the item
+      if (
+        existingTypeRoleIds.find((tr) => {
+          return (
+            tr.typeId === def.typeId &&
+            ((!tr.roleId && !def.roleId) || tr.roleId === def.roleId)
+          );
+        })
+      ) {
+        continue;
+      }
+      defs.push(def);
+    }
+    // sort by sort key
+    defs.sort((a, b) => {
+      return a.sortKey.localeCompare(b.sortKey);
+    });
+    return defs;
   }
 
   public getPartGroups(): PartGroup[] {
@@ -111,7 +177,7 @@ export class EditedItemRepository {
   /**
    * Load the specified item or a new item.
    *
-   * @param itemId The item ID, or undefined for a new item.
+   * @param itemId The item ID, or falsy for a new item.
    */
   public load(itemId?: string): void {
     const app = this._appRepository.getValue();
@@ -144,6 +210,9 @@ export class EditedItemRepository {
             layerPartInfos: layers,
             facet: this.pickDefaultFacet(app.facets),
           }));
+          this._store.update(
+            setProp('newPartDefinitions', this.getNewPartDefinitions())
+          );
         });
     } else {
       // existing item
@@ -172,6 +241,9 @@ export class EditedItemRepository {
               layerPartInfos: result.layers,
               facet: itemFacet,
             }));
+            this._store.update(
+              setProp('newPartDefinitions', this.getNewPartDefinitions())
+            );
           },
         });
     }
@@ -190,7 +262,7 @@ export class EditedItemRepository {
   }
 
   /**
-   * Save the specified item.
+   * Save the specified item in the backend and update this store.
    *
    * @param item The item.
    * @returns Promise with saved item.
@@ -202,7 +274,22 @@ export class EditedItemRepository {
         .pipe(take(1))
         .subscribe({
           next: (saved) => {
-            this._store.update(setProp('item', saved));
+            // update the item and the selected facet from it;
+            // this is required when the item was new, and thus loaded
+            // with the default facet before saving it
+            const app = this._appRepository.getValue();
+            const itemFacet = app.facets.find((f) => {
+              return f.id === saved.facetId;
+            });
+            this._store.update((state) => ({
+              ...state,
+              item: saved,
+              facet: itemFacet,
+            }));
+            // new-parts definitions
+            this._store.update(
+              setProp('newPartDefinitions', this.getNewPartDefinitions())
+            );
             resolve(saved);
           },
           error: (error) => {

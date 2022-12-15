@@ -35,6 +35,8 @@ import { EditedItemRepository } from '../state/edited-item.repository';
 
 /**
  * Item editor. This can edit a new or existing item's metadata and parts.
+ * The ID of the item being edited is extracted from the route. For a new item
+ * this is 'new', which here is stored as an empty string.
  */
 @Component({
   selector: 'cadmus-item-editor',
@@ -57,7 +59,7 @@ export class ItemEditorComponent implements OnInit, ComponentCanDeactivate {
   // public status$: Observable<StatusState>;
   // lookup data
   public facet$: Observable<FacetDefinition | undefined>;
-  public newPartDefinitions: PartDefinition[];
+  public newPartDefinitions$: Observable<PartDefinition[]>;
   public facets$: Observable<FacetDefinition[] | undefined>;
   public typeThesaurus$: Observable<Thesaurus | undefined>;
   public previewJKeys$: Observable<string[]>;
@@ -92,11 +94,9 @@ export class ItemEditorComponent implements OnInit, ComponentCanDeactivate {
   ) {
     this.id = this._route.snapshot.params['id'];
     this.flagDefinitions = [];
-    this.newPartDefinitions = [];
     if (this.id === 'new') {
       this.id = undefined;
     }
-    // this.status$ = this._repository.status$;
     // new part form
     this.newPartType = _formBuilder.control(null, Validators.required);
     this.newPart = _formBuilder.group({
@@ -136,6 +136,7 @@ export class ItemEditorComponent implements OnInit, ComponentCanDeactivate {
     this.partGroups$ = this._repository.partGroups$;
     this.layerPartInfos$ = this._repository.layers$;
     this.facet$ = this._repository.facet$;
+    this.newPartDefinitions$ = this._repository.newPartDefinitions$;
     // app
     this.facets$ = this._appRepository.facets$;
     this.typeThesaurus$ = this._appRepository.typeThesaurus$;
@@ -162,10 +163,9 @@ export class ItemEditorComponent implements OnInit, ComponentCanDeactivate {
       }
     });
 
-    // update the metadata form when item changes
+    // update the metadata form when item changes (e.g. saved)
     this.item$.subscribe((item) => {
       this.updateMetadataForm(item);
-      this.newPartDefinitions = this.getNewPartDefinitions();
     });
 
     // load the item (if any) and its lookup
@@ -174,61 +174,6 @@ export class ItemEditorComponent implements OnInit, ComponentCanDeactivate {
 
   public canDeactivate(): boolean | Observable<boolean> {
     return !this.metadata.dirty;
-  }
-
-  private getExistingPartTypeAndRoleIds(): {
-    typeId: string;
-    roleId?: string;
-  }[] {
-    const groups = this._repository.getPartGroups();
-    if (!groups) {
-      return [];
-    }
-    const results = [];
-    for (const group of groups) {
-      for (const part of group.parts) {
-        results.push({
-          typeId: part.typeId,
-          roleId: part.roleId,
-        });
-      }
-    }
-
-    return results;
-  }
-
-  private getNewPartDefinitions(): PartDefinition[] {
-    const facet = this._repository.getFacet();
-    if (!facet) {
-      return [];
-    }
-
-    const existingTypeRoleIds = this.getExistingPartTypeAndRoleIds();
-
-    const defs: PartDefinition[] = [];
-    for (const def of facet.partDefinitions) {
-      // exclude layer parts, as these are in the layers tab
-      if (def.roleId?.startsWith('fr.')) {
-        continue;
-      }
-      // exclude parts present in the item
-      if (
-        existingTypeRoleIds.find((tr) => {
-          return (
-            tr.typeId === def.typeId &&
-            ((!tr.roleId && !def.roleId) || tr.roleId === def.roleId)
-          );
-        })
-      ) {
-        continue;
-      }
-      defs.push(def);
-    }
-    // sort by sort key
-    defs.sort((a, b) => {
-      return a.sortKey.localeCompare(b.sortKey);
-    });
-    return defs;
   }
 
   /**
@@ -325,6 +270,7 @@ export class ItemEditorComponent implements OnInit, ComponentCanDeactivate {
     if (this.busy || !this.metadata.valid) {
       return;
     }
+    // build item (its ID will be empty if new)
     const item = { ...this._repository.getItem() };
     if (!item) {
       return;
@@ -335,28 +281,38 @@ export class ItemEditorComponent implements OnInit, ComponentCanDeactivate {
     item.facetId = this.facet.value?.trim() || undefined;
     item.groupId = this.group.value?.trim() || undefined;
     item.flags = this.flags.value;
-    // save and reload as edited if was new
+
+    // save: this will trigger a change in the store's item, reflected here
+    // by updating the metadata form
     this.busy = true;
     this._repository
       .save(item as Item)
       .then((saved) => {
-        // update the entity in items list if present
-        // (e.g. flags might have been changed)
-        this._itemListRepository.updateEntity({
-          id: item.id,
-          title: item.title,
-          description: item.description,
-          facetId: item.facetId,
-          groupId: item.groupId,
-          sortKey: item.sortKey,
-          flags: item.flags,
-          timeCreated: item.timeCreated,
-          creatorId: item.creatorId,
-          timeModified: item.timeModified,
-          userId: item.userId,
-        } as ItemInfo);
+        // once saved, a new item requires resetting the items list
+        if (!item.id) {
+          this._itemListRepository.clearCache();
+          this._itemListRepository.loadPage(1);
+        } else {
+          // an existing item instead just requires updating the entity
+          // in the items list if present (e.g. flags might have been changed)
+          this._itemListRepository.updateEntity({
+            id: item.id,
+            title: item.title,
+            description: item.description,
+            facetId: item.facetId,
+            groupId: item.groupId,
+            sortKey: item.sortKey,
+            flags: item.flags,
+            timeCreated: item.timeCreated,
+            creatorId: item.creatorId,
+            timeModified: item.timeModified,
+            userId: item.userId,
+          } as ItemInfo);
+        }
 
-        this.metadata.markAsPristine();
+        // this.metadata.markAsPristine();
+
+        // reload to force change in page URL
         if (!item.id) {
           this.id = saved.id;
           this._router.navigate(['/items', saved.id]);
@@ -472,8 +428,6 @@ export class ItemEditorComponent implements OnInit, ComponentCanDeactivate {
         this._repository.deletePart(part.id).then(
           (_) => {
             this.busy = false;
-            // once deleted, refresh new-part definitions
-            this.newPartDefinitions = this.getNewPartDefinitions();
           },
           (error) => {
             this.busy = false;

@@ -21,9 +21,9 @@
       />
     </p>
     <p *ngIf="item$ | async as item">
-      Last saved {{ item.timeModified | date: "yyyy-MM-dd HH:mm:ss" }} by
+      Last saved {{ item.timeModified | date : "yyyy-MM-dd HH:mm:ss" }} by
       {{ item.userId }}.<br />
-      Created {{ item.timeCreated | date: "yyyy-MM-dd HH:mm:ss" }} by
+      Created {{ item.timeCreated | date : "yyyy-MM-dd HH:mm:ss" }} by
       {{ item.creatorId }}.
     </p>
 
@@ -178,7 +178,10 @@
             <mat-form-field>
               <mat-label>part</mat-label>
               <mat-select [formControl]="newPartType" required>
-                <mat-option *ngFor="let p of newPartDefinitions" [value]="p">
+                <mat-option
+                  *ngFor="let p of newPartDefinitions$ | async"
+                  [value]="p"
+                >
                   <span [style.color]="'#' + p.colorKey" class="new-part-icon"
                     >&#x2b24;</span
                   >
@@ -300,7 +303,7 @@
                   ></cadmus-part-badge>
                 </td>
                 <td class="noif-lt-xs">
-                  {{ part.timeModified | date: "yyyy-MM-dd HH:mm:ss" }}
+                  {{ part.timeModified | date : "yyyy-MM-dd HH:mm:ss" }}
                 </td>
                 <td class="noif-lt-xs">{{ part.userId }}</td>
               </tr>
@@ -396,7 +399,7 @@
               </td>
               <td>
                 <span *ngIf="!part.isAbsent">
-                  {{ part.timeModified | date: "yyyy-MM-dd HH:mm:ss" }}
+                  {{ part.timeModified | date : "yyyy-MM-dd HH:mm:ss" }}
                 </span>
               </td>
             </tr>

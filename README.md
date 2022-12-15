@@ -2,6 +2,7 @@
 
 - [Cadmus Shell](#cadmus-shell)
   - [History](#history)
+    - [4.0.7](#407)
     - [4.0.6](#406)
     - [4.0.5](#405)
     - [4.0.4](#404)
@@ -39,10 +40,15 @@ Quick Docker image build:
 
 1. `npm run build-lib`.
 2. update version in `env.js` and then `ng build`.
-3. `docker build . -t vedph2020/cadmus-shell:4.0.6 -t vedph2020/cadmus-shell:latest` (replace with the current version).
+3. `docker build . -t vedph2020/cadmus-shell:4.0.7 -t vedph2020/cadmus-shell:latest` (replace with the current version).
 
 ## History
 
+### 4.0.7
+
+- 2022-12-15: fixes:
+  - wrong available parts list after saving a new item with a facet not equal to the default one (`@myrmidon/cadmus-item-editor`)
+  - refresh in items list did not reload page 1 (`@myrmidon/cadmus-item-list`).
 - 2022-12-14: fixed label position for note in `@myrmidon/cadmus-part-general-ui`.
 
 ### 4.0.6
