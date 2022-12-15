@@ -44,10 +44,15 @@ Quick Docker image build:
 
 ## History
 
+- 2022-12-15:
+  - added `flatLookup` pipe to event type in part editor (`@myrmidon/cadmus-part-general-ui`).
+  - updated Angular.
+  - aesthetics for philology parts, thesaurus list and UI (`@myrmidon/cadmus-part-philology-ui`, `@myrmidon/cadmus-thesaurus-list`, `@myrmidon/cadmus-thesaurus-ui`).
+
 ### 4.0.7
 
 - 2022-12-15: fixes:
-  - wrong available parts list after saving a new item with a facet not equal to the default one (`@myrmidon/cadmus-item-editor`)
+  - wrong available parts list after saving a new item with a facet not equal to the default one (`@myrmidon/cadmus-item-editor`).
   - refresh in items list did not reload page 1 (`@myrmidon/cadmus-item-list`).
 - 2022-12-14: fixed label position for note in `@myrmidon/cadmus-part-general-ui`.
 

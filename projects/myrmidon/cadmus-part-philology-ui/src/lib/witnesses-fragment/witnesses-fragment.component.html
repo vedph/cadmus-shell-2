@@ -15,13 +15,12 @@
     <mat-card-content>
       <button
         type="button"
-        mat-raised-button
+        mat-flat-button
         color="primary"
         matTooltip="Add a new witness"
         (click)="openCurrentWitness()"
       >
-        <mat-icon>add_circle</mat-icon>
-        add
+        <mat-icon>add_circle</mat-icon> witness
       </button>
       <table *ngIf="witnesses.valid">
         <thead>
