@@ -142,7 +142,7 @@
                 <mat-icon>delete</mat-icon>
               </button>
             </td>
-            <td>{{ e.relation }}</td>
+            <td>{{ e.relation | flatLookup : relationEntries : "id" : "value"}}</td>
             <td>{{ e.id }}</td>
           </tr>
         </tbody>

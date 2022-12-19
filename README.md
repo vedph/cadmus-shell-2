@@ -44,6 +44,9 @@ Quick Docker image build:
 
 ## History
 
+- 2022-12-19:
+  - added lookup pipe to event relations list in historical event editor (`@myrmidon/cadmus-part-general-ui`).
+  - updated packages.
 - 2022-12-15:
   - added `flatLookup` pipe to event type in part editor (`@myrmidon/cadmus-part-general-ui`).
   - updated Angular.
