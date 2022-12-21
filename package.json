@@ -16,7 +16,7 @@
     "build-itm": "ng build @myrmidon/cadmus-item-editor && ng build @myrmidon/cadmus-item-list && ng build @myrmidon/cadmus-item-search && ng build @myrmidon/cadmus-layer-demo",
     "build-grp": "ng build @myrmidon/cadmus-graph-ui && ng build @myrmidon/cadmus-graph-pg",
     "build-pre": "ng build @myrmidon/cadmus-preview-ui && ng build @myrmidon/cadmus-preview-pg",
-    "build-lib": "npm run build-cor && npm run build-api && npm run build-ui && npm run build-ths && npm run build-gen && npm run build-phi && npm run build-itm && npm run build-grp && npm run build-pre"
+    "build-lib": "npm run build-cor && npm run build-api && npm run build-itm && npm run build-ui && npm run build-ths && npm run build-gen && npm run build-phi && npm run build-grp && npm run build-pre"
   },
   "private": true,
   "dependencies": {
