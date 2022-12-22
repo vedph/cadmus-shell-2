@@ -2,6 +2,7 @@
 
 - [Cadmus Shell](#cadmus-shell)
   - [History](#history)
+    - [4.0.8](#408)
     - [4.0.7](#407)
     - [4.0.6](#406)
     - [4.0.5](#405)
@@ -40,11 +41,24 @@ Quick Docker image build:
 
 1. `npm run build-lib`.
 2. update version in `env.js` and then `ng build`.
-3. `docker build . -t vedph2020/cadmus-shell:4.0.7 -t vedph2020/cadmus-shell:latest` (replace with the current version).
+3. `docker build . -t vedph2020/cadmus-shell:4.0.8 -t vedph2020/cadmus-shell:latest` (replace with the current version).
 
 ## History
 
-- 2022-12-22: fix to thesaurus editor validation (`@myrmidon/cadmus-thesaurus-ui`).
+### 4.0.8
+
+- 2022-12-22:
+  - fix to thesaurus editor validation (`@myrmidon/cadmus-thesaurus-ui`).
+  - upgraded Monaco editor changing the glob in `angular.json` to:
+
+```json
+{
+  "glob": "**/*",
+  "input": "node_modules/monaco-editor",
+  "output": "assets/monaco-editor"
+}
+```
+
 - 2022-12-19:
   - added lookup pipe to event relations list in historical event editor (`@myrmidon/cadmus-part-general-ui`).
   - updated packages.
