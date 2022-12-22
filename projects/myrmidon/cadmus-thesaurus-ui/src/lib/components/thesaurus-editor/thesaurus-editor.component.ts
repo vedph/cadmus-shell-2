@@ -32,6 +32,7 @@ import {
 
 import { ThesaurusNodeListRepository } from '../../state/thesaurus-node-list.repository';
 import { PaginationData } from '@ngneat/elf-pagination';
+import { NgToolsValidators } from '@myrmidon/ng-tools';
 
 const THES_ID_PATTERN = '^[a-zA-Z0-9][.\\-_a-zA-Z0-9]*@[a-z]{2,3}$';
 
@@ -122,7 +123,7 @@ export class ThesaurusEditorComponent implements OnInit {
     this.alias = formBuilder.control(false, { nonNullable: true });
     this.targetId = formBuilder.control(null);
     this.entryCount = formBuilder.control(0, {
-      validators: Validators.min(1),
+      validators: NgToolsValidators.strictMinLengthValidator(1),
       nonNullable: true,
     });
     this.form = formBuilder.group({
@@ -160,7 +161,9 @@ export class ThesaurusEditorComponent implements OnInit {
       ]);
     } else {
       // not an alias: entries required, no target ID
-      this.entryCount.setValidators(Validators.min(1));
+      this.entryCount.setValidators(
+        NgToolsValidators.strictMinLengthValidator(1)
+      );
       this.targetId.setValidators(null);
     }
 

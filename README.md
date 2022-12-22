@@ -44,6 +44,7 @@ Quick Docker image build:
 
 ## History
 
+- 2022-12-22: fix to thesaurus editor validation (`@myrmidon/cadmus-thesaurus-ui`).
 - 2022-12-19:
   - added lookup pipe to event relations list in historical event editor (`@myrmidon/cadmus-part-general-ui`).
   - updated packages.
