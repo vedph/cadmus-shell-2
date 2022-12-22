@@ -54,6 +54,7 @@ Quick Docker image build:
 
 ### 4.0.7
 
+- 2022-12-22: fixed missing label in thesaurus add node button (`@myrmidon/cadmus-thesaurus-ui`).
 - 2022-12-15: fixes:
   - wrong available parts list after saving a new item with a facet not equal to the default one (`@myrmidon/cadmus-item-editor`).
   - refresh in items list did not reload page 1 (`@myrmidon/cadmus-item-list`).
