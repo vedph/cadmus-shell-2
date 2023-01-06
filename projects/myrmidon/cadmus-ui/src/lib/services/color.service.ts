@@ -60,4 +60,106 @@ export class ColorService {
       ? 'black'
       : 'white';
   }
+
+  /**
+   * Convert HSL to RGB.
+   *
+   * @param h Hue
+   * @param s Saturation
+   * @param l Lightness
+   * @returns Object with r, g, b values.
+   */
+  public hslToRgb(
+    h: number,
+    s: number,
+    l: number
+  ): { r: number; g: number; b: number } {
+    // https://css-tricks.com/converting-color-spaces-in-javascript/
+    // must be fractions of 1
+    s /= 100;
+    l /= 100;
+
+    let c = (1 - Math.abs(2 * l - 1)) * s,
+      x = c * (1 - Math.abs(((h / 60) % 2) - 1)),
+      m = l - c / 2,
+      r = 0,
+      g = 0,
+      b = 0;
+    if (0 <= h && h < 60) {
+      r = c;
+      g = x;
+      b = 0;
+    } else if (60 <= h && h < 120) {
+      r = x;
+      g = c;
+      b = 0;
+    } else if (120 <= h && h < 180) {
+      r = 0;
+      g = c;
+      b = x;
+    } else if (180 <= h && h < 240) {
+      r = 0;
+      g = x;
+      b = c;
+    } else if (240 <= h && h < 300) {
+      r = x;
+      g = 0;
+      b = c;
+    } else if (300 <= h && h < 360) {
+      r = c;
+      g = 0;
+      b = x;
+    }
+    r = Math.round((r + m) * 255);
+    g = Math.round((g + m) * 255);
+    b = Math.round((b + m) * 255);
+
+    return { r: r, g: g, b: b };
+  }
+
+  public rgbToString(r: number, g: number, b: number): string {
+    let rd = r.toString(16);
+    if (rd.length === 1) {
+      rd = '0' + rd;
+    }
+    let gd = g.toString(16);
+    if (gd.length === 1) {
+      gd = '0' + gd;
+    }
+    let bd = b.toString(16);
+    if (bd.length === 1) {
+      bd = '0' + bd;
+    }
+    return rd + gd + bd;
+  }
+
+  /**
+   * Get the next color from a palette generated to include
+   * the specified count of colors.
+   *
+   * @param index The index of the next color in the palette.
+   * @param count The total count of colors in the palette.
+   * @param blueBoost True to adjust colors for the eye's lack of sensitivity to blue.
+   * @returns The RRGGBB values string.
+   */
+  public nextPaletteColor(
+    index: number,
+    count: number,
+    blueBoost = true
+  ): string {
+    // https://stackoverflow.com/questions/43193341/how-to-generate-random-pastel-or-brighter-color-in-javascript
+    const h = Math.floor((index / count) * 341); // between 0 and 340
+    let s = 100;
+    let l = 50;
+
+    if (blueBoost && h > 215 && h < 265) {
+      const gain = 20;
+      let blueness = 1 - Math.abs(h - 240) / 25;
+      let change = Math.floor(gain * blueness);
+      l += change;
+      s -= change;
+    }
+    const rgb = this.hslToRgb(h, s, l);
+    return this.rgbToString(rgb.r, rgb.g, rgb.b);
+  }
 }

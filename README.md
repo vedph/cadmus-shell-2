@@ -45,6 +45,8 @@ Quick Docker image build:
 
 ## History
 
+- 2023-01-05: added more methods to `ColorService` in `@myrmidon/cadmus-ui` (getting them from `cadmus-show-app`).
+
 ### 4.0.8
 
 - 2022-12-22:

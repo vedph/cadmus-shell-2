@@ -7,7 +7,7 @@ import { take } from 'rxjs/operators';
 import { DialogService } from '@myrmidon/ng-mat-tools';
 import { AuthJwtService, User } from '@myrmidon/auth-jwt-login';
 import { Thesaurus } from '@myrmidon/cadmus-core';
-import { ThesaurusService, UserLevelService } from '@myrmidon/cadmus-api';
+import { UserLevelService } from '@myrmidon/cadmus-api';
 
 import { StatusState } from '@ngneat/elf-requests';
 import { PaginationData } from '@ngneat/elf-pagination';
@@ -27,7 +27,6 @@ export class ThesaurusListComponent implements OnInit {
 
   constructor(
     private _repository: ThesaurusListRepository,
-    private _thesaurusService: ThesaurusService,
     private _dialogService: DialogService,
     private _router: Router,
     private _authService: AuthJwtService,
