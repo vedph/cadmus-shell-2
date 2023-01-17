@@ -27,7 +27,12 @@ import {
 } from '@angular/animations';
 import { DialogService } from '@myrmidon/ng-mat-tools';
 import { AuthJwtService } from '@myrmidon/auth-jwt-login';
-import { ThesauriSet, ThesaurusEntry } from '@myrmidon/cadmus-core';
+import {
+  TextLayerService,
+  ThesauriSet,
+  ThesaurusEntry,
+  TokenLocation,
+} from '@myrmidon/cadmus-core';
 
 import { DifferResultToMspAdapter } from '../differ-result-to-msp-adapter';
 import { MspOperation } from '../msp-operation';
@@ -71,12 +76,14 @@ export class OrthographyFragmentComponent
   public standard: FormControl<string>;
   public operations: FormArray;
   public currentOperation?: MspOperation;
+  public frText?: string;
 
   public tagEntries: ThesaurusEntry[] | undefined;
 
   constructor(
     authService: AuthJwtService,
     private _formBuilder: FormBuilder,
+    private _layerService: TextLayerService,
     private _dialogService: DialogService,
     private _clipboard: Clipboard,
     private _snackbar: MatSnackBar
@@ -127,6 +134,14 @@ export class OrthographyFragmentComponent
   }
 
   protected override onDataSet(data?: EditedObject<OrthographyFragment>): void {
+    // fragment's text
+    if (data?.baseText && data.value) {
+      this.frText = this._layerService.getTextFragment(
+        data.baseText,
+        TokenLocation.parse(data.value.location)!
+      );
+    }
+
     // thesauri
     if (data?.thesauri) {
       this.updateThesauri(data.thesauri);
@@ -244,7 +259,7 @@ export class OrthographyFragmentComponent
 
   public autoAddOperations(): void {
     // we must have both A and B text
-    if (!this.data?.baseText || !this.standard.value) {
+    if (!this.frText || !this.standard.value) {
       return;
     }
 
@@ -256,7 +271,7 @@ export class OrthographyFragmentComponent
 
     // set operations
     const result = this._differ.diff_main(
-      this.data.baseText,
+      this.frText,
       this.standard.value
     );
     const ops = this._adapter!.adapt(result);

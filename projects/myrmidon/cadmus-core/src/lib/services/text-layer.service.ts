@@ -89,6 +89,73 @@ export class TextLayerService {
     return results;
   }
 
+  /**
+   * Get the fragment of text defined by the specified location.
+   *
+   * @param text The full base text.
+   * @param location The location to get text for.
+   * @returns A fragment of text corresponding to location.
+   */
+  public getTextFragment(text: string, location: TokenLocation): string {
+    const lines = this.getLines(text);
+
+    if (location.isRange()) {
+      const sb: string[] = [];
+      // for each line
+      let yn = 0;
+      for (let y = location.primary.y; y <= location.secondary!.y; y++) {
+        const headLine = location.primary.y === y;
+        const tailLine = location.secondary!.y === y;
+
+        if (++yn > 1) {
+          sb.push(' ');
+        }
+
+        // for each token in line
+        let xn = 0;
+        for (
+          let x = headLine ? location.primary.x : 1;
+          x <= (tailLine ? location.secondary!.x : lines[y - 1].tokens.length);
+          x++
+        ) {
+          if (++xn > 1) {
+            sb.push(' ');
+          }
+          // get token bounds
+          let start =
+            location.primary.at && headLine && x === location.primary.x
+              ? location.primary.at
+              : 1;
+          let len =
+            location.secondary!.at && tailLine && x === location.secondary!.x
+              ? location.secondary!.run || 1
+              : -1;
+          const token = lines[y - 1].tokens[x - 1];
+          if (start === 1 && len === -1) {
+            sb.push(token);
+          } else {
+            sb.push(
+              token.substring(
+                start - 1,
+                len === -1 ? undefined : start - 1 + len
+              )
+            );
+          }
+        }
+      }
+      return sb.join('');
+    } else {
+      const token =
+        lines[location.primary.y - 1].tokens[location.primary.x - 1];
+      return location.primary.at
+        ? token.substring(
+            location.primary.at - 1,
+            location.primary.at - 1 + (location.primary.run || 1)
+          )
+        : token;
+    }
+  }
+
   /*
    * Rendition: HTML rendering from a base text and a set of fragments locations.
    * Each line in the base text is rendered with p; each token in a line is

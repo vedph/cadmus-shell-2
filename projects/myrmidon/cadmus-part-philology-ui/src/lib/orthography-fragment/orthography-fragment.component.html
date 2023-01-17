@@ -8,7 +8,7 @@
         >Orthography Fragment {{ data?.value?.location }}</mat-card-title
       >
       <mat-card-subtitle>
-        {{ data?.baseText }}
+        {{ frText }}
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
@@ -23,7 +23,7 @@
                 standard.hasError('required') &&
                 (standard.touched || standard.dirty)
               "
-              >please enter the standard orthography</mat-error
+              >standard orthography required</mat-error
             >
             <mat-error
               *ngIf="
@@ -135,11 +135,11 @@
         </div>
         <div style="grid-area: tags" *ngIf="tagEntries?.length">
           <cadmus-thesaurus-tree
-          [entries]="tagEntries"
-          rootLabel="tags"
-          [renderLabel]="renderLabel"
-          (entryChange)="onTagChange($event)"
-        ></cadmus-thesaurus-tree>
+            [entries]="tagEntries"
+            rootLabel="tags"
+            [renderLabel]="renderLabel"
+            (entryChange)="onTagChange($event)"
+          ></cadmus-thesaurus-tree>
         </div>
       </div>
     </mat-card-content>

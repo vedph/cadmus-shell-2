@@ -209,11 +209,11 @@
     </div>
     <button
       type="button"
-      mat-icon-button
+      mat-flat-button
       color="primary"
       (click)="addWitness()"
     >
-      <mat-icon>add_circle</mat-icon>
+      <mat-icon>add_circle</mat-icon> witness
     </button>
   </mat-expansion-panel>
 
@@ -356,8 +356,8 @@
         </div>
       </div>
     </div>
-    <button type="button" mat-icon-button color="primary" (click)="addAuthor()">
-      <mat-icon>add_circle</mat-icon>
+    <button type="button" mat-flat-button color="primary" (click)="addAuthor()">
+      <mat-icon>add_circle</mat-icon> author
     </button>
     <div *ngIf="workEntries?.length">
       <cadmus-thesaurus-tree

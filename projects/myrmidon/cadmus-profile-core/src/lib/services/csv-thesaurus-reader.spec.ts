@@ -1,6 +1,6 @@
 import { CsvThesaurusReader } from './csv-thesaurus-reader';
 
-fdescribe('CsvThesarusReader', () => {
+describe('CsvThesarusReader', () => {
   it('should be created', () => {
     expect(new CsvThesaurusReader('')).toBeTruthy();
   });
@@ -18,11 +18,11 @@ fdescribe('CsvThesarusReader', () => {
     expect(thesaurus.language).toBe('en');
     expect(thesaurus.targetId).toBeFalsy();
 
-    expect(thesaurus.entries.length).toBe(2);
-    expect(thesaurus.entries[0].id).toBe('eng');
-    expect(thesaurus.entries[0].value).toBe('English');
-    expect(thesaurus.entries[1].id).toBe('ita');
-    expect(thesaurus.entries[1].value).toBe('Italian');
+    expect(thesaurus.entries!.length).toBe(2);
+    expect(thesaurus.entries![0].id).toBe('eng');
+    expect(thesaurus.entries![0].value).toBe('English');
+    expect(thesaurus.entries![1].id).toBe('ita');
+    expect(thesaurus.entries![1].value).toBe('Italian');
   });
 
   it('should read multiple thesauri', () => {
@@ -40,11 +40,11 @@ fdescribe('CsvThesarusReader', () => {
     expect(thesaurus.id).toBe('languages@en');
     expect(thesaurus.language).toBe('en');
     expect(thesaurus.targetId).toBeFalsy();
-    expect(thesaurus.entries.length).toBe(2);
-    expect(thesaurus.entries[0].id).toBe('eng');
-    expect(thesaurus.entries[0].value).toBe('English');
-    expect(thesaurus.entries[1].id).toBe('ita');
-    expect(thesaurus.entries[1].value).toBe('Italian');
+    expect(thesaurus.entries!.length).toBe(2);
+    expect(thesaurus.entries![0].id).toBe('eng');
+    expect(thesaurus.entries![0].value).toBe('English');
+    expect(thesaurus.entries![1].id).toBe('ita');
+    expect(thesaurus.entries![1].value).toBe('Italian');
 
     // colors@en
     thesaurus = reader.read();
@@ -55,11 +55,11 @@ fdescribe('CsvThesarusReader', () => {
     expect(thesaurus.id).toBe('colors@en');
     expect(thesaurus.language).toBe('en');
     expect(thesaurus.targetId).toBeFalsy();
-    expect(thesaurus.entries.length).toBe(2);
-    expect(thesaurus.entries[0].id).toBe('r');
-    expect(thesaurus.entries[0].value).toBe('red');
-    expect(thesaurus.entries[1].id).toBe('g');
-    expect(thesaurus.entries[1].value).toBe('green');
+    expect(thesaurus.entries!.length).toBe(2);
+    expect(thesaurus.entries![0].id).toBe('r');
+    expect(thesaurus.entries![0].value).toBe('red');
+    expect(thesaurus.entries![1].id).toBe('g');
+    expect(thesaurus.entries![1].value).toBe('green');
   });
 
   it('should read aliases', () => {
@@ -73,6 +73,6 @@ fdescribe('CsvThesarusReader', () => {
     }
     expect(thesaurus.id).toBe('biblio-languages@en');
     expect(thesaurus.targetId).toBe('languages');
-    expect(thesaurus.entries.length).toBe(0);
+    expect(thesaurus.entries!.length).toBe(0);
   });
 });

@@ -3,7 +3,7 @@ import { TestBed, inject } from '@angular/core/testing';
 import { TokenLocation } from '../token-location';
 import { TextLayerService, SelectedRange } from './text-layer.service';
 
-describe('TextLayerService', () => {
+fdescribe('TextLayerService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [TextLayerService],
@@ -261,4 +261,133 @@ describe('TextLayerService', () => {
   /*
    * getSelectedLocationForNew method
    */
+
+  /*
+   * getTextFragment method
+   */
+  it('getTextFragment from 1.1 in "[alpha] beta/gamma/delta epsilon"', () => {
+    const text = 'alpha beta\r\ngamma\r\ndelta epsilon';
+    const fr = new TextLayerService().getTextFragment(
+      text,
+      TokenLocation.parse('1.1')!
+    );
+    expect(fr).toBe('alpha');
+  });
+
+  it('getTextFragment from 1.2 in "alpha [beta]/gamma/delta epsilon"', () => {
+    const text = 'alpha beta\r\ngamma\r\ndelta epsilon';
+    const fr = new TextLayerService().getTextFragment(
+      text,
+      TokenLocation.parse('1.2')!
+    );
+    expect(fr).toBe('beta');
+  });
+
+  it('getTextFragment from 2.1 in "alpha beta/[gamma]/delta epsilon"', () => {
+    const text = 'alpha beta\r\ngamma\r\ndelta epsilon';
+    const fr = new TextLayerService().getTextFragment(
+      text,
+      TokenLocation.parse('2.1')!
+    );
+    expect(fr).toBe('gamma');
+  });
+
+  it('getTextFragment from 3.1 in "alpha beta/gamma/[delta] epsilon"', () => {
+    const text = 'alpha beta\r\ngamma\r\ndelta epsilon';
+    const fr = new TextLayerService().getTextFragment(
+      text,
+      TokenLocation.parse('3.1')!
+    );
+    expect(fr).toBe('delta');
+  });
+
+  it('getTextFragment from 3.2 in "alpha beta/gamma/delta [epsilon]"', () => {
+    const text = 'alpha beta\r\ngamma\r\ndelta epsilon';
+    const fr = new TextLayerService().getTextFragment(
+      text,
+      TokenLocation.parse('3.2')!
+    );
+    expect(fr).toBe('epsilon');
+  });
+
+  it('getTextFragment from 1.1@1x2 in "[al]pha beta/gamma/delta epsilon"', () => {
+    const text = 'alpha beta\r\ngamma\r\ndelta epsilon';
+    const fr = new TextLayerService().getTextFragment(
+      text,
+      TokenLocation.parse('1.1@1x2')!
+    );
+    expect(fr).toBe('al');
+  });
+
+  it('getTextFragment from 1.1@3x2 in "al[ph]a beta/gamma/delta epsilon"', () => {
+    const text = 'alpha beta\r\ngamma\r\ndelta epsilon';
+    const fr = new TextLayerService().getTextFragment(
+      text,
+      TokenLocation.parse('1.1@3x2')!
+    );
+    expect(fr).toBe('ph');
+  });
+
+  it('getTextFragment from 1.1@3x3 in "al[pha] beta/gamma/delta epsilon"', () => {
+    const text = 'alpha beta\r\ngamma\r\ndelta epsilon';
+    const fr = new TextLayerService().getTextFragment(
+      text,
+      TokenLocation.parse('1.1@3x3')!
+    );
+    expect(fr).toBe('pha');
+  });
+
+  it('getTextFragment from 1.1-1.2 in "[alpha beta]/gamma/delta epsilon"', () => {
+    const text = 'alpha beta\r\ngamma\r\ndelta epsilon';
+    const fr = new TextLayerService().getTextFragment(
+      text,
+      TokenLocation.parse('1.1-1.2')!
+    );
+    expect(fr).toBe('alpha beta');
+  });
+
+  it('getTextFragment from 1.2-2.1 in "alpha [beta/gamma]/delta epsilon"', () => {
+    const text = 'alpha beta\r\ngamma\r\ndelta epsilon';
+    const fr = new TextLayerService().getTextFragment(
+      text,
+      TokenLocation.parse('1.2-2.1')!
+    );
+    expect(fr).toBe('beta gamma');
+  });
+
+  it('getTextFragment from 1.2-3.2 in "alpha [beta/gamma/delta epsilon]"', () => {
+    const text = 'alpha beta\r\ngamma\r\ndelta epsilon';
+    const fr = new TextLayerService().getTextFragment(
+      text,
+      TokenLocation.parse('1.2-3.2')!
+    );
+    expect(fr).toBe('beta gamma delta epsilon');
+  });
+
+  it('getTextFragment from 1.1@3x3-1.2@1x2 in "al[pha be]ta/gamma/delta epsilon"', () => {
+    const text = 'alpha beta\r\ngamma\r\ndelta epsilon';
+    const fr = new TextLayerService().getTextFragment(
+      text,
+      TokenLocation.parse('1.1@3x3-1.2@1x2')!
+    );
+    expect(fr).toBe('pha be');
+  });
+
+  it('getTextFragment from 1.2@3x2-2.1@1x2 in "alpha be[ta/ga]mma/delta epsilon"', () => {
+    const text = 'alpha beta\r\ngamma\r\ndelta epsilon';
+    const fr = new TextLayerService().getTextFragment(
+      text,
+      TokenLocation.parse('1.2@3x2-2.1@1x2')!
+    );
+    expect(fr).toBe('ta ga');
+  });
+
+  it('getTextFragment from 3.1@4x2-3.2 in "alpha be[ta/ga]mma/del[ta epsilon]"', () => {
+    const text = 'alpha beta\r\ngamma\r\ndelta epsilon';
+    const fr = new TextLayerService().getTextFragment(
+      text,
+      TokenLocation.parse('3.1@4x2-3.2')!
+    );
+    expect(fr).toBe('ta epsilon');
+  });
 });

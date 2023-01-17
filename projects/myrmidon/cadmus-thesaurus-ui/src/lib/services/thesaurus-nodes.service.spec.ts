@@ -57,7 +57,7 @@ function getTreeEntries(): ThesaurusEntry[] {
   ];
 }
 
-fdescribe('ThesaurusNodesService', () => {
+describe('ThesaurusNodesService', () => {
   let service: ThesaurusNodesService;
 
   beforeEach(() => {
