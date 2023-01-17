@@ -18,6 +18,7 @@ import { AuthJwtService } from '@myrmidon/auth-jwt-login';
 import { EditedObject, ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
 
 import { WitnessesFragment, Witness } from '../witnesses-fragment';
+import { TextLayerService, TokenLocation } from '@myrmidon/cadmus-core';
 
 @Component({
   selector: 'cadmus-witnesses-fragment',
@@ -55,6 +56,7 @@ export class WitnessesFragmentComponent
     automaticLayout: true,
   };
 
+  public frText?: string;
   public witnesses: FormControl;
   // single witness form
   public id: FormControl<string | null>;
@@ -63,7 +65,11 @@ export class WitnessesFragmentComponent
   public note: FormControl<string | null>;
   public witness: FormGroup;
 
-  constructor(authService: AuthJwtService, formBuilder: FormBuilder) {
+  constructor(
+    authService: AuthJwtService,
+    formBuilder: FormBuilder,
+    private _layerService: TextLayerService
+  ) {
     super(authService, formBuilder);
     // form
     this.witnesses = formBuilder.control(null, Validators.required);
@@ -186,6 +192,13 @@ export class WitnessesFragmentComponent
   }
 
   protected override onDataSet(data?: EditedObject<WitnessesFragment>): void {
+    // fragment's text
+    if (data?.baseText && data.value) {
+      this.frText = this._layerService.getTextFragment(
+        data.baseText,
+        TokenLocation.parse(data.value.location)!
+      );
+    }
     this.updateForm(data?.value);
   }
 

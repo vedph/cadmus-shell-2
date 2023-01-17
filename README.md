@@ -48,6 +48,7 @@ Quick Docker image build:
 - 2023-01-17:
   - fix null in comment editor `getValue`.
   - added `TextLayerService.getTextFragment` to be used by orthography layer when comparing the original with the standard form.
+  - added `frText` display to all the layer fragment editors requiring it (orthography, apparatus, quotations, witnesses).
 - 2023-01-16: updated Angular and packages.
 - 2023-01-05: added more methods to `ColorService` in `@myrmidon/cadmus-ui` (getting them from `cadmus-show-app`).
 

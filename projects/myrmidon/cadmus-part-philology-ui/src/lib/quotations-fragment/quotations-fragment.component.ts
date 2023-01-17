@@ -8,7 +8,7 @@ import {
 
 import { AuthJwtService } from '@myrmidon/auth-jwt-login';
 import { EditedObject, ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
-import { ThesauriSet, ThesaurusEntry } from '@myrmidon/cadmus-core';
+import { TextLayerService, ThesauriSet, ThesaurusEntry, TokenLocation } from '@myrmidon/cadmus-core';
 import { DialogService } from '@myrmidon/ng-mat-tools';
 
 import { QuotationWorksService } from './quotation-works.service';
@@ -32,6 +32,7 @@ export class QuotationsFragmentComponent
 
   public editedEntry?: QuotationEntry;
   public currentTabIndex: number;
+  public frText?: string;
 
   public workEntries: ThesaurusEntry[] | undefined;
   public tagEntries: ThesaurusEntry[] | undefined;
@@ -42,6 +43,7 @@ export class QuotationsFragmentComponent
   constructor(
     authService: AuthJwtService,
     formBuilder: FormBuilder,
+    private _layerService: TextLayerService,
     private _dialogService: DialogService,
     private _worksService: QuotationWorksService
   ) {
@@ -95,6 +97,14 @@ export class QuotationsFragmentComponent
   }
 
   protected override onDataSet(data?: EditedObject<QuotationsFragment>): void {
+    // fragment's text
+    if (data?.baseText && data.value) {
+      this.frText = this._layerService.getTextFragment(
+        data.baseText,
+        TokenLocation.parse(data.value.location)!
+      );
+    }
+
     // thesauri
     if (data?.thesauri) {
       this.updateThesauri(data.thesauri);
