@@ -172,27 +172,27 @@ export class CommentEditorComponent
     }
   }
 
-  private updateForm(model?: CommentPart | CommentFragment | null): void {
-    if (!model) {
+  private updateForm(comment?: CommentPart | CommentFragment | null): void {
+    if (!comment) {
       this.form!.reset();
       return;
     }
-    this.tag.setValue(model.tag || null);
-    this.text.setValue(model.text);
-    this.initialRefs = model.references || [];
-    this.initialIds = model.externalIds || [];
+    this.tag.setValue(comment.tag || null);
+    this.text.setValue(comment.text);
+    this.initialRefs = comment.references || [];
+    this.initialIds = comment.externalIds || [];
     // keywords
     this.keywords.clear();
-    if (model.keywords?.length) {
-      for (let keyword of model.keywords) {
+    if (comment.keywords?.length) {
+      for (let keyword of comment.keywords) {
         this.keywords.controls.push(this.getKeywordGroup(keyword));
       }
     }
     // categories
-    if (model.categories?.length) {
+    if (comment.categories?.length) {
       // map the category IDs to the corresponding thesaurus
       // entries, if any -- else just use the IDs
-      const entries: ThesaurusEntry[] = model.categories.map((id) => {
+      const entries: ThesaurusEntry[] = comment.categories.map((id) => {
         const entry = this.catEntries?.find((e) => e.id === id);
         return entry
           ? entry
@@ -242,7 +242,7 @@ export class CommentEditorComponent
   }
 
   protected getValue(): CommentPart | CommentFragment {
-    if ((this.data!.value as CommentFragment).location) {
+    if ((this.data!.value as CommentFragment)?.location) {
       let fr = this.getEditedFragment() as CommentFragment;
       this.updateComment(fr);
       return fr;
