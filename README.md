@@ -45,6 +45,7 @@ Quick Docker image build:
 
 ## History
 
+- 2023-01-20: updated Angular and packages.
 - 2023-01-17:
   - fix null in comment editor `getValue`.
   - added `TextLayerService.getTextFragment` to be used by orthography layer when comparing the original with the standard form.
