@@ -35,7 +35,6 @@ export class HistoricalEventsPartComponent
 {
   private _editedIndex: number;
 
-  public tabIndex: number;
   public editedEvent: HistoricalEvent | undefined;
 
   /**
@@ -72,7 +71,6 @@ export class HistoricalEventsPartComponent
   ) {
     super(authService, formBuilder);
     this._editedIndex = -1;
-    this.tabIndex = 0;
     // form
     this.events = formBuilder.control([], {
       validators: NgToolsValidators.strictMinLengthValidator(1),
@@ -172,14 +170,10 @@ export class HistoricalEventsPartComponent
   public editEvent(index: number): void {
     if (index < 0) {
       this._editedIndex = -1;
-      this.tabIndex = 0;
       this.editedEvent = undefined;
     } else {
       this._editedIndex = index;
       this.editedEvent = this.events.value[index];
-      setTimeout(() => {
-        this.tabIndex = 1;
-      }, 300);
     }
   }
 

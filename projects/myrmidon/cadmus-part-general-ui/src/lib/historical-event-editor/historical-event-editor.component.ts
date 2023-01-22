@@ -14,6 +14,8 @@ import { renderLabelFromLastColon } from '@myrmidon/cadmus-ui';
 
 import { HistoricalEvent, RelatedEntity } from '../historical-events-part';
 
+const RELATION_SEP = ':';
+
 @Component({
   selector: 'cadmus-historical-event-editor',
   templateUrl: './historical-event-editor.component.html',
@@ -38,7 +40,8 @@ export class HistoricalEventEditorComponent implements OnInit {
   @Input()
   public eventTypeEntries: ThesaurusEntry[] | undefined;
   /**
-   * Thesaurus event-relations (hierarchical).
+   * Thesaurus event-relations (pseudo-hierarchical; the
+   * separator used is : rather than .).
    */
   @Input()
   public relationEntries: ThesaurusEntry[] | undefined;
@@ -65,12 +68,12 @@ export class HistoricalEventEditorComponent implements OnInit {
   /**
    * The number of event type portions to cut from the event type ID when
    * building the prefix used to filter the corresponding relations IDs.
-   * By default this is 0, i.e. the whole type ID (plus a final dot) is
+   * By default this is 0, i.e. the whole type ID (plus a final :) is
    * used as prefix. For instance, the ID "person.birth" generates prefix
-   * "person.birth.". The portions of an ID are defined by splitting it at
+   * "person:birth:". The portions of an ID are defined by splitting it at
    * each dot: so, should this property be 1, we would split the ID into
    * "person" and "birth", remove the last 1 tail(s), thus getting "person",
-   * join back the portions and append a final dot, generating "person.".
+   * join back the portions and append a final colon, generating "person:".
    */
   @Input()
   public eventTypeTailCut: number;
@@ -171,14 +174,15 @@ export class HistoricalEventEditorComponent implements OnInit {
   private getTypeEntryPrefix(id: string): string {
     let p = id;
     if (this.eventTypeTailCut > 0) {
+      // split the event type ID
       const tokens = p.split('.');
       if (tokens.length >= this.eventTypeTailCut) {
         tokens.splice(tokens.length - this.eventTypeTailCut);
       }
-      p = tokens.join('.');
+      p = tokens.join(RELATION_SEP);
     }
-    p += '.';
-    return p;
+    p += RELATION_SEP;
+    return p.replace('.', ':');
   }
 
   public onTypeEntryChange(entry: ThesaurusEntry): void {

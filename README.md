@@ -45,6 +45,7 @@ Quick Docker image build:
 
 ## History
 
+- 2023-01-22: changed historical events part related events thesaurus so that it uses `:` as separator.
 - 2023-01-20: updated Angular and packages.
 - 2023-01-17:
   - fix null in comment editor `getValue`.

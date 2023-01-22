@@ -1,7 +1,7 @@
 <form [formGroup]="form" (submit)="save()">
   <mat-tab-group>
     <mat-tab label="general">
-      <div>
+      <div class="form-row">
         <!-- eid -->
         <mat-form-field>
           <mat-label>EID</mat-label>
@@ -15,7 +15,7 @@
             >EID too long</mat-error
           >
         </mat-form-field>
-        &nbsp;
+
         <!-- type (bound) -->
         <div *ngIf="eventTypeEntries?.length">
           <cadmus-thesaurus-tree
@@ -155,7 +155,7 @@
       >
         <mat-expansion-panel-header>entity</mat-expansion-panel-header>
         <form [formGroup]="reForm" (submit)="saveCurrentEntity()">
-          <fieldset>
+          <fieldset class="form-row">
             <!-- relation (bound) -->
             <mat-form-field *ngIf="currentRelEntries | async as entries">
               <mat-label>relation</mat-label>
@@ -191,7 +191,7 @@
                 >relation too long</mat-error
               >
             </mat-form-field>
-            &nbsp;
+
             <!-- id -->
             <mat-form-field>
               <mat-label>ID</mat-label>
@@ -205,7 +205,7 @@
                 >ID too long</mat-error
               >
             </mat-form-field>
-            &nbsp;
+
             <button
               mat-icon-button
               type="button"
@@ -244,6 +244,5 @@
     >
       <mat-icon>check_circle</mat-icon>
     </button>
-    event
   </div>
 </form>
