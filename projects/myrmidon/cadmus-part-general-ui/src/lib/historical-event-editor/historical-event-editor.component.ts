@@ -78,6 +78,12 @@ export class HistoricalEventEditorComponent implements OnInit {
   @Input()
   public eventTypeTailCut: number;
 
+  /**
+   * True to disable ID lookup via scoped pin lookup.
+   */
+  @Input()
+  public noLookup?: boolean;
+
   @Output()
   public modelChange: EventEmitter<HistoricalEvent>;
   @Output()
@@ -309,6 +315,13 @@ export class HistoricalEventEditorComponent implements OnInit {
       this.relatedEntities.updateValueAndValidity();
       this.relatedEntities.markAsDirty();
     }
+  }
+
+  public onIdPick(id: string): void {
+    this.setCurrentEntity({
+      id: id,
+      relation: this.currentEntity?.relation || '',
+    });
   }
 
   public cancel(): void {

@@ -2,6 +2,7 @@
 
 - [Cadmus Shell](#cadmus-shell)
   - [History](#history)
+    - [4.0.9](#409)
     - [4.0.8](#408)
     - [4.0.7](#407)
     - [4.0.6](#406)
@@ -41,10 +42,13 @@ Quick Docker image build:
 
 1. `npm run build-lib`.
 2. update version in `env.js` and then `ng build`.
-3. `docker build . -t vedph2020/cadmus-shell:4.0.8 -t vedph2020/cadmus-shell:latest` (replace with the current version).
+3. `docker build . -t vedph2020/cadmus-shell:4.0.9 -t vedph2020/cadmus-shell:latest` (replace with the current version).
 
 ## History
 
+### 4.0.9
+
+- 2023-01-24: added lookup to historical event editor. To test this, just add an `eid` metadatum to an item's metadata part, and then in another item events part refer to its value via lookup.
 - 2023-01-22: changed historical events part related events thesaurus so that it uses `:` as separator.
 - 2023-01-20: updated Angular and packages.
 - 2023-01-17:

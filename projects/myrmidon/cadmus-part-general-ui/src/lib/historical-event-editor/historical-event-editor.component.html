@@ -29,7 +29,7 @@
             >type required</mat-error
           >
           <div *ngIf="type.value" class="sel-type">
-            {{ type.value | flatLookup: eventTypeEntries:"id":"value" }}
+            {{ type.value | flatLookup : eventTypeEntries : "id" : "value" }}
           </div>
         </div>
         <!-- type (free) -->
@@ -142,13 +142,15 @@
                 <mat-icon>delete</mat-icon>
               </button>
             </td>
-            <td>{{ e.relation | flatLookup : relationEntries : "id" : "value"}}</td>
+            <td>
+              {{ e.relation | flatLookup : relationEntries : "id" : "value" }}
+            </td>
             <td>{{ e.id }}</td>
           </tr>
         </tbody>
       </table>
 
-      <!-- editor -->
+      <!-- entity editor -->
       <mat-expansion-panel
         [disabled]="!currentEntity"
         [expanded]="currentEntity"
@@ -205,6 +207,12 @@
                 >ID too long</mat-error
               >
             </mat-form-field>
+
+            <!-- lookup -->
+            <cadmus-scoped-pin-lookup
+              *ngIf="!noLookup"
+              (idPick)="onIdPick($event)"
+            ></cadmus-scoped-pin-lookup>
 
             <button
               mat-icon-button

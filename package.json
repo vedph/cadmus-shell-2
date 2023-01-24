@@ -34,7 +34,7 @@
     "@myrmidon/auth-jwt-admin": "1.0.2",
     "@myrmidon/auth-jwt-login": "1.0.1",
     "@myrmidon/cadmus-refs-asserted-chronotope": "1.0.5",
-    "@myrmidon/cadmus-refs-asserted-ids": "^1.0.4",
+    "@myrmidon/cadmus-refs-asserted-ids": "^1.0.6",
     "@myrmidon/cadmus-refs-assertion": "1.0.3",
     "@myrmidon/cadmus-refs-doc-references": "^1.0.2",
     "@myrmidon/cadmus-refs-historical-date": "1.0.1",
