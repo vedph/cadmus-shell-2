@@ -73,31 +73,41 @@
       </div>
       <!-- chronotope -->
       <mat-checkbox [formControl]="hasChronotope">chronotope</mat-checkbox>
-      <fieldset *ngIf="hasChronotope?.value">
-        <legend>chronotope</legend>
-        <cadmus-refs-asserted-chronotope
-          [tagEntries]="ctTagEntries"
-          [assTagEntries]="assTagEntries"
-          [refTagEntries]="refTagEntries"
-          [refTypeEntries]="refTypeEntries"
-          [chronotope]="initialChronotope"
-          (chronotopeChange)="onChronotopeChange($event)"
-        ></cadmus-refs-asserted-chronotope>
-      </fieldset>
-      <br />
+      <mat-expansion-panel
+        [expanded]="hasChronotope.value"
+        [disabled]="!hasChronotope.value"
+      >
+        <fieldset>
+          <legend>chronotope</legend>
+          <cadmus-refs-asserted-chronotope
+            [tagEntries]="ctTagEntries"
+            [assTagEntries]="assTagEntries"
+            [refTagEntries]="refTagEntries"
+            [refTypeEntries]="refTypeEntries"
+            [chronotope]="initialChronotope"
+            (chronotopeChange)="onChronotopeChange($event)"
+          ></cadmus-refs-asserted-chronotope>
+        </fieldset>
+      </mat-expansion-panel>
+
       <!-- assertion -->
       <mat-checkbox [formControl]="hasAssertion">assertion</mat-checkbox>
-      <fieldset *ngIf="hasAssertion?.value">
-        <legend>assertion</legend>
-        <cadmus-refs-assertion
-          [assTagEntries]="assTagEntries"
-          [refTagEntries]="refTagEntries"
-          [refTypeEntries]="refTypeEntries"
-          [assertion]="initialAssertion"
-          (assertionChange)="onAssertionChange($event)"
-        >
-        </cadmus-refs-assertion>
-      </fieldset>
+      <mat-expansion-panel
+        [expanded]="hasAssertion.value"
+        [disabled]="!hasAssertion.value"
+      >
+        <fieldset>
+          <legend>assertion</legend>
+          <cadmus-refs-assertion
+            [assTagEntries]="assTagEntries"
+            [refTagEntries]="refTagEntries"
+            [refTypeEntries]="refTypeEntries"
+            [assertion]="initialAssertion"
+            (assertionChange)="onAssertionChange($event)"
+          >
+          </cadmus-refs-assertion>
+        </fieldset>
+      </mat-expansion-panel>
     </mat-tab>
 
     <mat-tab label="related">
@@ -159,12 +169,14 @@
         <form [formGroup]="reForm" (submit)="saveCurrentEntity()">
           <fieldset class="form-row">
             <!-- relation (bound) -->
-            <mat-form-field *ngIf="currentRelEntries | async as entries">
+            <mat-form-field *ngIf="currentRelEntries">
               <mat-label>relation</mat-label>
               <mat-select [formControl]="relation">
-                <mat-option *ngFor="let e of entries" [value]="e.id">{{
-                  e.value
-                }}</mat-option>
+                <mat-option
+                  *ngFor="let e of currentRelEntries"
+                  [value]="e.id"
+                  >{{ e.value }}</mat-option
+                >
               </mat-select>
               <mat-error
                 *ngIf="

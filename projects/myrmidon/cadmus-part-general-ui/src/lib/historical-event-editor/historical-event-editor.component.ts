@@ -5,7 +5,6 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
 
 import { ThesaurusEntry } from '@myrmidon/cadmus-core';
 import { AssertedChronotope } from '@myrmidon/cadmus-refs-asserted-chronotope';
@@ -21,7 +20,7 @@ const RELATION_SEP = ':';
   templateUrl: './historical-event-editor.component.html',
   styleUrls: ['./historical-event-editor.component.css'],
 })
-export class HistoricalEventEditorComponent implements OnInit {
+export class HistoricalEventEditorComponent {
   private _model: HistoricalEvent | undefined;
   private _currentEntityIndex: number;
 
@@ -30,6 +29,9 @@ export class HistoricalEventEditorComponent implements OnInit {
     return this._model;
   }
   public set model(value: HistoricalEvent | undefined) {
+    if (this._model === value) {
+      return;
+    }
     this._model = value;
     this.updateForm(value);
   }
@@ -105,7 +107,7 @@ export class HistoricalEventEditorComponent implements OnInit {
   public initialAssertion?: Assertion;
 
   // related entity
-  public currentRelEntries: BehaviorSubject<ThesaurusEntry[]>;
+  public currentRelEntries: ThesaurusEntry[];
   public currentEntity?: RelatedEntity;
   public relation: FormControl<string | null>;
   public id: FormControl<string | null>;
@@ -144,7 +146,7 @@ export class HistoricalEventEditorComponent implements OnInit {
       assertion: this.assertion,
     });
     // related entity
-    this.currentRelEntries = new BehaviorSubject<ThesaurusEntry[]>([]);
+    this.currentRelEntries = [];
     this.relation = formBuilder.control(null, [
       Validators.required,
       Validators.maxLength(500),
@@ -159,12 +161,6 @@ export class HistoricalEventEditorComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    if (this._model) {
-      this.updateForm(this._model);
-    }
-  }
-
   public renderLabel(label: string): string {
     return renderLabelFromLastColon(label);
   }
@@ -173,8 +169,9 @@ export class HistoricalEventEditorComponent implements OnInit {
     if (!this.relationEntries?.length) {
       return;
     }
-    const entries = this.relationEntries.filter((e) => e.id.startsWith(prefix));
-    this.currentRelEntries.next(entries);
+    this.currentRelEntries = this.relationEntries.filter((e) =>
+      e.id.startsWith(prefix)
+    );
   }
 
   private getTypeEntryPrefix(id: string): string {
@@ -220,6 +217,7 @@ export class HistoricalEventEditorComponent implements OnInit {
     if (this.relationEntries?.length) {
       this.updateRelEntries(this.getTypeEntryPrefix(model.type));
     }
+
     this.form.markAsPristine();
   }
 
