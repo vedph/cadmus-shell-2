@@ -36,9 +36,9 @@ export class ExternalIdsPartComponent
   public ids: FormControl<AssertedId[]>;
 
   // external-id-scopes
-  public scopeEntries: ThesaurusEntry[] | undefined;
+  public idScopeEntries: ThesaurusEntry[] | undefined;
   // external-id-tags
-  public tagEntries: ThesaurusEntry[] | undefined;
+  public idTagEntries: ThesaurusEntry[] | undefined;
 
   // thesauri for assertions:
   // assertion-tags
@@ -92,16 +92,16 @@ export class ExternalIdsPartComponent
 
     key = 'external-id-scopes';
     if (this.hasThesaurus(key)) {
-      this.scopeEntries = thesauri[key].entries;
+      this.idScopeEntries = thesauri[key].entries;
     } else {
-      this.scopeEntries = undefined;
+      this.idScopeEntries = undefined;
     }
 
     key = 'external-id-tags';
     if (this.hasThesaurus(key)) {
-      this.tagEntries = thesauri[key].entries;
+      this.idTagEntries = thesauri[key].entries;
     } else {
-      this.tagEntries = undefined;
+      this.idTagEntries = undefined;
     }
   }
 
