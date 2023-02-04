@@ -46,6 +46,9 @@ Quick Docker image build:
 
 ## History
 
+- 2023-02-03:
+  - fixed a label in chronotopes part.
+  - updated packages and Angular.
 - 2023-02-01: fixed a label in `@myrmidon/cadmus-graph-ui`.
 
 ### 4.0.9
