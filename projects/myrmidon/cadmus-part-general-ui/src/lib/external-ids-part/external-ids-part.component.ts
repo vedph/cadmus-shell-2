@@ -32,7 +32,6 @@ export class ExternalIdsPartComponent
   extends ModelEditorComponentBase<ExternalIdsPart>
   implements OnInit
 {
-  public initialIds: AssertedId[];
   public ids: FormControl<AssertedId[]>;
 
   // external-id-scopes
@@ -50,7 +49,6 @@ export class ExternalIdsPartComponent
 
   constructor(authService: AuthJwtService, formBuilder: FormBuilder) {
     super(authService, formBuilder);
-    this.initialIds = [];
     // form
     this.ids = formBuilder.control([], {
       validators: NgToolsValidators.strictMinLengthValidator(1),
@@ -110,7 +108,7 @@ export class ExternalIdsPartComponent
       this.form.reset();
       return;
     }
-    this.initialIds = part.ids || [];
+    this.ids.setValue(part.ids || []);
     this.form.markAsPristine();
   }
 

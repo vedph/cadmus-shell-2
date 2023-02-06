@@ -33,7 +33,6 @@ export class ChronotopesPartComponent
   private _editedIndex: number;
 
   public tabIndex: number;
-  public initialChronotope: AssertedChronotope | undefined;
   public editedChronotope: AssertedChronotope | undefined;
 
   // chronotope-place-tags
@@ -138,10 +137,10 @@ export class ChronotopesPartComponent
     if (index < 0) {
       this._editedIndex = -1;
       this.tabIndex = 0;
-      this.initialChronotope = undefined;
+      this.editedChronotope = undefined;
     } else {
       this._editedIndex = index;
-      this.initialChronotope = this.chronotopes.value[index];
+      this.editedChronotope = this.chronotopes.value[index];
       setTimeout(() => {
         this.tabIndex = 1;
       }, 300);

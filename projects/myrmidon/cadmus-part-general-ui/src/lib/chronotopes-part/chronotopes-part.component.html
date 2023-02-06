@@ -81,13 +81,13 @@
           </table>
         </mat-tab>
 
-        <mat-tab label="chronotope" *ngIf="initialChronotope">
+        <mat-tab label="chronotope" *ngIf="editedChronotope">
           <cadmus-refs-asserted-chronotope
             [tagEntries]="tagEntries"
             [assTagEntries]="assTagEntries"
             [refTagEntries]="refTagEntries"
             [refTypeEntries]="refTypeEntries"
-            [chronotope]="initialChronotope"
+            [chronotope]="editedChronotope"
             (chronotopeChange)="onChronotopeChange($event)"
           ></cadmus-refs-asserted-chronotope>
           <div>
@@ -102,11 +102,10 @@
             <button
               type="button"
               (click)="onChronotopeSave()"
-              mat-flat-button
+              mat-icon-button
               color="primary"
             >
               <mat-icon>check_circle</mat-icon>
-              chronotope
             </button>
           </div>
         </mat-tab>

@@ -32,6 +32,9 @@ export class QuotationEntryComponent implements OnInit {
     return this._entry;
   }
   public set entry(value: QuotationEntry | undefined) {
+    if (this._entry === value) {
+      return;
+    }
     this._entry = value;
     this.updateForm(value);
   }
@@ -180,7 +183,7 @@ export class QuotationEntryComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
-    const entry = this.getEntry();
-    this.entryChange.emit(entry);
+    this._entry = this.getEntry();
+    this.entryChange.emit(this._entry);
   }
 }

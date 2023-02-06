@@ -17,7 +17,7 @@
           <mat-panel-title>references</mat-panel-title>
         </mat-expansion-panel-header>
         <cadmus-refs-doc-references
-          [references]="initialRefs"
+          [references]="references.value"
           [typeEntries]="typeEntries"
           [tagEntries]="tagEntries"
           (referencesChange)="onReferencesChange($event)"

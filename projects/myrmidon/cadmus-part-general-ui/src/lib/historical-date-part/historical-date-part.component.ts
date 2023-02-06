@@ -32,15 +32,12 @@ export class HistoricalDatePartComponent
   public references: FormControl<DocReference[]>;
   public date: FormControl<HistoricalDateModel>;
 
-  public initialRefs: DocReference[];
-
   public typeEntries: ThesaurusEntry[] | undefined;
   public tagEntries: ThesaurusEntry[] | undefined;
 
   constructor(authService: AuthJwtService, formBuilder: FormBuilder) {
     super(authService, formBuilder);
     // form
-    this.initialRefs = [];
     this.date = formBuilder.control(new HistoricalDate(), {
       nonNullable: true,
     });
@@ -63,7 +60,7 @@ export class HistoricalDatePartComponent
       this.form.reset();
       return;
     }
-    this.initialRefs = part.references || [];
+    this.references.setValue(part.references || []);
     this.date.setValue(part.date);
   }
 

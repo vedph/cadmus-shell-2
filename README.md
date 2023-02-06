@@ -2,6 +2,7 @@
 
 - [Cadmus Shell](#cadmus-shell)
   - [History](#history)
+    - [4.0.10](#4010)
     - [4.0.9](#409)
     - [4.0.8](#408)
     - [4.0.7](#407)
@@ -42,10 +43,13 @@ Quick Docker image build:
 
 1. `npm run build-lib`.
 2. update version in `env.js` and then `ng build`.
-3. `docker build . -t vedph2020/cadmus-shell:4.0.9 -t vedph2020/cadmus-shell:latest` (replace with the current version).
+3. `docker build . -t vedph2020/cadmus-shell:4.0.10 -t vedph2020/cadmus-shell:latest` (replace with the current version).
 
 ## History
 
+### 4.0.10
+
+- 2023-02-06: changes to binding in bibliography-entry; chronotopes-part; comment-editor; doc-references-part; external-ids-part; historical-date-part; historical-event-editor; index-keyword; tiled-data; quotation-entry. These reflect the new bricks (mostly assertions or chronotopes), whose binding has been fixed so that now the initial-property hack is no more required.
 - 2023-02-03:
   - fixed a label in chronotopes part.
   - updated packages and Angular.

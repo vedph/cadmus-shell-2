@@ -10,12 +10,12 @@ import { AuthJwtService } from '@myrmidon/auth-jwt-login';
 import { EditedObject, ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
 import { ThesauriSet, ThesaurusEntry } from '@myrmidon/cadmus-core';
 import { DocReference } from '@myrmidon/cadmus-refs-doc-references';
+import { NgToolsValidators } from '@myrmidon/ng-tools';
 
 import {
   DocReferencesPart,
   DOC_REFERENCES_PART_TYPEID,
 } from '../doc-references-part';
-import { NgToolsValidators } from '@myrmidon/ng-tools';
 
 /**
  * Document references part editor.
@@ -31,14 +31,12 @@ export class DocReferencesPartComponent
   implements OnInit
 {
   public references: FormControl<DocReference[]>;
-  public initialRefs: DocReference[];
 
   public typeEntries: ThesaurusEntry[] | undefined;
   public tagEntries: ThesaurusEntry[] | undefined;
 
   constructor(authService: AuthJwtService, formBuilder: FormBuilder) {
     super(authService, formBuilder);
-    this.initialRefs = [];
     // form
     this.references = formBuilder.control([], {
       validators: NgToolsValidators.strictMinLengthValidator(1),
@@ -77,7 +75,7 @@ export class DocReferencesPartComponent
       this.form.reset();
       return;
     }
-    this.initialRefs = part.references || [];
+    this.references.setValue(part.references || []);
     this.form.markAsPristine();
   }
 

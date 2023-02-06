@@ -44,9 +44,6 @@ export class CommentEditorComponent
   public categories: FormControl<ThesaurusEntry[]>;
   public keywords: FormArray;
 
-  public initialRefs: DocReference[];
-  public initialIds: AssertedId[];
-
   // comment-tags
   public comTagEntries: ThesaurusEntry[] | undefined;
   // doc-reference-tags
@@ -78,8 +75,6 @@ export class CommentEditorComponent
 
   constructor(authService: AuthJwtService, formBuilder: FormBuilder) {
     super(authService, formBuilder);
-    this.initialRefs = [];
-    this.initialIds = [];
     // form
     this.tag = formBuilder.control(null, Validators.maxLength(50));
     this.text = formBuilder.control(null, [
@@ -179,8 +174,8 @@ export class CommentEditorComponent
     }
     this.tag.setValue(comment.tag || null);
     this.text.setValue(comment.text);
-    this.initialRefs = comment.references || [];
-    this.initialIds = comment.externalIds || [];
+    this.references.setValue(comment.references || []);
+    this.ids.setValue(comment.externalIds || []);
     // keywords
     this.keywords.clear();
     if (comment.keywords?.length) {
@@ -211,7 +206,7 @@ export class CommentEditorComponent
       this.categories.setValue([]);
     }
 
-    this.form!.markAsPristine();
+    this.form.markAsPristine();
   }
 
   protected override onDataSet(

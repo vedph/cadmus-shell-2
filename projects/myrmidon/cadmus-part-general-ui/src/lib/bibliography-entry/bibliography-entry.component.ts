@@ -326,7 +326,7 @@ export class BibliographyEntryComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
-    const entry = this.getEntry();
-    this.entryChange.emit(entry);
+    this._entry = this.getEntry();
+    this.entryChange.emit(this._entry);
   }
 }

@@ -4,5 +4,5 @@
 
   // environment-dependent settings
   window.__env.apiUrl = "http://localhost:60380/api/";
-  window.__env.version = '4.0.9';
+  window.__env.version = '4.0.10';
 })(this);

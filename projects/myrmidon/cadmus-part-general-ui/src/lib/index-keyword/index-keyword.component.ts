@@ -24,6 +24,9 @@ export class IndexKeywordComponent implements OnInit {
     return this._keyword;
   }
   public set keyword(value: IndexKeyword | undefined) {
+    if (this._keyword === value) {
+      return;
+    }
     this._keyword = value;
     this.updateForm();
   }
@@ -107,6 +110,7 @@ export class IndexKeywordComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
-    this.save.emit(this.getKeyword());
+    this._keyword = this.getKeyword();
+    this.save.emit(this._keyword);
   }
 }

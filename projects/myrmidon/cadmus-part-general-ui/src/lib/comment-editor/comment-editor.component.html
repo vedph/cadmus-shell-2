@@ -53,7 +53,7 @@
           <!-- references -->
           <div>
             <cadmus-refs-doc-references
-              [references]="initialRefs"
+              [references]="references.value"
               [tagEntries]="docTagEntries"
               [typeEntries]="docTypeEntries"
               (referencesChange)="onReferencesChange($event)"
@@ -66,7 +66,7 @@
           <h3>external IDs</h3>
           <div>
             <cadmus-refs-asserted-ids
-              [ids]="initialIds"
+              [ids]="ids.value"
               [idScopeEntries]="idScopeEntries"
               [idTagEntries]="idTagEntries"
               [assTagEntries]="assTagEntries"

@@ -42,6 +42,9 @@ export class TiledDataComponent implements OnInit {
     return this._data;
   }
   public set data(value: Data) {
+    if (this._data === value) {
+      return;
+    }
     this._data = value;
     this.updateForm();
   }
