@@ -104,7 +104,6 @@ export class HistoricalEventEditorComponent {
   public form: FormGroup;
 
   public initialChronotope?: AssertedChronotope;
-  public initialAssertion?: Assertion;
 
   // related entity
   public currentRelEntries: ThesaurusEntry[];
@@ -211,7 +210,7 @@ export class HistoricalEventEditorComponent {
     this.hasChronotope.setValue(model.chronotope ? true : false);
     this.initialChronotope = model.chronotope;
     this.hasAssertion.setValue(model.assertion ? true : false);
-    this.initialAssertion = model.assertion;
+    this.assertion.setValue(model.assertion || null);
     this.relatedEntities.setValue(model.relatedEntities || []);
 
     if (this.relationEntries?.length) {
