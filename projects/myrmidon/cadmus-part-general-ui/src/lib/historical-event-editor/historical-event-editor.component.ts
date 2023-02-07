@@ -173,16 +173,25 @@ export class HistoricalEventEditorComponent {
 
   private getTypeEntryPrefix(id: string): string {
     let p = id;
-    if (this.eventTypeTailCut > 0) {
-      // split the event type ID
+
+    // eventually remove tail: by convention, an entry ID ending with ".-"
+    // is always treated as a tailed ID where the ending "-" should be removed.
+    // This is because that's the convention for representing parent entries
+    // like "person.job.-" with children like "person.job.bishop".
+    const tailSize = p.endsWith('.-')
+      ? 1 + this.eventTypeTailCut
+      : this.eventTypeTailCut;
+
+    if (tailSize > 0) {
+      // split the event type ID (truly hierarchical, e.g. "person.birth")
       const tokens = p.split('.');
-      if (tokens.length >= this.eventTypeTailCut) {
-        tokens.splice(tokens.length - this.eventTypeTailCut);
+      if (tokens.length >= tailSize) {
+        tokens.splice(tokens.length - tailSize);
       }
       p = tokens.join(RELATION_SEP);
+      return p + RELATION_SEP;
     }
-    p += RELATION_SEP;
-    return p.replace('.', ':');
+    return p.replace('.', RELATION_SEP) + RELATION_SEP;
   }
 
   public onTypeEntryChange(entry: ThesaurusEntry): void {
@@ -218,7 +227,7 @@ export class HistoricalEventEditorComponent {
     this.form.markAsPristine();
   }
 
-  private getModel(): HistoricalEvent | null {
+  private getModel(): HistoricalEvent {
     return {
       eid: this.eid.value?.trim() || '',
       type: this.type.value?.trim() || '',
@@ -327,10 +336,7 @@ export class HistoricalEventEditorComponent {
     if (this.form.invalid) {
       return;
     }
-    const model = this.getModel();
-    if (!model) {
-      return;
-    }
-    this.modelChange.emit(model);
+    this._model = this.getModel();
+    this.modelChange.emit(this._model);
   }
 }

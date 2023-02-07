@@ -50,6 +50,7 @@ Quick Docker image build:
 - 2023-02-07:
   - fix to chronotopes part.
   - use contrast color in Th-Scopes tab in item editor.
+  - cut tail `.-` in filtering related event thesauri.
 
 ### 4.0.10
 
