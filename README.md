@@ -47,7 +47,9 @@ Quick Docker image build:
 
 ## History
 
-- 2023-02-07: fix to chronotopes part.
+- 2023-02-07:
+  - fix to chronotopes part.
+  - use contrast color in Th-Scopes tab in item editor.
 
 ### 4.0.10
 

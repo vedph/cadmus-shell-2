@@ -22,9 +22,8 @@
         <td>
           <span
             class="model-type"
-            [style.background-color]="
-              getPartColor($any(parts)[i].typeId, $any(parts)[i].roleId)
-            "
+            [style.background-color]="getPartColor($any(parts)[i].typeId, $any(parts)[i].roleId)"
+            [style.color]="getContrastColor($any(parts)[i].typeId, $any(parts)[i].roleId)"
             >{{ getTypeIdName($any(parts)[i].typeId) }}</span
           >
         </td>

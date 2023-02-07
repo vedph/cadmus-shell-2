@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 
 import { Part } from '@myrmidon/cadmus-core';
-import { CustomValidators } from '@myrmidon/cadmus-ui';
+import { ColorService, CustomValidators } from '@myrmidon/cadmus-ui';
 import { FacetService } from '@myrmidon/cadmus-api';
 import { AppRepository } from '@myrmidon/cadmus-state';
 import { DialogService } from '@myrmidon/ng-mat-tools';
@@ -56,6 +56,7 @@ export class PartsScopeEditorComponent implements OnInit {
     private _facetService: FacetService,
     private _dialogService: DialogService,
     private _appRepository: AppRepository,
+    private _colorService: ColorService,
     private _editedItemRepository: EditedItemRepository
   ) {
     // events
@@ -85,9 +86,14 @@ export class PartsScopeEditorComponent implements OnInit {
     }
   }
 
-  public getPartColor(typeId: string, roleId: string): string {
+  public getPartColor(typeId: string, roleId?: string): string {
     const facet = this._editedItemRepository.getFacet();
     return this._facetService.getPartColor(typeId, roleId, facet);
+  }
+
+  public getContrastColor(typeId: string, roleId?: string): string {
+    const rgb = this.getPartColor(typeId, roleId);
+    return this._colorService.getContrastColor(rgb);
   }
 
   public getTypeIdName(typeId: string): string {
