@@ -30,7 +30,7 @@ export class ChronotopesPartComponent
   extends ModelEditorComponentBase<ChronotopesPart>
   implements OnInit
 {
-  private _editedIndex: number;
+  private _editedChronotopeIndex: number;
 
   public tabIndex: number;
   public editedChronotope: AssertedChronotope | undefined;
@@ -52,7 +52,7 @@ export class ChronotopesPartComponent
     private _dialogService: DialogService
   ) {
     super(authService, formBuilder);
-    this._editedIndex = -1;
+    this._editedChronotopeIndex = -1;
     this.tabIndex = 0;
     // form
     this.chronotopes = formBuilder.control([], {
@@ -127,43 +127,42 @@ export class ChronotopesPartComponent
   }
 
   public addChronotope(): void {
-    this.chronotopes.setValue([...this.chronotopes.value, {}]);
-    this.chronotopes.updateValueAndValidity();
-    this.chronotopes.markAsDirty();
-    this.editChronotope(this.chronotopes.value.length - 1);
+    this.editChronotope({}, -1);
   }
 
-  public editChronotope(index: number): void {
-    if (index < 0) {
-      this._editedIndex = -1;
-      this.tabIndex = 0;
-      this.editedChronotope = undefined;
-    } else {
-      this._editedIndex = index;
-      this.editedChronotope = this.chronotopes.value[index];
-      setTimeout(() => {
-        this.tabIndex = 1;
-      }, 300);
-    }
+  public editChronotope(chronotope: AssertedChronotope, index: number): void {
+    this._editedChronotopeIndex = index;
+    this.editedChronotope = chronotope;
+    setTimeout(() => {
+      this.tabIndex = 1;
+    }, 200);
   }
 
   public onChronotopeChange(chronotope: AssertedChronotope): void {
     this.editedChronotope = chronotope;
   }
 
-  public onChronotopeSave(): void {
-    this.chronotopes.setValue(
-      this.chronotopes.value.map((e: AssertedChronotope, i: number) =>
-        i === this._editedIndex ? this.editedChronotope! : e
-      )
-    );
+  public saveChronotope(): void {
+    const chronotopes = [...this.chronotopes.value];
+    if (this._editedChronotopeIndex === -1) {
+      chronotopes.push(this.editedChronotope!);
+    } else {
+      chronotopes.splice(
+        this._editedChronotopeIndex,
+        1,
+        this.editedChronotope!
+      );
+    }
+    this.chronotopes.setValue(chronotopes);
     this.chronotopes.updateValueAndValidity();
     this.chronotopes.markAsDirty();
-    this.editChronotope(-1);
+    this.closeChronotope();
   }
 
-  public onChronotopeClose(): void {
-    this.editChronotope(-1);
+  public closeChronotope(): void {
+    this.editedChronotope = undefined;
+    this._editedChronotopeIndex = -1;
+    this.tabIndex = 0;
   }
 
   public deleteChronotope(index: number): void {

@@ -42,7 +42,7 @@
                     mat-icon-button
                     color="primary"
                     matTooltip="Edit this chronotope"
-                    (click)="editChronotope(i)"
+                    (click)="editChronotope(entry, i)"
                   >
                     <mat-icon>edit</mat-icon>
                   </button>
@@ -93,7 +93,7 @@
           <div>
             <button
               type="button"
-              (click)="onChronotopeClose()"
+              (click)="closeChronotope()"
               mat-icon-button
               color="warn"
             >
@@ -101,7 +101,7 @@
             </button>
             <button
               type="button"
-              (click)="onChronotopeSave()"
+              (click)="saveChronotope()"
               mat-icon-button
               color="primary"
             >

@@ -47,6 +47,8 @@ Quick Docker image build:
 
 ## History
 
+- 2023-02-07: fix to chronotopes part.
+
 ### 4.0.10
 
 - 2023-02-06: changes to binding in bibliography-entry; chronotopes-part; comment-editor; doc-references-part; external-ids-part; historical-date-part; historical-event-editor; index-keyword; tiled-data; quotation-entry. These reflect the new bricks (mostly assertions or chronotopes), whose binding has been fixed so that now the initial-property hack is no more required.
