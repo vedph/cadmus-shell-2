@@ -47,6 +47,9 @@ Quick Docker image build:
 
 ## History
 
+- 2023-02-14:
+  - updated Angular and packages.
+  - clear user list cache on new registered user in `RegisterUserPageComponent`.
 - 2023-02-07:
   - fix to chronotopes part.
   - use contrast color in Th-Scopes tab in item editor.

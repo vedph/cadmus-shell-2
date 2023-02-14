@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserListRepository } from '@myrmidon/auth-jwt-admin/lib/components/state/user-list.repository';
+import { UserListRepository } from '@myrmidon/auth-jwt-admin';
 
 @Component({
   selector: 'app-register-user-page',
