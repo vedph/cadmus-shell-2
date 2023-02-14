@@ -1,19 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UserListRepository } from '@myrmidon/auth-jwt-admin/lib/components/state/user-list.repository';
 
 @Component({
   selector: 'app-register-user-page',
   templateUrl: './register-user-page.component.html',
-  styleUrls: ['./register-user-page.component.css']
+  styleUrls: ['./register-user-page.component.css'],
 })
 export class RegisterUserPageComponent implements OnInit {
+  constructor(
+    private _router: Router,
+    private _repository: UserListRepository
+  ) {}
 
-  constructor(private _router: Router) { }
-
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   public onRegistered(): void {
+    this._repository.clearCache();
     this._router.navigate(['/home']);
   }
 }
