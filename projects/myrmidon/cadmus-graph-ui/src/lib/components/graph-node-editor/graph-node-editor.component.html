@@ -1,6 +1,6 @@
 <form [formGroup]="form" (submit)="save()">
   <!-- uri (readonly if not new) -->
-  <div>
+  <div class="form-row">
     <mat-form-field *ngIf="isNew">
       <mat-label>uri</mat-label>
       <input matInput [formControl]="uri" />
@@ -13,11 +13,9 @@
         >uri too long</mat-error
       >
     </mat-form-field>
-    <span style="color: silver" *ngIf="!isNew">{{ uri?.value }} </span>
-  </div>
+    <span style="color: silver" *ngIf="!isNew">{{ uri.value }} </span>
 
-  <!-- label -->
-  <div>
+    <!-- label -->
     <mat-form-field>
       <mat-label>label</mat-label>
       <input matInput [formControl]="label" />
@@ -30,12 +28,11 @@
         >label too long</mat-error
       >
     </mat-form-field>
-  </div>
 
-  <!-- class, tag -->
-  <div>
+    <!-- class -->
     <mat-checkbox [formControl]="isClass">is class</mat-checkbox>
-    &nbsp;
+
+    <!-- tag -->
     <mat-form-field *ngIf="tagEntries?.length" style="width: 8em">
       <mat-label>tag</mat-label>
       <mat-select [formControl]="tag">

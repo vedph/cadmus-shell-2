@@ -1,6 +1,6 @@
 <div id="container">
   <!-- filters -->
-  <div style="grid-area: filters">
+  <div id="filters">
     <mat-card appearance="outlined">
       <mat-card-content>
         <cadmus-graph-triple-filter
@@ -11,7 +11,7 @@
   </div>
 
   <!-- list -->
-  <div style="grid-area: list" *ngIf="pagination$ | async as pagination">
+  <div id="list" *ngIf="pagination$ | async as pagination">
     <div *ngIf="(status$ | async)?.value === 'pending'">
       <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     </div>
@@ -25,13 +25,12 @@
           <th>S</th>
           <th>P</th>
           <th>O</th>
-          <th>uri</th>
           <th class="noif-lt-md">sid</th>
           <th class="noif-lt-md">tag</th>
         </thead>
         <tbody>
           <tr *ngFor="let d of pagination.data">
-            <td class="command">
+            <td class="fit-width">
               <button
                 mat-icon-button
                 type="button"
@@ -41,8 +40,6 @@
               >
                 <mat-icon>edit</mat-icon>
               </button>
-            </td>
-            <td class="command">
               <button
                 mat-icon-button
                 type="button"
@@ -75,7 +72,7 @@
       </div>
 
       <!-- pagination -->
-      <div style="grid-area: paginator; justify-content: end" class="form-row">
+      <div id="paginator" class="form-row">
         <button
           color="primary"
           type="button"
@@ -100,7 +97,7 @@
 
     <!-- editor -->
     <mat-expansion-panel
-      style="grid-area: editor"
+      id="editor"
       [expanded]="editedTriple ? true : false"
       [disabled]="editedTriple ? false : true"
     >

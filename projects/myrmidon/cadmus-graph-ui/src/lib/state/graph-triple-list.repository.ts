@@ -164,7 +164,7 @@ export class GraphTripleListRepository {
       });
   }
 
-  clearCache() {
+  public clearCache() {
     this._store.update(deleteAllEntities(), deleteAllPages());
   }
 

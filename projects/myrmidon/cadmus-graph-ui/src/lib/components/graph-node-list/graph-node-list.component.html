@@ -1,6 +1,6 @@
 <div id="container">
   <!-- filters -->
-  <div style="grid-area: filters">
+  <div id="filters">
     <mat-card appearance="outlined">
       <mat-card-content>
         <cadmus-graph-node-filter
@@ -11,7 +11,7 @@
   </div>
 
   <!-- list -->
-  <div style="grid-area: list" *ngIf="pagination$ | async as pagination">
+  <div id="list" *ngIf="pagination$ | async as pagination">
     <div *ngIf="(status$ | async)?.value === 'pending'">
       <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     </div>
@@ -19,7 +19,6 @@
     <div *ngIf="pagination$ | async as pagination">
       <table>
         <thead>
-          <th></th>
           <th></th>
           <th>id</th>
           <th>cls</th>
@@ -31,7 +30,17 @@
         </thead>
         <tbody>
           <tr *ngFor="let d of pagination.data">
-            <td class="command">
+            <td class="fit-width">
+              <button
+                *ngIf="hasWalker"
+                mat-icon-button
+                type="button"
+                color="primary"
+                matTooltip="Walk node"
+                (click)="walkNode(d)"
+              >
+                <mat-icon>flare</mat-icon>
+              </button>
               <button
                 mat-icon-button
                 type="button"
@@ -41,8 +50,6 @@
               >
                 <mat-icon>edit</mat-icon>
               </button>
-            </td>
-            <td class="command">
               <button
                 mat-icon-button
                 type="button"
@@ -64,14 +71,19 @@
         </tbody>
       </table>
       <div>
-        <button color="primary" type="button" mat-flat-button (click)="addNode()">
+        <button
+          color="primary"
+          type="button"
+          mat-flat-button
+          (click)="addNode()"
+        >
           <mat-icon>add_circle</mat-icon>
           add node
         </button>
       </div>
 
       <!-- pagination -->
-      <div style="grid-area: paginator; justify-content: end" class="form-row">
+      <div id="paginator" class="form-row">
         <button
           color="primary"
           type="button"
@@ -98,7 +110,7 @@
     <mat-expansion-panel
       [expanded]="editedNode ? true : false"
       [disabled]="editedNode ? false : true"
-      style="grid-area: editor"
+      id="editor"
     >
       <mat-expansion-panel-header>Node</mat-expansion-panel-header>
       <cadmus-graph-node-editor

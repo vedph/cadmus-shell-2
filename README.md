@@ -47,6 +47,7 @@ Quick Docker image build:
 
 ## History
 
+- 2023-02-15: improvements to graph UI.
 - 2023-02-14:
   - updated Angular and packages.
   - clear user list cache on new registered user in `RegisterUserPageComponent`.

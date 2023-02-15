@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
@@ -33,6 +33,18 @@ export class GraphNodeListComponent implements OnInit {
   @Input()
   public tagEntries?: ThesaurusEntry[];
 
+  /**
+   * True if this node list should have a walker button for each node.
+   */
+  @Input()
+  public hasWalker?: boolean;
+
+  /**
+   * Emitted when walking a specific node is requested.
+   */
+  @Output()
+  public nodeWalk: EventEmitter<NodeResult>;
+
   constructor(
     private _repository: NodeListRepository,
     private _graphService: GraphService,
@@ -41,6 +53,7 @@ export class GraphNodeListComponent implements OnInit {
   ) {
     this.pagination$ = _repository.pagination$;
     this.status$ = _repository.status$;
+    this.nodeWalk = new EventEmitter<NodeResult>();
   }
 
   ngOnInit(): void {}
@@ -111,6 +124,10 @@ export class GraphNodeListComponent implements OnInit {
             });
         }
       });
+  }
+
+  public walkNode(node: NodeResult): void {
+    this.nodeWalk.emit(node);
   }
 
   public clearCache(): void {

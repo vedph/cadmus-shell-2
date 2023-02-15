@@ -9,4 +9,8 @@ export * from './lib/components/graph-node-editor/graph-node-editor.component';
 export * from './lib/components/graph-triple-filter/graph-triple-filter.component';
 export * from './lib/components/graph-triple-list/graph-triple-list.component';
 export * from './lib/components/graph-triple-editor/graph-triple-editor.component';
+
+export * from './lib/state/graph-node-list.repository';
+export * from './lib/state/graph-triple-list.repository';
+
 export * from './lib/cadmus-graph-ui.module';

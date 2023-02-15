@@ -20,12 +20,15 @@ export class GraphTripleEditorComponent implements OnInit {
   private _triple: TripleResult | undefined;
 
   @Input()
-  public get triple(): TripleResult | undefined {
+  public get triple(): TripleResult | undefined | null {
     return this._triple;
   }
-  public set triple(value: TripleResult | undefined) {
-    this._triple = value;
-    this.updateForm();
+  public set triple(value: TripleResult | undefined | null) {
+    if (this._triple === value) {
+      return;
+    }
+    this._triple = value || undefined;
+    this.updateForm(this._triple);
   }
 
   /**
@@ -144,6 +147,7 @@ export class GraphTripleEditorComponent implements OnInit {
       this.isNew = true;
       return;
     }
+
     if (triple.subjectId) {
       this.getNode(triple.subjectId).then((node) => {
         this.subjectNode.setValue(node || null);
@@ -202,6 +206,7 @@ export class GraphTripleEditorComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
-    this.tripleChange.emit(this.getTriple());
+    this._triple = this.getTriple();
+    this.tripleChange.emit(this._triple);
   }
 }

@@ -169,7 +169,7 @@ export class NodeListRepository {
       });
   }
 
-  clearCache() {
+  public clearCache() {
     this._store.update(deleteAllEntities(), deleteAllPages());
   }
 

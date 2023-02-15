@@ -1,4 +1,5 @@
 table {
+  width: 100%;
   border-collapse: collapse;
 }
 tr:nth-child(odd) {
@@ -12,8 +13,9 @@ th {
 td {
   padding: 4px;
 }
-td.command {
-  width: 24px;
+td.fit-width {
+  width: 1px;
+  white-space: nowrap;
 }
 .form-row {
   display: flex;
@@ -34,6 +36,19 @@ div#container {
     ". paginator"
     ". editor";
   gap: 8px;
+}
+div#filters {
+  grid-area: filters;
+}
+div#list {
+  grid-area: list;
+}
+div#paginator {
+  grid-area: paginator;
+  justify-content: end;
+}
+div#editor {
+  grid-area: editor;
 }
 /* lt-md */
 @media only screen and (max-width: 959px) {

@@ -23,12 +23,15 @@ export class GraphNodeEditorComponent implements OnInit {
    * The node being edited. A new node has ID=0 and no uri.
    */
   @Input()
-  public get node(): NodeResult | undefined {
+  public get node(): NodeResult | undefined | null {
     return this._node;
   }
-  public set node(value: NodeResult | undefined) {
-    this._node = value;
-    this.updateForm(value);
+  public set node(value: NodeResult | undefined | null) {
+    if (this._node === value) {
+      return;
+    }
+    this._node = value || undefined;
+    this.updateForm(this._node);
   }
 
   /**
@@ -115,6 +118,7 @@ export class GraphNodeEditorComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
-    this.nodeChange.emit(this.getNode());
+    this._node = this.getNode();
+    this.nodeChange.emit(this._node);
   }
 }
