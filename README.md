@@ -2,6 +2,7 @@
 
 - [Cadmus Shell](#cadmus-shell)
   - [History](#history)
+    - [4.0.11](#4011)
     - [4.0.10](#4010)
     - [4.0.9](#409)
     - [4.0.8](#408)
@@ -24,28 +25,30 @@
     - [2.0.1](#201)
     - [2.0.0](#200)
 
-This is the second iteration of Cadmus frontend refactoring.
+This is the second iteration of [Cadmus](https://myrmex.github.io/overview/cadmus) frontend refactoring.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.4, and upgraded since then up to version 14. For version 15, which implies dropping a number of obsolete libraries, the repository has been cloned into this one. Once tested, development will continue on this repository, while others are kept for backwards compatibility only. Historical versions are listed here:
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.4, and upgraded since then up to version 14. For version 15, which implies dropping a number of obsolete libraries, the repository has been cloned into this one. Development will continue on this repository, while others are kept for backwards compatibility only. Historical versions are listed here:
 
 1. [original shell app](https://github.com/vedph/cadmus_shell): this was a draft.
 2. [version 1](https://github.com/vedph/cadmus-shell): this is a production version. It was upgraded up to Angular 14.
 3. version 2 is this version. It is still the same repository, with a few core changes:
 
-- [Akita](https://github.com/salesforce/akita) has been replaced by [ELF](https://ngneat.github.io/elf/). This implies changing the store model behind each editor and list. New documentation will follow on this. This change was required by Akita obsolescence. Further, ELF has the advantage of being more modern and framework independent.
+- [Akita](https://github.com/salesforce/akita) has been replaced by [ELF](https://ngneat.github.io/elf/). This implies changing the store model behind each editor and list. New documentation will follow on this. This change was required by Akita obsolescence. Further, ELF has the advantage of being more modern and framework-independent.
 - the dirty change mechanism has been refactored and now uses [this solution](https://github.com/vedph/ngx-dirty-check).
 - Angular Material has been upgraded to 15, which implies a number of style adjustments.
 - `@angular/flex-layout`, which has been obsoleted, has been removed and replaced by pure CSS with some media queries where required.
 
-💡 For pre-Angular-15 projects, see the [migration instructions](migration.md).
+💡 For **pre-Angular-15** projects, see the [migration instructions](migration.md).
 
-Quick Docker image build:
+🐋 Quick Docker image build:
 
-1. `npm run build-lib`.
-2. update version in `env.js` and then `ng build`.
-3. `docker build . -t vedph2020/cadmus-shell:4.0.10 -t vedph2020/cadmus-shell:latest` (replace with the current version).
+1. `npm run build-lib`;
+2. update version in `env.js` (and Docker files), and then `ng build --configuration=production`;
+3. `docker build . -t vedph2020/cadmus-shell:4.0.11 -t vedph2020/cadmus-shell:latest` (replace with the current version).
 
 ## History
+
+### 4.0.11
 
 - 2023-02-15: improvements to graph UI.
 - 2023-02-14:
