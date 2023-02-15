@@ -11,6 +11,7 @@ export interface PinLink {
   roleId?: string;
   name: string;
   value: string;
+  tag?: string;
 }
 
 /**
@@ -105,6 +106,9 @@ export const PIN_LINKS_PART_SCHEMA = {
             type: 'string',
           },
           value: {
+            type: 'string',
+          },
+          tag: {
             type: 'string',
           },
         },

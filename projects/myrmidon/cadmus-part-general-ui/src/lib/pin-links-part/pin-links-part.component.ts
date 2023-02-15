@@ -18,13 +18,18 @@ import {
   PinLinksPart,
   PIN_LINKS_PART_TYPEID,
 } from '../pin-links-part';
-import { DataPinInfo, IndexLookupDefinitions } from '@myrmidon/cadmus-core';
+import {
+  DataPinInfo,
+  IndexLookupDefinitions,
+  ThesauriSet,
+  ThesaurusEntry,
+} from '@myrmidon/cadmus-core';
 import { ItemService } from '@myrmidon/cadmus-api';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 /**
  * PinLinksPart editor component.
- * Thesauri: none.
+ * Thesauri: pin-link-tags (optional).
  */
 @Component({
   selector: 'cadmus-pin-links-part',
@@ -39,9 +44,13 @@ export class PinLinksPartComponent
   public links: FormControl<PinLink[]>;
 
   public key: FormControl<string | null>;
+  public tag: FormControl<string | null>;
   public keyForm: FormGroup;
 
   public loading?: boolean;
+
+  // pin-link-tags
+  public tagEntries?: ThesaurusEntry[];
 
   constructor(
     authService: AuthJwtService,
@@ -62,8 +71,10 @@ export class PinLinksPartComponent
     });
     // key form
     this.key = formBuilder.control(null, Validators.required);
+    this.tag = formBuilder.control(null, Validators.maxLength(50));
     this.keyForm = formBuilder.group({
       key: this.key,
+      tag: this.tag,
     });
   }
 
@@ -77,6 +88,15 @@ export class PinLinksPartComponent
     });
   }
 
+  private updateThesauri(thesauri: ThesauriSet): void {
+    const key = 'pin-link-tags';
+    if (this.hasThesaurus(key)) {
+      this.tagEntries = thesauri[key].entries;
+    } else {
+      this.tagEntries = undefined;
+    }
+  }
+
   private updateForm(part?: PinLinksPart | null): void {
     if (!part) {
       this.form.reset();
@@ -87,7 +107,10 @@ export class PinLinksPartComponent
   }
 
   protected override onDataSet(data?: EditedObject<PinLinksPart>): void {
-    // form
+    // thesauri
+    if (data?.thesauri) {
+      this.updateThesauri(data.thesauri);
+    } // form
     this.updateForm(data?.value);
   }
 
@@ -116,7 +139,8 @@ export class PinLinksPartComponent
         return (
           l.itemId === info.itemId &&
           l.partId === info.partId &&
-          ((!l.roleId && !info.partId) || l.roleId === info.roleId)
+          ((!l.roleId && !info.partId) || l.roleId === info.roleId) &&
+          ((!l.tag && !info.tag) || l.tag === info.tag)
         );
       }) > -1
     );
@@ -143,10 +167,12 @@ export class PinLinksPartComponent
             partTypeId: info.partTypeId,
             name: info.name,
             value: info.value,
+            tag: this.tag.value || undefined,
           });
           this.links.setValue(links);
           this.links.markAsDirty();
           this.links.updateValueAndValidity();
+          this.tag.reset();
         },
         error: (error) => {
           this.loading = false;

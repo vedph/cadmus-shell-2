@@ -31,4 +31,8 @@ export class PinLinksPartFeatureComponent
       editorService
     );
   }
+
+  protected override getReqThesauriIds(): string[] {
+    return ['pin-link-tags'];
+  }
 }

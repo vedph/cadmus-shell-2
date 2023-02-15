@@ -48,6 +48,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2023-02-15: added optional `tag` to pin links part entries.
+
 ### 4.0.11
 
 - 2023-02-15: improvements to graph UI.

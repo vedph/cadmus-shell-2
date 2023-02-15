@@ -74,6 +74,7 @@ export interface DataPinInfo {
   partTypeId: string;
   name: string;
   value: string;
+  tag?: string;
 }
 
 /**
