@@ -107,11 +107,19 @@ const routes: Routes = [
     canActivate: [AuthJwtGuardService],
   },
   // cadmus - graph
+  // {
+  //   path: 'graph',
+  //   loadChildren: () =>
+  //     import('@myrmidon/cadmus-graph-pg').then(
+  //       (module) => module.CadmusGraphPgModule
+  //     ),
+  //   canActivate: [AuthJwtGuardService],
+  // },
   {
     path: 'graph',
     loadChildren: () =>
-      import('@myrmidon/cadmus-graph-pg').then(
-        (module) => module.CadmusGraphPgModule
+      import('@myrmidon/cadmus-graph-pg-ex').then(
+        (module) => module.CadmusGraphPgExModule
       ),
     canActivate: [AuthJwtGuardService],
   },

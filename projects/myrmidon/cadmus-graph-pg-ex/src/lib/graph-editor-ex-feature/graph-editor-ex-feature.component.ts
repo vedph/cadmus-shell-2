@@ -7,6 +7,7 @@ import { Node as GraphNode } from '@swimlane/ngx-graph';
 import { WalkerNodeData } from '@myrmidon/cadmus-graph-ui-ex';
 
 const TAB_NODES = 0;
+const TAB_WALKER = 2;
 
 @Component({
   selector: 'cadmus-graph-editor-ex-feature',
@@ -41,6 +42,11 @@ export class GraphEditorExFeatureComponent implements OnInit {
           }
         },
       });
+  }
+
+  public onNodeWalk(node: UriNode): void {
+    this.walkerNodeId = node.id;
+    this.tabIndex = TAB_WALKER;
   }
 
   public onWalkerNodePick(node: GraphNode) {
