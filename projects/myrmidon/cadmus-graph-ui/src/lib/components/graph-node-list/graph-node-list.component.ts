@@ -23,9 +23,24 @@ import { NodeListRepository } from '../../state/graph-node-list.repository';
   styleUrls: ['./graph-node-list.component.css'],
 })
 export class GraphNodeListComponent implements OnInit {
-  public editedNode?: NodeResult;
+  private _editedNode?: NodeResult;
+
   public status$: Observable<StatusState>;
   public pagination$: Observable<PaginationData & { data: NodeResult[] }>;
+
+  /**
+   * The currently edited node if any.
+   */
+  @Input()
+  public get editedNode(): NodeResult | undefined | null {
+    return this._editedNode;
+  }
+  public set editedNode(value: NodeResult | undefined | null) {
+    if (this._editedNode === value) {
+      return;
+    }
+    this._editedNode = value || undefined;
+  }
 
   /**
    * The optional set of thesaurus entries for node's tags.
