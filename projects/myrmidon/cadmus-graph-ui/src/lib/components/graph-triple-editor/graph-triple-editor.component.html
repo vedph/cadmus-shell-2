@@ -4,33 +4,57 @@
     <fieldset id="s">
       <legend>subject</legend>
       <!-- picker -->
-      <cadmus-graph-node-lookup
-        (nodeChange)="onSubjectChange($event)"
-      ></cadmus-graph-node-lookup>
+      <cadmus-ref-lookup
+        [service]="lookupService"
+        [required]="true"
+        [item]="subjectNode.value"
+        label="subject"
+        (itemChange)="onSubjectChange($event)"
+      ></cadmus-ref-lookup>
     </fieldset>
     <!-- P -->
     <fieldset id="p">
       <legend>predicate</legend>
       <!-- picker -->
-      <cadmus-graph-node-lookup
-        tag="property"
-        (nodeChange)="onPredicateChange($event)"
-      ></cadmus-graph-node-lookup>
+      <cadmus-ref-lookup
+        [service]="lookupService"
+        [required]="true"
+        [item]="predicateNode.value"
+        label="predicate"
+        [baseFilter]="{ tag: 'property' }"
+        (itemChange)="onPredicateChange($event)"
+      ></cadmus-ref-lookup>
     </fieldset>
     <!-- O -->
     <fieldset id="o">
       <legend>object</legend>
-      <!-- literal -->
       <mat-checkbox [formControl]="isLiteral">literal</mat-checkbox>
-      <!-- picker -->
-      <cadmus-graph-node-lookup
+      <!-- object -->
+      <cadmus-ref-lookup
         *ngIf="!isLiteral?.value"
-        (nodeChange)="onObjectChange($event)"
-      ></cadmus-graph-node-lookup>
-      <!-- objectNode -->
+        [required]="true"
+        [service]="lookupService"
+        [item]="objectNode.value"
+        label="object"
+        (itemChange)="onObjectChange($event)"
+      ></cadmus-ref-lookup>
+      <!-- literal -->
       <mat-form-field style="width: 100%" *ngIf="isLiteral?.value">
         <mat-label>object</mat-label>
-        <textarea matInput [formControl]="objectNode"></textarea>
+        <textarea matInput [formControl]="literal"></textarea>
+        <mat-error
+          *ngIf="
+            $any(literal).errors?.required && (literal.dirty || literal.touched)
+          "
+          >literal required</mat-error
+        >
+        <mat-error
+          *ngIf="
+            $any(literal).errors?.maxLength &&
+            (literal.dirty || literal.touched)
+          "
+          >literal too long</mat-error
+        >
       </mat-form-field>
     </fieldset>
   </div>

@@ -64,9 +64,12 @@
   <div>
     <fieldset>
       <legend>linked node</legend>
-      <cadmus-graph-node-lookup
-        (nodeChange)="onLinkedNodeSet($event)"
-      ></cadmus-graph-node-lookup>
+      <cadmus-ref-lookup
+        label="node"
+        [item]="linkedNode$ | async"
+        [service]="lookupService"
+        (itemChange)="onLinkedNodeSet($event)"
+      ></cadmus-ref-lookup>
       <div *ngIf="linkedNode$ | async">
         <mat-form-field>
           <mat-label>role</mat-label>
@@ -80,8 +83,9 @@
           mat-icon-button
           color="warn"
           matTooltip="Reset linked node"
+          (click)="clearLinkedNode()"
         >
-          cancel
+          <mat-icon>clear</mat-icon>
         </button>
       </div>
     </fieldset>
@@ -91,10 +95,12 @@
   <div>
     <fieldset>
       <legend>classes</legend>
-      <cadmus-graph-node-lookup
-        [isClass]="true"
-        (nodeChange)="onClassAdd($event)"
-      ></cadmus-graph-node-lookup>
+      <cadmus-ref-lookup
+        label="class"
+        [service]="lookupService"
+        [baseFilter]="{ isClass: true }"
+        (itemChange)="onClassAdd($event)"
+      ></cadmus-ref-lookup>
       <mat-chip-listbox *ngIf="classNodes$ | async as classNodes">
         <mat-chip-option
           *ngFor="let node of classNodes"
@@ -103,7 +109,7 @@
           matTooltip="{{ node.uri }}"
           >{{ node.label }}
           <button type="button" matChipRemove>
-            <mat-icon>cancel</mat-icon>
+            <mat-icon>clear</mat-icon>
           </button>
         </mat-chip-option>
       </mat-chip-listbox>

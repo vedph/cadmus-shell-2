@@ -19,6 +19,9 @@
         "dist/myrmidon/cadmus-graph-pg/myrmidon-cadmus-graph-pg",
         "dist/myrmidon/cadmus-graph-pg"
       ],
+      "@myrmidon/cadmus-graph-pg-ex": [
+        "dist/myrmidon/cadmus-graph-pg-ex"
+      ],
       "@myrmidon/cadmus-graph-ui": [
         "dist/myrmidon/cadmus-graph-ui/myrmidon-cadmus-graph-ui",
         "dist/myrmidon/cadmus-graph-ui"

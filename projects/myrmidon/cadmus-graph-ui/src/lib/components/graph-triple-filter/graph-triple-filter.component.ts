@@ -7,9 +7,10 @@ import {
 } from '@angular/forms';
 import { Observable } from 'rxjs';
 
-import { NodeResult, TripleFilter } from '@myrmidon/cadmus-api';
+import { UriNode, TripleFilter } from '@myrmidon/cadmus-api';
 
 import { GraphTripleListRepository } from '../../state/graph-triple-list.repository';
+import { GraphNodeLookupService } from '../../services/graph-node-lookup.service';
 
 /**
  * Graph triples filter used in graph triples list.
@@ -23,9 +24,6 @@ import { GraphTripleListRepository } from '../../state/graph-triple-list.reposit
 })
 export class GraphTripleFilterComponent implements OnInit {
   public filter$: Observable<TripleFilter>;
-  public subject$: Observable<NodeResult | undefined>;
-  public predicate$: Observable<NodeResult | undefined>;
-  public object$: Observable<NodeResult | undefined>;
   public literal: FormControl<boolean>;
   public objectLit: FormControl<string | null>;
   public sid: FormControl<string | null>;
@@ -33,17 +31,22 @@ export class GraphTripleFilterComponent implements OnInit {
   public tag: FormControl<string | null>;
   public form: FormGroup;
 
+  public subjectNode$: Observable<UriNode | undefined>;
+  public predicateNode$: Observable<UriNode | undefined>;
+  public objectNode$: Observable<UriNode | undefined>;
+
   @Input()
   public disabled?: boolean;
 
   constructor(
     formBuilder: FormBuilder,
-    private _repository: GraphTripleListRepository,
+    public lookupService: GraphNodeLookupService,
+    private _repository: GraphTripleListRepository
   ) {
     this.filter$ = _repository.filter$;
-    this.subject$ = _repository.selectTerm('S');
-    this.predicate$ = _repository.selectTerm('P');
-    this.object$ = _repository.selectTerm('O');
+    this.subjectNode$ = _repository.subjectNode$;
+    this.predicateNode$ = _repository.predicateNode$;
+    this.objectNode$ = _repository.objectNode$;
     // form
     this.literal = formBuilder.control(false, { nonNullable: true });
     this.objectLit = formBuilder.control(null, Validators.maxLength(100));
@@ -67,23 +70,29 @@ export class GraphTripleFilterComponent implements OnInit {
 
   private updateForm(filter: TripleFilter): void {
     this._repository.setTermId(filter.subjectId, 'S');
-    this._repository.setTermId(filter.predicateId, 'P');
+    this._repository.setTermId(
+      filter.predicateIds?.length ? filter.predicateIds[0] : null,
+      'P'
+    );
     this._repository.setTermId(filter.objectId, 'O');
-    this.literal.setValue(filter.objectLiteral ? true : false);
-    this.objectLit.setValue(filter.objectLiteral || null);
+    this.literal.setValue(filter.literalPattern ? true : false);
+    this.objectLit.setValue(filter.literalPattern || null);
     this.sid.setValue(filter.sid || null);
     this.tag.setValue(filter.tag || null);
     this.form.markAsPristine();
   }
 
   private getFilter(): TripleFilter {
+    const pid = this._repository.getTerm('P')?.id;
     return {
+      pageNumber: 1, // not used,
+      pageSize: 20, // not used
       subjectId: this._repository.getTerm('S')?.id,
-      predicateId: this._repository.getTerm('P')?.id,
+      predicateIds: pid ? [pid] : undefined,
       objectId: this.literal.value
         ? undefined
         : this._repository.getTerm('O')?.id,
-      objectLiteral: this.literal.value
+      literalPattern: this.literal.value
         ? this.objectLit.value?.trim()
         : undefined,
       sid: this.sid.value?.trim(),
@@ -91,16 +100,28 @@ export class GraphTripleFilterComponent implements OnInit {
     };
   }
 
-  public onSubjectNodeChange(node?: NodeResult | null): void {
+  public onSubjectNodeChange(node?: UriNode | null): void {
     this._repository.setTerm(node, 'S');
   }
 
-  public onPredicateNodeChange(node?: NodeResult | null): void {
+  public clearSubjectNode(): void {
+    this._repository.setTerm(null, 'S');
+  }
+
+  public onPredicateNodeChange(node?: UriNode | null): void {
     this._repository.setTerm(node, 'P');
   }
 
-  public onObjectNodeChange(node?: NodeResult | null): void {
+  public clearPredicateNode(): void {
+    this._repository.setTerm(null, 'P');
+  }
+
+  public onObjectNodeChange(node?: UriNode | null): void {
     this._repository.setTerm(node, 'O');
+  }
+
+  public clearObjectNode(): void {
+    this._repository.setTerm(null, 'O');
   }
 
   public reset(): void {

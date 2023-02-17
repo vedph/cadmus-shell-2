@@ -6,10 +6,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { GraphService, NodeResult, TripleResult } from '@myrmidon/cadmus-api';
+import { take } from 'rxjs/operators';
+
+import { GraphService, UriNode, UriTriple } from '@myrmidon/cadmus-api';
 import { ThesaurusEntry } from '@myrmidon/cadmus-core';
 import { NgToolsValidators } from '@myrmidon/ng-tools';
-import { take } from 'rxjs/operators';
+
+import { GraphNodeLookupService } from '../../services/graph-node-lookup.service';
 
 @Component({
   selector: 'cadmus-graph-triple-editor',
@@ -17,13 +20,13 @@ import { take } from 'rxjs/operators';
   styleUrls: ['./graph-triple-editor.component.css'],
 })
 export class GraphTripleEditorComponent implements OnInit {
-  private _triple: TripleResult | undefined;
+  private _triple: UriTriple | undefined;
 
   @Input()
-  public get triple(): TripleResult | undefined | null {
+  public get triple(): UriTriple | undefined | null {
     return this._triple;
   }
-  public set triple(value: TripleResult | undefined | null) {
+  public set triple(value: UriTriple | undefined | null) {
     if (this._triple === value) {
       return;
     }
@@ -41,7 +44,7 @@ export class GraphTripleEditorComponent implements OnInit {
    * Emitted when triple has changed.
    */
   @Output()
-  public tripleChange: EventEmitter<TripleResult>;
+  public tripleChange: EventEmitter<UriTriple>;
 
   /**
    * Emitted when the user requested to close the editor.
@@ -51,9 +54,9 @@ export class GraphTripleEditorComponent implements OnInit {
 
   public isNew: boolean;
 
-  public subjectNode: FormControl<NodeResult | null>;
-  public predicateNode: FormControl<NodeResult | null>;
-  public objectNode: FormControl<NodeResult | null>;
+  public subjectNode: FormControl<UriNode | null>;
+  public predicateNode: FormControl<UriNode | null>;
+  public objectNode: FormControl<UriNode | null>;
   public isLiteral: FormControl<boolean>;
   public literal: FormControl<string | null>;
   public tag: FormControl<string | null>;
@@ -61,28 +64,33 @@ export class GraphTripleEditorComponent implements OnInit {
 
   constructor(
     formBuilder: FormBuilder,
+    public lookupService: GraphNodeLookupService,
     private _snackbar: MatSnackBar,
     private _graphService: GraphService
   ) {
-    this.tripleChange = new EventEmitter<TripleResult>();
+    this.tripleChange = new EventEmitter<UriTriple>();
     this.editorClose = new EventEmitter<any>();
     this.isNew = true;
     // form
     this.subjectNode = formBuilder.control(null, Validators.required);
     this.predicateNode = formBuilder.control(null, Validators.required);
-    this.objectNode = formBuilder.control(null, [
-      NgToolsValidators.conditionalValidator(() => {
-        return !this.isLiteral?.value;
-      }, Validators.required),
-      Validators.maxLength(15000),
-    ]);
+    this.objectNode = formBuilder.control(null, {
+      validators: [
+        NgToolsValidators.conditionalValidator(() => {
+          return !this.isLiteral?.value;
+        }, Validators.required),
+      ],
+    });
     this.isLiteral = formBuilder.control(true, { nonNullable: true });
-    this.literal = formBuilder.control(
-      null,
-      NgToolsValidators.conditionalValidator(() => {
-        return this.isLiteral?.value;
-      }, Validators.required)
-    );
+    this.literal = formBuilder.control(null, {
+      validators: [
+        NgToolsValidators.conditionalValidator(() => {
+          return this.isLiteral?.value;
+        }, Validators.required),
+        Validators.maxLength(15000),
+      ],
+      updateOn: 'change',
+    });
     this.tag = formBuilder.control(null, Validators.maxLength(50));
     this.form = formBuilder.group({
       subjectNode: this.subjectNode,
@@ -96,19 +104,19 @@ export class GraphTripleEditorComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  public onSubjectChange(node?: NodeResult | null): void {
+  public onSubjectChange(node?: UriNode | null): void {
     this.subjectNode.setValue(node || null);
     this.subjectNode.updateValueAndValidity();
     this.subjectNode.markAsDirty();
   }
 
-  public onPredicateChange(node?: NodeResult | null): void {
+  public onPredicateChange(node?: UriNode | null): void {
     this.predicateNode.setValue(node || null);
     this.predicateNode.updateValueAndValidity();
     this.predicateNode.markAsDirty();
   }
 
-  public onObjectChange(node?: NodeResult | null): void {
+  public onObjectChange(node?: UriNode | null): void {
     this.objectNode.setValue(node || null);
     this.objectNode.updateValueAndValidity();
     this.objectNode.markAsDirty();
@@ -120,7 +128,7 @@ export class GraphTripleEditorComponent implements OnInit {
     }
   }
 
-  private getNode(id: number): Promise<NodeResult | undefined> {
+  private getNode(id: number): Promise<UriNode | undefined> {
     return new Promise((resolve, reject) => {
       this._graphService
         .getNode(id)
@@ -140,7 +148,7 @@ export class GraphTripleEditorComponent implements OnInit {
     });
   }
 
-  private updateForm(triple?: TripleResult): void {
+  private updateForm(triple?: UriTriple): void {
     if (!triple) {
       this.form.reset();
       this.isLiteral.setValue(true);
@@ -181,7 +189,7 @@ export class GraphTripleEditorComponent implements OnInit {
     this.form.markAsPristine();
   }
 
-  private getTriple(): TripleResult {
+  private getTriple(): UriTriple {
     return {
       id: this.triple?.id || 0,
       subjectId: this.subjectNode.value?.id || 0,

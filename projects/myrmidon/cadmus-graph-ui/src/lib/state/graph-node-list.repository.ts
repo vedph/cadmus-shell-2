@@ -27,7 +27,7 @@ import {
   withRequestsStatus,
 } from '@ngneat/elf-requests';
 
-import { NodeFilter, NodeResult } from '@myrmidon/cadmus-api';
+import { NodeFilter, UriNode } from '@myrmidon/cadmus-api';
 import {
   deleteAllEntities,
   selectActiveEntity,
@@ -44,8 +44,8 @@ const NAME = 'graph-node-list';
 
 export interface NodeListProps {
   filter: NodeFilter;
-  linkedNode?: NodeResult;
-  classNodes?: NodeResult[];
+  linkedNode?: UriNode;
+  classNodes?: UriNode[];
 }
 
 /**
@@ -56,12 +56,12 @@ export class NodeListRepository {
   private _store;
   private _lastPageSize: number;
 
-  public activeItem$: Observable<NodeResult | undefined>;
+  public activeItem$: Observable<UriNode | undefined>;
   public filter$: Observable<NodeFilter>;
-  public pagination$: Observable<PaginationData & { data: NodeResult[] }>;
+  public pagination$: Observable<PaginationData & { data: UriNode[] }>;
   public status$: Observable<StatusState>;
-  public linkedNode$: Observable<NodeResult | undefined>;
-  public classNodes$: Observable<NodeResult[] | undefined>;
+  public linkedNode$: Observable<UriNode | undefined>;
+  public classNodes$: Observable<UriNode[] | undefined>;
 
   constructor(private _graphService: GraphService) {
     this._store = this.createStore();
@@ -98,9 +98,9 @@ export class NodeListRepository {
     const store = createStore(
       { name: NAME },
       withProps<NodeListProps>({
-        filter: {},
+        filter: { pageNumber: 1, pageSize: 20 },
       }),
-      withEntities<NodeResult>(),
+      withEntities<UriNode>(),
       withActiveId(),
       withRequestsCache<'graph-node-list'>(),
       withRequestsStatus(),
@@ -110,17 +110,17 @@ export class NodeListRepository {
     return store;
   }
 
-  public getLinkedNode(): NodeResult | undefined {
+  public getLinkedNode(): UriNode | undefined {
     return this._store.query((state) => state.linkedNode);
   }
 
-  public getClassNodes(): NodeResult[] | undefined {
+  public getClassNodes(): UriNode[] | undefined {
     return this._store.query((state) => state.classNodes);
   }
 
   private adaptPage(
-    page: DataPage<NodeResult>
-  ): PaginationData & { data: NodeResult[] } {
+    page: DataPage<UriNode>
+  ): PaginationData & { data: UriNode[] } {
     return {
       currentPage: page.pageNumber,
       perPage: page.pageSize,
@@ -130,7 +130,7 @@ export class NodeListRepository {
     };
   }
 
-  private addPage(response: PaginationData & { data: NodeResult[] }): void {
+  private addPage(response: PaginationData & { data: UriNode[] }): void {
     const { data, ...paginationData } = response;
     this._store.update(
       upsertEntities(data),
@@ -161,7 +161,7 @@ export class NodeListRepository {
 
     this._store.update(updateRequestStatus(NAME, 'pending'));
     this._graphService
-      .getNodes(this._store.getValue().filter, pageNumber, pageSize)
+      .getNodes({ ...this._store.getValue().filter, pageNumber, pageSize })
       .pipe(take(1))
       .subscribe((page) => {
         this.addPage({ ...this.adaptPage(page), data: page.items });
@@ -182,7 +182,7 @@ export class NodeListRepository {
    *
    * @param node The node or undefined.
    */
-  public setLinkedNode(node?: NodeResult): void {
+  public setLinkedNode(node?: UriNode): void {
     this._store.update(setProp('linkedNode', node));
   }
 
@@ -218,7 +218,7 @@ export class NodeListRepository {
    *
    * @param node The node to add.
    */
-  public addClassNode(node: NodeResult): void {
+  public addClassNode(node: UriNode): void {
     const nodes = [...(this._store.query((state) => state.classNodes) || [])];
     if (nodes.some((n) => n.id === node.id)) {
       return;
@@ -238,14 +238,14 @@ export class NodeListRepository {
       return;
     }
 
-    const requests: Observable<NodeResult>[] = [];
+    const requests: Observable<UriNode>[] = [];
     ids.forEach((id) => {
       requests.push(this._graphService.getNode(id).pipe(take(1)));
     });
     forkJoin(requests)
       .pipe(take(1))
       .subscribe({
-        next: (nodes: NodeResult[]) => {
+        next: (nodes: UriNode[]) => {
           this._store.update(setProp('classNodes', nodes));
         },
         error: (error) => {

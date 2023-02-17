@@ -48,7 +48,10 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
-- 2023-02-17: edited node as a bindable property in graph node list (`@myrmidon/cadmus-graph-ui`).
+- 2023-02-17:
+  - edited node as a bindable property in graph node list (`@myrmidon/cadmus-graph-ui`).
+  - refactored API graph service (`@myrmidon/cadmus-api`).
+  - replaced graph lookup component with the generic lookup brick (`@myrmidon/cadmus-graph-ui`; added `GraphNodeLookupService`).
 - 2023-02-15: added optional `tag` to pin links part entries (`@myrmidon/cadmus-part-general-ui` and `@myrmidon/cadmus-part-general-pg`).
 
 ### 4.0.11

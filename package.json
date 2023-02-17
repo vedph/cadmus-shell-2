@@ -14,9 +14,12 @@
     "build-gen": "ng build @myrmidon/cadmus-part-general-ui && ng build @myrmidon/cadmus-part-general-pg",
     "build-phi": "ng build @myrmidon/cadmus-part-philology-ui && ng build @myrmidon/cadmus-part-philology-pg",
     "build-itm": "ng build @myrmidon/cadmus-item-list && ng build @myrmidon/cadmus-item-editor && ng build @myrmidon/cadmus-item-search && ng build @myrmidon/cadmus-layer-demo",
-    "build-grp": "ng build @myrmidon/cadmus-graph-ui && ng build @myrmidon/cadmus-graph-pg",
+    "build-grp": "ng build @myrmidon/cadmus-graph-ui && ng build @myrmidon/cadmus-graph-pg && ng build @myrmidon/cadmus-graph-pg-ex",
     "build-pre": "ng build @myrmidon/cadmus-preview-ui && ng build @myrmidon/cadmus-preview-pg",
     "build-lib": "npm run build-cor && npm run build-api && npm run build-itm && npm run build-ui && npm run build-ths && npm run build-gen && npm run build-phi && npm run build-grp && npm run build-pre"
+  },
+  "overrides": {
+    "d3-selection": "3.0.0"
   },
   "private": true,
   "dependencies": {
@@ -33,6 +36,7 @@
     "@auth0/angular-jwt": "^5.1.2",
     "@myrmidon/auth-jwt-admin": "1.0.4",
     "@myrmidon/auth-jwt-login": "1.0.1",
+    "@myrmidon/cadmus-graph-ui-ex": "^0.0.3",
     "@myrmidon/cadmus-refs-asserted-chronotope": "1.0.8",
     "@myrmidon/cadmus-refs-asserted-ids": "^1.0.9",
     "@myrmidon/cadmus-refs-assertion": "1.0.5",
@@ -51,6 +55,7 @@
     "@ngneat/elf-entities": "^4.4.3",
     "@ngneat/elf-pagination": "^1.1.0",
     "@ngneat/elf-requests": "^1.6.0",
+    "@swimlane/ngx-graph": "^8.0.3",
     "@types/diff-match-patch": "^1.0.32",
     "@types/rangy": "0.0.34",
     "diff-match-patch": "^1.0.5",
@@ -67,6 +72,9 @@
     "@angular-devkit/build-angular": "^15.1.5",
     "@angular/cli": "^15.1.5",
     "@angular/compiler-cli": "^15.1.4",
+    "@types/d3-dispatch": "^3.0.2",
+    "@types/d3-drag": "^3.0.2",
+    "@types/d3-timer": "^3.0.0",
     "@types/jasmine": "~3.10.0",
     "@types/node": "^12.11.1",
     "jasmine-core": "~3.10.0",

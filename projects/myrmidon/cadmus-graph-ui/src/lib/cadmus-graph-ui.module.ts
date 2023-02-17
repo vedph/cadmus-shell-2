@@ -21,9 +21,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CadmusApiModule } from '@myrmidon/cadmus-api';
 import { NgToolsModule } from '@myrmidon/ng-tools';
 import { NgMatToolsModule } from '@myrmidon/ng-mat-tools';
+import { CadmusRefsLookupModule } from '@myrmidon/cadmus-refs-lookup';
 
 import { GraphNodeFilterComponent } from './components/graph-node-filter/graph-node-filter.component';
-import { GraphNodeLookupComponent } from './components/graph-node-lookup/graph-node-lookup.component';
 import { GraphNodeListComponent } from './components/graph-node-list/graph-node-list.component';
 import { GraphNodeEditorComponent } from './components/graph-node-editor/graph-node-editor.component';
 import { GraphTripleFilterComponent } from './components/graph-triple-filter/graph-triple-filter.component';
@@ -33,7 +33,6 @@ import { GraphTripleEditorComponent } from './components/graph-triple-editor/gra
 @NgModule({
   declarations: [
     GraphNodeFilterComponent,
-    GraphNodeLookupComponent,
     GraphNodeListComponent,
     GraphNodeEditorComponent,
     GraphTripleFilterComponent,
@@ -61,15 +60,15 @@ import { GraphTripleEditorComponent } from './components/graph-triple-editor/gra
     MatTooltipModule,
     // Cadmus
     CadmusApiModule,
+    CadmusRefsLookupModule,
     NgToolsModule,
     NgMatToolsModule,
   ],
   exports: [
-    GraphNodeFilterComponent,
-    GraphNodeLookupComponent,
+    // GraphNodeFilterComponent,
     GraphNodeListComponent,
     GraphNodeEditorComponent,
-    GraphTripleFilterComponent,
+    // GraphTripleFilterComponent,
     GraphTripleListComponent,
     GraphTripleEditorComponent,
   ],

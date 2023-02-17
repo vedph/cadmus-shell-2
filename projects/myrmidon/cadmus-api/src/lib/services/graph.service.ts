@@ -6,12 +6,13 @@ import { catchError, retry } from 'rxjs/operators';
 
 import { DataPage, EnvService, ErrorService } from '@myrmidon/ng-tools';
 
+//#region Models
 export enum NodeSourceType {
   User = 0,
   Item,
-  ItemFacet,
-  ItemGroup,
-  Pin,
+  Part,
+  Thesaurus,
+  Implicit,
 }
 
 export interface Node {
@@ -23,11 +24,13 @@ export interface Node {
   sid?: string;
 }
 
-export interface NodeResult extends Node {
+export interface UriNode extends Node {
   uri: string;
 }
 
-export interface NodeFilter {
+interface NodeFilterBase {
+  pageNumber: number;
+  pageSize: number;
   uid?: string;
   isClass?: boolean;
   tag?: string;
@@ -35,9 +38,12 @@ export interface NodeFilter {
   sourceType?: NodeSourceType;
   sid?: string;
   isSidPrefix?: boolean;
-  linkedNodeId?: number;
-  linkedNodeRole?: 'S' | 'O' | null;
   classIds?: number[];
+}
+
+export interface NodeFilter extends NodeFilterBase {
+  linkedNodeId?: number;
+  linkedNodeRole?: 'S' | 'O';
 }
 
 export interface Triple {
@@ -46,25 +52,67 @@ export interface Triple {
   predicateId: number;
   objectId?: number;
   objectLiteral?: string;
+  objectLiteralIx?: string;
+  literalType?: string;
+  literalLanguage?: string;
+  literalNumber?: number;
   sid?: string;
   tag?: string;
 }
 
-export interface TripleResult extends Triple {
+export interface UriTriple extends Triple {
   subjectUri: string;
   predicateUri: string;
   objectUri?: string;
 }
 
-export interface TripleFilter {
+export interface TripleGroup {
+  predicateId: number;
+  predicateUri: string;
+  count: number;
+}
+
+export interface LiteralFilter {
+  pageNumber: number;
+  pageSize: number;
+  literalPattern?: string;
+  literalType?: string;
+  literalLanguage?: string;
+  minLiteralNumber?: number;
+  maxLiteralNumber?: number;
+}
+
+export interface TripleFilter extends LiteralFilter {
   subjectId?: number;
-  predicateId?: number;
+  predicateIds?: number[];
+  notPredicateIds?: number[];
+  hasLiteralObject?: boolean;
   objectId?: number;
-  objectLiteral?: string;
   sid?: string;
   isSidPrefix?: boolean;
   tag?: string;
 }
+
+export interface LinkedNodeFilter extends NodeFilterBase {
+  /**
+   * The other node identifier, which is the subject node
+   * ID when isObject is true, otherwise the object node ID.
+   */
+  otherNodeId: number;
+  predicateId: number;
+  /**
+   * Whether the node to match is the object (true) or
+   * the subject (false) of the triple having predicate
+   * predicateId.
+   */
+  isObject?: boolean;
+}
+
+export interface LinkedLiteralFilter extends LiteralFilter {
+  subjectId?: number;
+  predicateId?: number;
+}
+//#endregion
 
 /**
  * Cadmus semantic graph service.
@@ -85,16 +133,12 @@ export class GraphService {
    * @param filter The nodes filter.
    * @returns A page of nodes.
    */
-  public getNodes(
-    filter: NodeFilter,
-    pageNumber = 1,
-    pageSize = 20
-  ): Observable<DataPage<NodeResult>> {
+  public getNodes(filter: NodeFilter): Observable<DataPage<UriNode>> {
     const url = this._env.get('apiUrl') + 'graph/nodes';
 
     let httpParams = new HttpParams();
-    httpParams = httpParams.set('pageNumber', pageNumber.toString());
-    httpParams = httpParams.set('pageSize', pageSize.toString());
+    httpParams = httpParams.set('pageNumber', filter.pageNumber.toString());
+    httpParams = httpParams.set('pageSize', filter.pageSize.toString());
 
     if (filter.uid) {
       httpParams = httpParams.set('uid', filter.uid);
@@ -133,7 +177,27 @@ export class GraphService {
     }
 
     return this._http
-      .get<DataPage<NodeResult>>(url, {
+      .get<DataPage<UriNode>>(url, {
+        params: httpParams,
+      })
+      .pipe(retry(3), catchError(this._error.handleError));
+  }
+
+  /**
+   * Get the specified set of nodes.
+   *
+   * @param ids The nodes IDs.
+   * @returns List of nodes/nulls.
+   */
+  public getNodeSet(ids: number[]): Observable<(UriNode | null)[]> {
+    const url = this._env.get('apiUrl') + 'graph/nodes-set/';
+    let httpParams = new HttpParams();
+    for (let i = 0; i < ids.length; i++) {
+      httpParams = httpParams.append('id', ids[i].toString());
+    }
+
+    return this._http
+      .get<(UriNode | null)[]>(url, {
         params: httpParams,
       })
       .pipe(retry(3), catchError(this._error.handleError));
@@ -145,10 +209,26 @@ export class GraphService {
    * @param id The node's ID.
    * @returns The node.
    */
-  public getNode(id: number): Observable<NodeResult> {
+  public getNode(id: number): Observable<UriNode> {
     const url = this._env.get('apiUrl') + 'graph/nodes/' + id.toString();
     return this._http
-      .get<NodeResult>(url)
+      .get<UriNode>(url)
+      .pipe(retry(3), catchError(this._error.handleError));
+  }
+
+  /**
+   * Get the node with the specified URI.
+   *
+   * @param uri The node's URI.
+   * @returns The node.
+   */
+  public getNodeByUri(uri: string): Observable<UriNode> {
+    const url = this._env.get('apiUrl') + 'graph/nodes-by-uri';
+    let httpParams = new HttpParams();
+    httpParams = httpParams.set('uri', uri);
+
+    return this._http
+      .get<UriNode>(url, { params: httpParams })
       .pipe(retry(3), catchError(this._error.handleError));
   }
 
@@ -159,10 +239,10 @@ export class GraphService {
    * @param node The node to add.
    * @returns The added node.
    */
-  public addNode(node: NodeResult): Observable<NodeResult> {
+  public addNode(node: UriNode): Observable<UriNode> {
     const url = this._env.get('apiUrl') + 'graph/nodes/';
     return this._http
-      .post<NodeResult>(url, node)
+      .post<UriNode>(url, node)
       .pipe(catchError(this._error.handleError));
   }
 
@@ -176,37 +256,37 @@ export class GraphService {
     return this._http.delete(url).pipe(catchError(this._error.handleError));
   }
 
-  /**
-   * Get the specified page of triples.
-   *
-   * @param filter The filter.
-   * @returns The page.
-   */
-  public getTriples(
+  private applyTripleFilter(
     filter: TripleFilter,
-    pageNumber = 1,
-    pageSize = 20
-  ): Observable<DataPage<TripleResult>> {
-    const url = this._env.get('apiUrl') + 'graph/triples';
-
-    let httpParams = new HttpParams();
-    httpParams = httpParams.set('pageNumber', pageNumber.toString());
-    httpParams = httpParams.set('pageSize', pageSize.toString());
+    httpParams: HttpParams
+  ): HttpParams {
+    httpParams = httpParams.set('pageNumber', filter.pageNumber.toString());
+    httpParams = httpParams.set('pageSize', filter.pageSize.toString());
 
     if (filter.subjectId) {
       httpParams = httpParams.set('subjectId', filter.subjectId.toString());
     }
-    if (filter.predicateId) {
-      httpParams = httpParams.set('predicateId', filter.predicateId.toString());
+    if (filter.predicateIds?.length) {
+      filter.predicateIds!.forEach((p) => {
+        httpParams = httpParams.set('predicateIds', p);
+      });
+    }
+    if (filter.notPredicateIds?.length) {
+      filter.notPredicateIds!.forEach((p) => {
+        httpParams = httpParams.set('notPredicateIds', p);
+      });
+    }
+    if (
+      filter.hasLiteralObject !== null &&
+      filter.hasLiteralObject !== undefined
+    ) {
+      httpParams = httpParams.set(
+        'hasLiteralObject',
+        filter.hasLiteralObject.toString()
+      );
     }
     if (filter.objectId) {
       httpParams = httpParams.set('objectId', filter.objectId.toString());
-    }
-    if (filter.objectLiteral) {
-      httpParams = httpParams.set(
-        'objectLiteral',
-        filter.objectLiteral.toString()
-      );
     }
     if (filter.sid) {
       httpParams = httpParams.set('sid', filter.sid);
@@ -218,8 +298,22 @@ export class GraphService {
       httpParams = httpParams.set('tag', filter.tag);
     }
 
+    return httpParams;
+  }
+
+  /**
+   * Get the specified page of triples.
+   *
+   * @param filter The filter.
+   * @returns The page.
+   */
+  public getTriples(filter: TripleFilter): Observable<DataPage<UriTriple>> {
+    const url = this._env.get('apiUrl') + 'graph/triples';
+
+    const httpParams = this.applyTripleFilter(filter, new HttpParams());
+
     return this._http
-      .get<DataPage<TripleResult>>(url, {
+      .get<DataPage<UriTriple>>(url, {
         params: httpParams,
       })
       .pipe(retry(3), catchError(this._error.handleError));
@@ -231,10 +325,10 @@ export class GraphService {
    * @param id The triple's ID.
    * @returns The triple.
    */
-  public getTriple(id: number): Observable<TripleResult> {
+  public getTriple(id: number): Observable<UriTriple> {
     const url = this._env.get('apiUrl') + 'graph/triples/' + id.toString();
     return this._http
-      .get<TripleResult>(url)
+      .get<UriTriple>(url)
       .pipe(retry(3), catchError(this._error.handleError));
   }
 
@@ -245,7 +339,7 @@ export class GraphService {
    * @returns The added triple.
    */
   public addTriple(triple: Triple): Observable<Triple> {
-    const url = this._env.get('apiUrl') + 'graph/triples/';
+    const url = this._env.get('apiUrl') + 'graph/triples';
     return this._http
       .post<Triple>(url, triple)
       .pipe(catchError(this._error.handleError));
@@ -257,7 +351,144 @@ export class GraphService {
    * @param id The triple's ID.
    */
   public deleteTriple(id: number): Observable<any> {
-    const url = this._env.get('apiUrl') + '/graph/triples/' + id.toString();
+    const url = this._env.get('apiUrl') + 'graph/triples/' + id.toString();
     return this._http.delete(url).pipe(catchError(this._error.handleError));
+  }
+
+  private applyLiteralFilter(
+    filter: LiteralFilter,
+    httpParams: HttpParams
+  ): HttpParams {
+    if (filter.literalPattern) {
+      httpParams = httpParams.set('literalPattern', filter.literalPattern);
+    }
+    if (filter.literalType) {
+      httpParams = httpParams.set('literalType', filter.literalType);
+    }
+    if (filter.literalLanguage) {
+      httpParams = httpParams.set('literalLanguage', filter.literalLanguage);
+    }
+    if (filter.minLiteralNumber) {
+      httpParams = httpParams.set(
+        'minLiteralNumber',
+        filter.minLiteralNumber.toString()
+      );
+    }
+    if (filter.maxLiteralNumber) {
+      httpParams = httpParams.set(
+        'maxLiteralNumber',
+        filter.maxLiteralNumber.toString()
+      );
+    }
+    return httpParams;
+  }
+
+  /**
+   * Get the specified page of triples grouped by their property.
+   *
+   * @param filter The filter.
+   * @returns The page of triples.
+   */
+  public getTripleGroups(
+    filter: TripleFilter
+  ): Observable<DataPage<TripleGroup>> {
+    const httpParams = this.applyTripleFilter(filter, new HttpParams());
+
+    const url = this._env.get('apiUrl') + 'graph/walk/triples';
+    return this._http
+      .get<DataPage<TripleGroup>>(url, {
+        params: httpParams,
+      })
+      .pipe(retry(3), catchError(this._error.handleError));
+  }
+
+  /**
+   * Get linked nodes.
+   * @param filter The filter.
+   * @returns Observable with data page.
+   */
+  public getLinkedNodes(
+    filter: LinkedNodeFilter
+  ): Observable<DataPage<UriNode>> {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.set('pageNumber', filter.pageNumber.toString());
+    httpParams = httpParams.set('pageSize', filter.pageSize.toString());
+
+    // NodeFilterBase
+    if (filter.uid) {
+      httpParams = httpParams.set('uid', filter.uid);
+    }
+    if (filter.isClass !== null && filter.isClass !== undefined) {
+      httpParams = httpParams.set('isClass', filter.isClass);
+    }
+    if (filter.tag) {
+      httpParams = httpParams.set('tag', filter.tag);
+    }
+    if (filter.label) {
+      httpParams = httpParams.set('label', filter.label);
+    }
+    if (filter.sourceType) {
+      httpParams = httpParams.set('sourceType', +filter.sourceType);
+    }
+    if (filter.sid) {
+      httpParams = httpParams.set('sid', filter.sid);
+    }
+    if (filter.isSidPrefix !== null && filter.isSidPrefix !== undefined) {
+      httpParams = httpParams.set('isSidPrefix', filter.isSidPrefix);
+    }
+    if (filter.classIds?.length) {
+      for (let i = 0; i < filter.classIds.length; i++) {
+        httpParams = httpParams.set('classIds', filter.classIds[i]);
+      }
+    }
+
+    // LinkedNodeFilter
+    if (filter.otherNodeId) {
+      httpParams = httpParams.set('otherNodeId', filter.otherNodeId);
+    }
+    if (filter.predicateId) {
+      httpParams = httpParams.set('predicateId', filter.predicateId);
+    }
+    if (filter.isObject !== null && filter.isObject !== undefined) {
+      httpParams = httpParams.set('isObject', filter.isObject);
+    }
+
+    const url = this._env.get('apiUrl') + 'graph/walk/nodes';
+    return this._http
+      .get<DataPage<UriNode>>(url, {
+        params: httpParams,
+      })
+      .pipe(retry(3), catchError(this._error.handleError));
+  }
+
+  /**
+   * Get linked literals.
+   * @param filter The filter.
+   * @returns Observable with data page.
+   */
+  public getLinkedLiterals(
+    filter: LinkedLiteralFilter
+  ): Observable<DataPage<UriTriple>> {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.set('pageNumber', filter.pageNumber.toString());
+    httpParams = httpParams.set('pageSize', filter.pageSize.toString());
+
+    // LiteralFilter
+    httpParams = this.applyLiteralFilter(filter, httpParams);
+
+    // LinkedLiteralFilter
+    if (filter.subjectId) {
+      httpParams = httpParams.set('subjectId', filter.subjectId.toString());
+    }
+    if (filter.predicateId) {
+      httpParams = httpParams.set('predicateId', filter.predicateId.toString());
+    }
+
+    const url = this._env.get('apiUrl') + 'graph/walk/nodes/literal';
+    return this._http
+      .get<DataPage<UriTriple>>(url, {
+        params: httpParams,
+      })
+      .pipe(retry(3), catchError(this._error.handleError));
   }
 }

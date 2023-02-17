@@ -22,9 +22,9 @@ import {
 
 import {
   NodeFilter,
-  NodeResult,
+  UriNode,
   TripleFilter,
-  TripleResult,
+  UriTriple,
 } from '@myrmidon/cadmus-api';
 import {
   deleteAllEntities,
@@ -42,9 +42,9 @@ const NAME = 'graph-triple-list';
 
 export interface TripleListProps {
   filter: TripleFilter;
-  subjectNode?: NodeResult;
-  predicateNode?: NodeResult;
-  objectNode?: NodeResult;
+  subjectNode?: UriNode;
+  predicateNode?: UriNode;
+  objectNode?: UriNode;
 }
 
 /**
@@ -55,13 +55,13 @@ export class GraphTripleListRepository {
   private _store;
   private _lastPageSize: number;
 
-  public activeItem$: Observable<TripleResult | undefined>;
+  public activeItem$: Observable<UriTriple | undefined>;
   public filter$: Observable<TripleFilter>;
-  public pagination$: Observable<PaginationData & { data: TripleResult[] }>;
+  public pagination$: Observable<PaginationData & { data: UriTriple[] }>;
   public status$: Observable<StatusState>;
-  public subjectNode$: Observable<NodeResult | undefined>;
-  public predicateNode$: Observable<NodeResult | undefined>;
-  public objectNode$: Observable<NodeResult | undefined>;
+  public subjectNode$: Observable<UriNode | undefined>;
+  public predicateNode$: Observable<UriNode | undefined>;
+  public objectNode$: Observable<UriNode | undefined>;
 
   constructor(private _graphService: GraphService) {
     this._store = this.createStore();
@@ -101,9 +101,9 @@ export class GraphTripleListRepository {
     const store = createStore(
       { name: NAME },
       withProps<TripleListProps>({
-        filter: {},
+        filter: { pageNumber: 1, pageSize: 20 },
       }),
-      withEntities<TripleResult>(),
+      withEntities<UriTriple>(),
       withActiveId(),
       withRequestsCache<'graph-triple-list'>(),
       withRequestsStatus(),
@@ -114,8 +114,8 @@ export class GraphTripleListRepository {
   }
 
   private adaptPage(
-    page: DataPage<TripleResult>
-  ): PaginationData & { data: TripleResult[] } {
+    page: DataPage<UriTriple>
+  ): PaginationData & { data: UriTriple[] } {
     return {
       currentPage: page.pageNumber,
       perPage: page.pageSize,
@@ -125,7 +125,7 @@ export class GraphTripleListRepository {
     };
   }
 
-  private addPage(response: PaginationData & { data: TripleResult[] }): void {
+  private addPage(response: PaginationData & { data: UriTriple[] }): void {
     const { data, ...paginationData } = response;
     this._store.update(
       upsertEntities(data),
@@ -156,7 +156,7 @@ export class GraphTripleListRepository {
 
     this._store.update(updateRequestStatus(NAME, 'pending'));
     this._graphService
-      .getTriples(this._store.getValue().filter, pageNumber, pageSize)
+      .getTriples({ ...this._store.getValue().filter, pageNumber, pageSize })
       .pipe(take(1))
       .subscribe((page) => {
         this.addPage({ ...this.adaptPage(page), data: page.items });
@@ -179,7 +179,7 @@ export class GraphTripleListRepository {
    * @param type The type: subject, predicate, object.
    */
   public setTerm(
-    node: NodeResult | null | undefined,
+    node: UriNode | null | undefined,
     type: 'S' | 'P' | 'O'
   ): void {
     switch (type) {
@@ -222,7 +222,7 @@ export class GraphTripleListRepository {
       });
   }
 
-  public selectTerm(type: 'S' | 'P' | 'O'): Observable<NodeResult | undefined> {
+  public selectTerm(type: 'S' | 'P' | 'O'): Observable<UriNode | undefined> {
     switch (type) {
       case 'S':
         return this.subjectNode$;
@@ -233,14 +233,14 @@ export class GraphTripleListRepository {
     }
   }
 
-  public getTerm(type: 'S' | 'P' | 'O'): NodeResult | undefined {
+  public getTerm(type: 'S' | 'P' | 'O'): UriNode | undefined {
     switch (type) {
       case 'S':
-        return this._store.query(state => state.subjectNode);
+        return this._store.query((state) => state.subjectNode);
       case 'P':
-        return this._store.query(state => state.predicateNode);
+        return this._store.query((state) => state.predicateNode);
       case 'O':
-        return this._store.query(state => state.objectNode);
+        return this._store.query((state) => state.objectNode);
     }
   }
 }

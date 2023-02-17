@@ -1,7 +1,7 @@
 {
-  "name": "@myrmidon/cadmus-api",
-  "version": "2.1.0",
-  "description": "Cadmus - API services.",
+  "name": "@myrmidon/cadmus-graph-pg-ex",
+  "version": "0.0.1",
+  "description": "Cadmus - extended semantic graph page.",
   "keywords": [
     "Cadmus"
   ],
@@ -19,5 +19,6 @@
   },
   "dependencies": {
     "tslib": "^2.3.0"
-  }
+  },
+  "sideEffects": false
 }

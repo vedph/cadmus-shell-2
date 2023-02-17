@@ -7,7 +7,7 @@ import { take } from 'rxjs/operators';
 import { PaginationData } from '@ngneat/elf-pagination';
 import { StatusState } from '@ngneat/elf-requests';
 
-import { GraphService, NodeResult, NodeSourceType } from '@myrmidon/cadmus-api';
+import { GraphService, UriNode, NodeSourceType } from '@myrmidon/cadmus-api';
 import { DialogService } from '@myrmidon/ng-mat-tools';
 import { ThesaurusEntry } from '@myrmidon/cadmus-core';
 
@@ -23,19 +23,19 @@ import { NodeListRepository } from '../../state/graph-node-list.repository';
   styleUrls: ['./graph-node-list.component.css'],
 })
 export class GraphNodeListComponent implements OnInit {
-  private _editedNode?: NodeResult;
+  private _editedNode?: UriNode;
 
   public status$: Observable<StatusState>;
-  public pagination$: Observable<PaginationData & { data: NodeResult[] }>;
+  public pagination$: Observable<PaginationData & { data: UriNode[] }>;
 
   /**
    * The currently edited node if any.
    */
   @Input()
-  public get editedNode(): NodeResult | undefined | null {
+  public get editedNode(): UriNode | undefined | null {
     return this._editedNode;
   }
-  public set editedNode(value: NodeResult | undefined | null) {
+  public set editedNode(value: UriNode | undefined | null) {
     if (this._editedNode === value) {
       return;
     }
@@ -58,7 +58,7 @@ export class GraphNodeListComponent implements OnInit {
    * Emitted when walking a specific node is requested.
    */
   @Output()
-  public nodeWalk: EventEmitter<NodeResult>;
+  public nodeWalk: EventEmitter<UriNode>;
 
   constructor(
     private _repository: NodeListRepository,
@@ -68,7 +68,7 @@ export class GraphNodeListComponent implements OnInit {
   ) {
     this.pagination$ = _repository.pagination$;
     this.status$ = _repository.status$;
-    this.nodeWalk = new EventEmitter<NodeResult>();
+    this.nodeWalk = new EventEmitter<UriNode>();
   }
 
   ngOnInit(): void {}
@@ -86,11 +86,11 @@ export class GraphNodeListComponent implements OnInit {
     };
   }
 
-  public editNode(node: NodeResult): void {
+  public editNode(node: UriNode): void {
     this.editedNode = node;
   }
 
-  public onNodeChange(node: NodeResult): void {
+  public onNodeChange(node: UriNode): void {
     this._graphService
       .addNode(node)
       .pipe(take(1))
@@ -116,7 +116,7 @@ export class GraphNodeListComponent implements OnInit {
     this.editedNode = undefined;
   }
 
-  public deleteNode(node: NodeResult): void {
+  public deleteNode(node: UriNode): void {
     this._dialogService
       .confirm('Delete Node', 'Delete node ' + node.label + '?')
       .pipe(take(1))
@@ -141,7 +141,7 @@ export class GraphNodeListComponent implements OnInit {
       });
   }
 
-  public walkNode(node: NodeResult): void {
+  public walkNode(node: UriNode): void {
     this.nodeWalk.emit(node);
   }
 

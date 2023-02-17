@@ -2,9 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 
-import { NodeFilter, NodeResult } from '@myrmidon/cadmus-api';
+import { NodeFilter, UriNode } from '@myrmidon/cadmus-api';
 
 import { NodeListRepository } from '../../state/graph-node-list.repository';
+import { GraphNodeLookupService } from '../../services/graph-node-lookup.service';
 
 /**
  * Graph nodes filter used in graph nodes list.
@@ -18,8 +19,8 @@ import { NodeListRepository } from '../../state/graph-node-list.repository';
 })
 export class GraphNodeFilterComponent implements OnInit {
   public filter$: Observable<NodeFilter>;
-  public linkedNode$: Observable<NodeResult | undefined>;
-  public classNodes$: Observable<NodeResult[] | undefined>;
+  public linkedNode$: Observable<UriNode | undefined>;
+  public classNodes$: Observable<UriNode[] | undefined>;
 
   @Input()
   public disabled?: boolean;
@@ -36,6 +37,7 @@ export class GraphNodeFilterComponent implements OnInit {
 
   constructor(
     formBuilder: FormBuilder,
+    public lookupService: GraphNodeLookupService,
     private _repository: NodeListRepository
   ) {
     this.filter$ = _repository.filter$;
@@ -93,6 +95,8 @@ export class GraphNodeFilterComponent implements OnInit {
 
   private getFilter(): NodeFilter {
     return {
+      pageNumber: 1,  // not used
+      pageSize: 20,   // not used
       label: this.label.value?.trim(),
       isClass: this.isClass.value === 0 ? undefined : this.isClass.value === 1,
       uid: this.uid.value?.trim(),
@@ -102,7 +106,7 @@ export class GraphNodeFilterComponent implements OnInit {
       sid: this.sid.value?.trim(),
       isSidPrefix: this.sidPrefix.value,
       linkedNodeId: this._repository.getLinkedNode()?.id,
-      linkedNodeRole: this.linkedNodeRole.value,
+      linkedNodeRole: this.linkedNodeRole.value || undefined,
       classIds: this._repository.getClassNodes()?.map((n) => n.id),
     };
   }
@@ -111,11 +115,15 @@ export class GraphNodeFilterComponent implements OnInit {
     this._repository.setLinkedNode();
   }
 
-  public onLinkedNodeSet(node: NodeResult | null): void {
+  public onLinkedNodeSet(node: UriNode | null): void {
     this._repository.setLinkedNode(node || undefined);
   }
 
-  public onClassAdd(node: NodeResult | null): void {
+  public clearLinkedNode(): void {
+    this._repository.setLinkedNode();
+  }
+
+  public onClassAdd(node: UriNode | null): void {
     if (!node) {
       return;
     }

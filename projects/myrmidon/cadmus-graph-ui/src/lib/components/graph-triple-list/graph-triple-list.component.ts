@@ -10,7 +10,7 @@ import { PaginationData } from '@ngneat/elf-pagination';
 import {
   GraphService,
   ThesaurusService,
-  TripleResult,
+  UriTriple,
 } from '@myrmidon/cadmus-api';
 import { DialogService } from '@myrmidon/ng-mat-tools';
 import { ThesaurusEntry } from '@myrmidon/cadmus-core';
@@ -23,9 +23,9 @@ import { GraphTripleListRepository } from '../../state/graph-triple-list.reposit
   styleUrls: ['./graph-triple-list.component.css'],
 })
 export class GraphTripleListComponent implements OnInit {
-  public pagination$: Observable<PaginationData & { data: TripleResult[] }>;
+  public pagination$: Observable<PaginationData & { data: UriTriple[] }>;
   public status$: Observable<StatusState>;
-  public editedTriple?: TripleResult;
+  public editedTriple?: UriTriple;
 
   /**
    * The optional set of thesaurus entries for triple's tags.
@@ -68,11 +68,11 @@ export class GraphTripleListComponent implements OnInit {
     };
   }
 
-  public editTriple(triple: TripleResult): void {
+  public editTriple(triple: UriTriple): void {
     this.editedTriple = triple;
   }
 
-  public onTripleChange(triple: TripleResult): void {
+  public onTripleChange(triple: UriTriple): void {
     this._graphService
       .addTriple(triple)
       .pipe(take(1))
@@ -98,7 +98,7 @@ export class GraphTripleListComponent implements OnInit {
     this.editedTriple = undefined;
   }
 
-  public deleteTriple(triple: TripleResult): void {
+  public deleteTriple(triple: UriTriple): void {
     this._dialogService
       .confirm('Delete Triple', 'Delete triple?')
       .pipe(take(1))

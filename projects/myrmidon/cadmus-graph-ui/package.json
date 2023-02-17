@@ -1,14 +1,14 @@
 {
   "name": "@myrmidon/cadmus-graph-ui",
-  "version": "2.0.4",
+  "version": "2.1.1",
   "description": "Cadmus - semantic graph components.",
   "keywords": [
     "Cadmus"
   ],
-  "homepage": "https://github.com/vedph/cadmus-shell",
+  "homepage": "https://github.com/vedph/cadmus-shell-2",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vedph/cadmus-shell"
+    "url": "https://github.com/vedph/cadmus-shell-2"
   },
   "author": {
     "name": "Daniele Fusi"

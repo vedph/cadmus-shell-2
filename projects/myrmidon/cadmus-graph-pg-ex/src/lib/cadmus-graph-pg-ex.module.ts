@@ -10,20 +10,22 @@ import { NgMatToolsModule } from '@myrmidon/ng-mat-tools';
 import { NgToolsModule } from '@myrmidon/ng-tools';
 import { CadmusApiModule } from '@myrmidon/cadmus-api';
 import { CadmusGraphUiModule } from '@myrmidon/cadmus-graph-ui';
+import { CadmusGraphUiExModule } from '@myrmidon/cadmus-graph-ui-ex';
+import { NgxGraphModule } from '@swimlane/ngx-graph';
 
-import { GraphEditorFeatureComponent } from './graph-editor-feature/graph-editor-feature.component';
+import { GraphEditorExFeatureComponent } from './graph-editor-ex-feature/graph-editor-ex-feature.component';
 
 // https://github.com/ng-packagr/ng-packagr/issues/778
 export const RouterModuleForChild = RouterModule.forChild([
   {
     path: '',
     pathMatch: 'full',
-    component: GraphEditorFeatureComponent,
+    component: GraphEditorExFeatureComponent,
   },
 ]);
 
 @NgModule({
-  declarations: [GraphEditorFeatureComponent],
+  declarations: [GraphEditorExFeatureComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -33,12 +35,15 @@ export const RouterModuleForChild = RouterModule.forChild([
     // material
     MatCardModule,
     MatTabsModule,
+    // vendor
+    NgxGraphModule,
     // cadmus
     NgToolsModule,
     NgMatToolsModule,
     CadmusApiModule,
     CadmusGraphUiModule,
+    CadmusGraphUiExModule,
   ],
-  exports: [GraphEditorFeatureComponent],
+  exports: [GraphEditorExFeatureComponent],
 })
-export class CadmusGraphPgModule {}
+export class CadmusGraphPgExModule {}

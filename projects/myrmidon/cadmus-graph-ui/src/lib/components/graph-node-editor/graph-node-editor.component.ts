@@ -5,7 +5,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { NodeResult, NodeSourceType } from '@myrmidon/cadmus-api';
+import { UriNode, NodeSourceType } from '@myrmidon/cadmus-api';
 import { ThesaurusEntry } from '@myrmidon/cadmus-core';
 
 /**
@@ -17,16 +17,16 @@ import { ThesaurusEntry } from '@myrmidon/cadmus-core';
   styleUrls: ['./graph-node-editor.component.css'],
 })
 export class GraphNodeEditorComponent implements OnInit {
-  private _node?: NodeResult;
+  private _node?: UriNode;
 
   /**
    * The node being edited. A new node has ID=0 and no uri.
    */
   @Input()
-  public get node(): NodeResult | undefined | null {
+  public get node(): UriNode | undefined | null {
     return this._node;
   }
-  public set node(value: NodeResult | undefined | null) {
+  public set node(value: UriNode | undefined | null) {
     if (this._node === value) {
       return;
     }
@@ -44,7 +44,7 @@ export class GraphNodeEditorComponent implements OnInit {
    * Emitted when the node has changed.
    */
   @Output()
-  public nodeChange: EventEmitter<NodeResult>;
+  public nodeChange: EventEmitter<UriNode>;
 
   /**
    * Emitted when the user requested to close the editor.
@@ -61,7 +61,7 @@ export class GraphNodeEditorComponent implements OnInit {
   public form: FormGroup;
 
   constructor(formBuilder: FormBuilder) {
-    this.nodeChange = new EventEmitter<NodeResult>();
+    this.nodeChange = new EventEmitter<UriNode>();
     this.editorClose = new EventEmitter<any>();
     this.isNew = true;
     // form
@@ -85,7 +85,7 @@ export class GraphNodeEditorComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  private updateForm(node?: NodeResult): void {
+  private updateForm(node?: UriNode): void {
     if (!node) {
       this.form.reset();
       this.isNew = true;
@@ -99,7 +99,7 @@ export class GraphNodeEditorComponent implements OnInit {
     this.form.markAsPristine();
   }
 
-  private getNode(): NodeResult {
+  private getNode(): UriNode {
     return {
       id: this._node?.id || 0,
       sourceType: this._node?.sourceType || NodeSourceType.User,
