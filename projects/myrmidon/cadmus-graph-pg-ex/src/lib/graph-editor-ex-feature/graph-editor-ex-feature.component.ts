@@ -49,20 +49,25 @@ export class GraphEditorExFeatureComponent implements OnInit {
     this.tabIndex = TAB_WALKER;
   }
 
+  private getNodeNumericId(id: string): number {
+    const i = id.indexOf('N');
+    return i === -1 ? 0 : +id.substring(i + 1);
+  }
+
   public onWalkerNodePick(node: GraphNode) {
     const data = node.data as WalkerNodeData;
     if (!data) {
       return;
     }
     this.tabIndex = TAB_NODES;
-    // this.editedNode = {
-    //   id: TODO,
-    //   isClass: data.isClass,
-    //   label: data.,
-    //   sourceType: data.sourceType,
-    //   tag: data.tag,
-    //   sid: data.sid,
-    //   uri: data.uri
-    // }
+    this.editedNode = {
+      id: this.getNodeNumericId(node.id),
+      isClass: data.isClass,
+      label: node.label || node.id,
+      sourceType: data.sourceType,
+      tag: data.tag,
+      sid: data.sid,
+      uri: data.uri
+    }
   }
 }
