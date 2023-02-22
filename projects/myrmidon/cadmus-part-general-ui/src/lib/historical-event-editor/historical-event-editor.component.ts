@@ -166,9 +166,13 @@ export class HistoricalEventEditorComponent {
     if (!this.relationEntries?.length) {
       return;
     }
-    this.currentRelEntries = this.relationEntries.filter((e) =>
-      e.id.startsWith(prefix)
-    );
+    if (!prefix) {
+      this.currentRelEntries = this.relationEntries;
+    } else {
+      this.currentRelEntries = this.relationEntries.filter((e) =>
+        e.id.startsWith(prefix)
+      );
+    }
   }
 
   private getTypeEntryPrefix(id: string): string {
