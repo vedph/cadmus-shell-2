@@ -324,7 +324,7 @@ export class HistoricalEventEditorComponent {
   public onIdPick(id: string): void {
     this.setCurrentEntity({
       id: id,
-      relation: this.currentEntity?.relation || '',
+      relation: this.relation.value || '',
     });
   }
 
