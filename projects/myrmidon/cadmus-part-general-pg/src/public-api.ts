@@ -17,6 +17,7 @@ export * from './lib/keywords-part-feature/keywords-part-feature.component';
 export * from './lib/metadata-part-feature/metadata-part-feature.component';
 export * from './lib/names-part-feature/names-part-feature.component';
 export * from './lib/note-part-feature/note-part-feature.component';
+export * from './lib/pin-links-fragment-feature/pin-links-fragment-feature.component';
 export * from './lib/pin-links-part-feature/pin-links-part-feature.component';
 export * from './lib/tiled-text-layer-part-feature/tiled-text-layer-part-feature.component';
 export * from './lib/tiled-text-part-feature/tiled-text-part-feature.component';

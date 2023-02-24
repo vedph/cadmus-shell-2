@@ -56,6 +56,7 @@ import { TiledTextPartComponent } from './tiled-text-part/tiled-text-part.compon
 import { HistoricalEventsPartComponent } from './historical-events-part/historical-events-part.component';
 import { NamesPartComponent } from './names-part/names-part.component';
 import { PinLinksPartComponent } from './pin-links-part/pin-links-part.component';
+import { PinLinksFragmentComponent } from './pin-links-fragment/pin-links-fragment.component';
 
 @NgModule({
   imports: [
@@ -112,6 +113,7 @@ import { PinLinksPartComponent } from './pin-links-part/pin-links-part.component
     MetadataPartComponent,
     NamesPartComponent,
     NotePartComponent,
+    PinLinksFragmentComponent,
     PinLinksPartComponent,
     TextTileComponent,
     TiledTextPartComponent,
@@ -135,6 +137,7 @@ import { PinLinksPartComponent } from './pin-links-part/pin-links-part.component
     MetadataPartComponent,
     NamesPartComponent,
     NotePartComponent,
+    PinLinksFragmentComponent,
     PinLinksPartComponent,
     TiledDataComponent,
     TextTileComponent,

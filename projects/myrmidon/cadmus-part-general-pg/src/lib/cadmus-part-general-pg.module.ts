@@ -35,6 +35,7 @@ import {
   CHRONOTOPES_PART_TYPEID,
   EXTERNAL_IDS_PART_TYPEID,
   PIN_LINKS_PART_TYPEID,
+  PIN_LINKS_FRAGMENT_TYPEID,
 } from '@myrmidon/cadmus-part-general-ui';
 import { CadmusStateModule } from '@myrmidon/cadmus-state';
 import {
@@ -65,6 +66,7 @@ import { TiledTextPartFeatureComponent } from './tiled-text-part-feature/tiled-t
 import { TiledTextLayerPartFeatureComponent } from './tiled-text-layer-part-feature/tiled-text-layer-part-feature.component';
 import { TokenTextLayerPartFeatureComponent } from './token-text-layer-part-feature/token-text-layer-part-feature.component';
 import { TokenTextPartFeatureComponent } from './token-text-part-feature/token-text-part-feature.component';
+import { PinLinksFragmentFeatureComponent } from './pin-links-fragment-feature/pin-links-fragment-feature.component';
 
 // https://github.com/ng-packagr/ng-packagr/issues/778
 export const RouterModuleForChild = RouterModule.forChild([
@@ -188,6 +190,12 @@ export const RouterModuleForChild = RouterModule.forChild([
     component: ChronologyFragmentFeatureComponent,
     canDeactivate: [PendingChangesGuard],
   },
+  {
+    path: `fragment/:pid/${PIN_LINKS_FRAGMENT_TYPEID}/:loc`,
+    pathMatch: 'full',
+    component: PinLinksFragmentFeatureComponent,
+    canDeactivate: [PendingChangesGuard],
+  },
 ]);
 
 @NgModule({
@@ -234,6 +242,7 @@ export const RouterModuleForChild = RouterModule.forChild([
     MetadataPartFeatureComponent,
     NamesPartFeatureComponent,
     NotePartFeatureComponent,
+    PinLinksFragmentFeatureComponent,
     PinLinksPartFeatureComponent,
     TiledTextLayerPartFeatureComponent,
     TiledTextPartFeatureComponent,
@@ -256,6 +265,7 @@ export const RouterModuleForChild = RouterModule.forChild([
     MetadataPartFeatureComponent,
     NamesPartFeatureComponent,
     NotePartFeatureComponent,
+    PinLinksFragmentFeatureComponent,
     PinLinksPartFeatureComponent,
     TiledTextLayerPartFeatureComponent,
     TiledTextPartFeatureComponent,

@@ -52,6 +52,9 @@ export * from './lib/note-part/note-part.component';
 export * from './lib/pin-links-part';
 export * from './lib/pin-links-part/pin-links-part.component';
 
+export * from './lib/pin-links-fragment';
+export * from './lib/pin-links-fragment/pin-links-fragment.component';
+
 export * from './lib/text-tile/text-tile.component';
 export * from './lib/tiled-data/tiled-data.component';
 export * from './lib/tiled-text-part';

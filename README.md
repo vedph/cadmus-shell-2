@@ -48,6 +48,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2023-02-24: added pin links fragment layer.
 - 2023-02-22:
   - updated Angular.
   - fix to event editor: relation reset when picking lookup item (`@myrmidon/cadmus-part-general-ui`).

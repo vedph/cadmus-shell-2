@@ -76,15 +76,11 @@ export const PIN_LINKS_PART_SCHEMA = {
       type: ['string', 'null'],
       pattern: '^([a-z][-0-9a-z._]*)?$',
     },
-
     links: {
       type: 'array',
-      default: [],
-      title: 'The links Schema',
       items: {
         type: 'object',
         default: {},
-        title: 'A Schema',
         required: ['label', 'itemId', 'partId', 'partTypeId', 'name', 'value'],
         properties: {
           label: {
