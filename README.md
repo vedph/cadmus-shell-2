@@ -48,7 +48,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
-- 2023-02-24: added pin links fragment layer.
+- 2023-02-26: multiple chronotopes in historical event (`@myrmidon/cadmus-part-general-ui`).
+- 2023-02-24: added pin links fragment layer (`@myrmidon/cadmus-part-general-ui` and (`@myrmidon/cadmus-part-general-pg`)).
 - 2023-02-22:
   - updated Angular.
   - fix to event editor: relation reset when picking lookup item (`@myrmidon/cadmus-part-general-ui`).

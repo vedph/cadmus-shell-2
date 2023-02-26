@@ -71,22 +71,19 @@
           >
         </mat-form-field>
       </div>
-      <!-- chronotope -->
-      <mat-checkbox [formControl]="hasChronotope">chronotope</mat-checkbox>
-      <mat-expansion-panel
-        [expanded]="hasChronotope.value"
-        [disabled]="!hasChronotope.value"
-      >
+      <!-- chronotopes -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>chronotopes</mat-expansion-panel-header>
         <fieldset>
-          <legend>chronotope</legend>
-          <cadmus-refs-asserted-chronotope
+          <legend>chronotopes</legend>
+          <cadmus-asserted-chronotope-set
             [tagEntries]="ctTagEntries"
             [assTagEntries]="assTagEntries"
             [refTagEntries]="refTagEntries"
             [refTypeEntries]="refTypeEntries"
-            [chronotope]="chronotope.value || undefined"
-            (chronotopeChange)="onChronotopeChange($event)"
-          ></cadmus-refs-asserted-chronotope>
+            [chronotopes]="chronotopes.value || undefined"
+            (chronotopesChange)="onChronotopesChange($event)"
+          ></cadmus-asserted-chronotope-set>
         </fieldset>
       </mat-expansion-panel>
 

@@ -24,8 +24,7 @@
             <th></th>
             <th>type</th>
             <th>ID</th>
-            <th>place</th>
-            <th>date</th>
+            <th>place/date</th>
             <th>rel.</th>
           </tr>
         </thead>
@@ -80,8 +79,7 @@
               {{ entry.type | flatLookup : eventTypeEntries : "id" : "value" }}
             </td>
             <td>{{ entry.eid }}</td>
-            <td>{{ entry.chronotope?.place?.value }}</td>
-            <td>{{ entry.chronotope?.date | historicalDate }}</td>
+            <td>{{ entry.chronotopes | assertedChronotopes }}</td>
             <td>{{ entry.relatedEntities?.length || 0 }}</td>
           </tr>
         </tbody>

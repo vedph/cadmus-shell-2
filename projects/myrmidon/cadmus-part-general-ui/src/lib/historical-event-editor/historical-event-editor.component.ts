@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -97,8 +97,7 @@ export class HistoricalEventEditorComponent {
   public description: FormControl<string | null>;
   public note: FormControl<string | null>;
   public relatedEntities: FormControl<RelatedEntity[]>;
-  public hasChronotope: FormControl<boolean>;
-  public chronotope: FormControl<AssertedChronotope | null>;
+  public chronotopes: FormControl<AssertedChronotope[]>;
   public hasAssertion: FormControl<boolean>;
   public assertion: FormControl<Assertion | null>;
   public form: FormGroup;
@@ -127,8 +126,7 @@ export class HistoricalEventEditorComponent {
     this.description = formBuilder.control(null, Validators.maxLength(1000));
     this.note = formBuilder.control(null, Validators.maxLength(1000));
     this.relatedEntities = formBuilder.control([], { nonNullable: true });
-    this.hasChronotope = formBuilder.control(false, { nonNullable: true });
-    this.chronotope = formBuilder.control(null);
+    this.chronotopes = formBuilder.control([], { nonNullable: true });
     this.hasAssertion = formBuilder.control(false, { nonNullable: true });
     this.assertion = formBuilder.control(null);
     this.form = formBuilder.group({
@@ -137,8 +135,7 @@ export class HistoricalEventEditorComponent {
       description: this.description,
       note: this.note,
       relatedEntities: this.relatedEntities,
-      hasChronotope: this.hasChronotope,
-      chronotope: this.chronotope,
+      chronotopes: this.chronotopes,
       hasAssertion: this.hasAssertion,
       assertion: this.assertion,
     });
@@ -218,8 +215,7 @@ export class HistoricalEventEditorComponent {
     this.type.setValue(model.type);
     this.description.setValue(model.description || null);
     this.note.setValue(model.note || null);
-    this.hasChronotope.setValue(model.chronotope ? true : false);
-    this.chronotope.setValue(model.chronotope || null);
+    this.chronotopes.setValue(model.chronotopes || []);
     this.hasAssertion.setValue(model.assertion ? true : false);
     this.assertion.setValue(model.assertion || null);
     this.relatedEntities.setValue(model.relatedEntities || []);
@@ -237,8 +233,8 @@ export class HistoricalEventEditorComponent {
       type: this.type.value?.trim() || '',
       description: this.description.value?.trim() || undefined,
       note: this.note.value?.trim() || undefined,
-      chronotope: this.hasChronotope.value
-        ? this.chronotope.value || undefined
+      chronotopes: this.chronotopes.value.length
+        ? this.chronotopes.value
         : undefined,
       assertion: this.hasAssertion.value
         ? this.assertion.value || undefined
@@ -249,10 +245,10 @@ export class HistoricalEventEditorComponent {
     };
   }
 
-  public onChronotopeChange(chronotope: AssertedChronotope): void {
-    this.chronotope.setValue(chronotope);
-    this.chronotope.updateValueAndValidity();
-    this.chronotope.markAsDirty();
+  public onChronotopesChange(chronotope: AssertedChronotope[]): void {
+    this.chronotopes.setValue(chronotope);
+    this.chronotopes.updateValueAndValidity();
+    this.chronotopes.markAsDirty();
   }
 
   public onAssertionChange(assertion: Assertion | undefined): void {

@@ -23,7 +23,7 @@ export interface RelatedEntity {
 export interface HistoricalEvent {
   eid: string;
   type: string;
-  chronotope?: AssertedChronotope;
+  chronotopes?: AssertedChronotope[];
   assertion?: Assertion;
   description?: string;
   relatedEntities?: RelatedEntity[];
@@ -102,173 +102,180 @@ export const HISTORICAL_EVENTS_PART_SCHEMA = {
               type: {
                 type: 'string',
               },
-              chronotope: {
-                place: {
-                  type: 'object',
-                  required: ['value'],
-                  properties: {
-                    tag: {
-                      type: 'string',
-                    },
-                    value: {
-                      type: 'string',
-                    },
-                    assertion: {
-                      type: 'object',
-                      required: ['rank'],
-                      properties: {
-                        tag: {
-                          type: 'string',
+              chronotopes: {
+                type: 'array',
+                items: {
+                  anyOf: [
+                    {
+                      place: {
+                        type: 'object',
+                        required: ['value'],
+                        properties: {
+                          tag: {
+                            type: 'string',
+                          },
+                          value: {
+                            type: 'string',
+                          },
+                          assertion: {
+                            type: 'object',
+                            required: ['rank'],
+                            properties: {
+                              tag: {
+                                type: 'string',
+                              },
+                              rank: {
+                                type: 'integer',
+                              },
+                              note: {
+                                type: 'string',
+                              },
+                              references: {
+                                type: 'array',
+                                items: {
+                                  anyOf: [
+                                    {
+                                      type: 'object',
+                                      required: ['citation'],
+                                      properties: {
+                                        type: {
+                                          type: 'string',
+                                        },
+                                        tag: {
+                                          type: 'string',
+                                        },
+                                        citation: {
+                                          type: 'string',
+                                        },
+                                        note: {
+                                          type: 'string',
+                                        },
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            },
+                          },
                         },
-                        rank: {
-                          type: 'integer',
-                        },
-                        note: {
-                          type: 'string',
-                        },
-                        references: {
-                          type: 'array',
-                          items: {
-                            anyOf: [
-                              {
+                      },
+                      date: {
+                        type: 'object',
+                        required: ['value'],
+                        properties: {
+                          tag: {
+                            type: 'string',
+                          },
+                          date: {
+                            type: 'object',
+                            required: ['a'],
+                            properties: {
+                              a: {
                                 type: 'object',
-                                required: ['citation'],
+                                required: ['value'],
                                 properties: {
-                                  type: {
-                                    type: 'string',
+                                  value: {
+                                    type: 'integer',
                                   },
-                                  tag: {
-                                    type: 'string',
+                                  isCentury: {
+                                    type: 'boolean',
                                   },
-                                  citation: {
-                                    type: 'string',
+                                  isSpan: {
+                                    type: 'boolean',
                                   },
-                                  note: {
-                                    type: 'string',
+                                  isApproximate: {
+                                    type: 'boolean',
+                                  },
+                                  isDubious: {
+                                    type: 'boolean',
+                                  },
+                                  day: {
+                                    type: 'integer',
+                                  },
+                                  month: {
+                                    type: 'integer',
+                                  },
+                                  hint: {
+                                    type: ['string', 'null'],
                                   },
                                 },
                               },
-                            ],
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-                value: {
-                  type: 'object',
-                  required: ['value'],
-                  properties: {
-                    tag: {
-                      type: 'string',
-                    },
-                    date: {
-                      type: 'object',
-                      required: ['a'],
-                      properties: {
-                        a: {
-                          type: 'object',
-                          required: ['value'],
-                          properties: {
-                            value: {
-                              type: 'integer',
-                            },
-                            isCentury: {
-                              type: 'boolean',
-                            },
-                            isSpan: {
-                              type: 'boolean',
-                            },
-                            isApproximate: {
-                              type: 'boolean',
-                            },
-                            isDubious: {
-                              type: 'boolean',
-                            },
-                            day: {
-                              type: 'integer',
-                            },
-                            month: {
-                              type: 'integer',
-                            },
-                            hint: {
-                              type: ['string', 'null'],
-                            },
-                          },
-                        },
-                        b: {
-                          type: 'object',
-                          required: ['value'],
-                          properties: {
-                            value: {
-                              type: 'integer',
-                            },
-                            isCentury: {
-                              type: 'boolean',
-                            },
-                            isSpan: {
-                              type: 'boolean',
-                            },
-                            isApproximate: {
-                              type: 'boolean',
-                            },
-                            isDubious: {
-                              type: 'boolean',
-                            },
-                            day: {
-                              type: 'integer',
-                            },
-                            month: {
-                              type: 'integer',
-                            },
-                            hint: {
-                              type: ['string', 'null'],
-                            },
-                          },
-                        },
-                      },
-                    },
-                    assertion: {
-                      type: 'object',
-                      required: ['rank'],
-                      properties: {
-                        tag: {
-                          type: 'string',
-                        },
-                        rank: {
-                          type: 'integer',
-                        },
-                        note: {
-                          type: 'string',
-                        },
-                        references: {
-                          type: 'array',
-                          items: {
-                            anyOf: [
-                              {
+                              b: {
                                 type: 'object',
-                                required: ['citation'],
+                                required: ['value'],
                                 properties: {
-                                  type: {
-                                    type: 'string',
+                                  value: {
+                                    type: 'integer',
                                   },
-                                  tag: {
-                                    type: 'string',
+                                  isCentury: {
+                                    type: 'boolean',
                                   },
-                                  citation: {
-                                    type: 'string',
+                                  isSpan: {
+                                    type: 'boolean',
                                   },
-                                  note: {
-                                    type: 'string',
+                                  isApproximate: {
+                                    type: 'boolean',
+                                  },
+                                  isDubious: {
+                                    type: 'boolean',
+                                  },
+                                  day: {
+                                    type: 'integer',
+                                  },
+                                  month: {
+                                    type: 'integer',
+                                  },
+                                  hint: {
+                                    type: ['string', 'null'],
                                   },
                                 },
                               },
-                            ],
+                            },
+                          },
+                          assertion: {
+                            type: 'object',
+                            required: ['rank'],
+                            properties: {
+                              tag: {
+                                type: 'string',
+                              },
+                              rank: {
+                                type: 'integer',
+                              },
+                              note: {
+                                type: 'string',
+                              },
+                              references: {
+                                type: 'array',
+                                items: {
+                                  anyOf: [
+                                    {
+                                      type: 'object',
+                                      required: ['citation'],
+                                      properties: {
+                                        type: {
+                                          type: 'string',
+                                        },
+                                        tag: {
+                                          type: 'string',
+                                        },
+                                        citation: {
+                                          type: 'string',
+                                        },
+                                        note: {
+                                          type: 'string',
+                                        },
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            },
                           },
                         },
                       },
                     },
-                  },
+                  ],
                 },
               },
               assertion: {
