@@ -49,6 +49,18 @@ export abstract class EditPartFeatureBase
    */
   public saving?: boolean;
 
+  /**
+   * Set to true when you want the role ID (defined by identity) to affect
+   * the ID of the thesauri to load. You should set this in your editor
+   * constructor, or in your getReqThesauriIds override. When true, the role ID
+   * will be suffixed (preceded by an underscore) to the thesaurus ID,
+   * before its language identifier, i.e. for instance "categories@en"
+   * with role "sample" becomes "categories_sample@en". When this option is
+   * enabled, and some of your thesauri do not need to be suffixed, just
+   * provide an alias for the suffixed thesaurus in the backend.
+   */
+  protected roleIdInThesauri?: boolean;
+
   constructor(
     protected router: Router,
     route: ActivatedRoute,
@@ -107,14 +119,36 @@ export abstract class EditPartFeatureBase
    */
   protected onDataLoaded(): void {}
 
+  private suffixThesaurusId(id: string, suffix: string): string {
+    const i = id.lastIndexOf('@');
+    return i > -1
+      ? `${id.substring(0, i)}_${suffix}${id.substring(i)}`
+      : id + '_' + suffix;
+  }
+
+  private suffixThesauriIds(ids: string[]): string[] {
+    if (!this.roleIdInThesauri || !ids.length || !this.identity.roleId) {
+      return ids;
+    }
+    return ids.map((id) => this.suffixThesaurusId(id, this.identity.roleId!));
+  }
+
   public ngOnInit(): void {
     // load data
     this.loading = true;
     const thesIds = this.getReqThesauriIds();
+    const sfxThesIds = this.suffixThesauriIds(thesIds);
+
     this.editorService
-      .load(this.identity, thesIds)
+      .load(this.identity, sfxThesIds)
       .then((data) => {
         if (data) {
+          // if we loaded suffixed thesauri, add an unsuffixed alias to each
+          if (this.roleIdInThesauri && this.identity.roleId) {
+            for (let i = 0; i < sfxThesIds.length; i++) {
+              data.thesauri[thesIds[i]] = data.thesauri[sfxThesIds[i]];
+            }
+          }
           this.data = data;
           this.onDataLoaded();
         }
