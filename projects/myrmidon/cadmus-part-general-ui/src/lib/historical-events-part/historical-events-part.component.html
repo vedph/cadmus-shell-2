@@ -23,6 +23,7 @@
           <tr>
             <th></th>
             <th>type</th>
+            <th>tag</th>
             <th>ID</th>
             <th>place/date</th>
             <th>rel.</th>
@@ -78,6 +79,7 @@
             <td>
               {{ entry.type | flatLookup : eventTypeEntries : "id" : "value" }}
             </td>
+            <td>{{ entry.tag }}</td>
             <td>{{ entry.eid }}</td>
             <td>{{ entry.chronotopes | assertedChronotopes }}</td>
             <td>{{ entry.relatedEntities?.length || 0 }}</td>
@@ -89,6 +91,7 @@
       <mat-expansion-panel [expanded]="editedEvent" [disabled]="!editedEvent">
         <mat-expansion-panel-header>event</mat-expansion-panel-header>
         <cadmus-historical-event-editor
+          [eventTagEntries]="eventTagEntries"
           [eventTypeEntries]="eventTypeEntries"
           [relationEntries]="relationEntries"
           [ctTagEntries]="ctTagEntries"

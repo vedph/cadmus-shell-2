@@ -45,6 +45,25 @@
             >type too long</mat-error
           >
         </mat-form-field>
+
+        <!-- tag (bound) -->
+        <mat-form-field *ngIf="eventTagEntries?.length">
+          <mat-label>tag</mat-label>
+          <mat-select [formControl]="tag">
+            <mat-option *ngFor="let e of eventTagEntries" [value]="e.id">{{
+              e.value
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <!-- tag (free) -->
+        <mat-form-field *ngIf="!eventTagEntries?.length">
+          <mat-label>tag</mat-label>
+          <input matInput [formControl]="tag" />
+          <mat-error
+            *ngIf="$any(tag).errors?.maxLength && (tag.dirty || tag.touched)"
+            >tag too long</mat-error
+          >
+        </mat-form-field>
       </div>
       <div>
         <!-- description -->

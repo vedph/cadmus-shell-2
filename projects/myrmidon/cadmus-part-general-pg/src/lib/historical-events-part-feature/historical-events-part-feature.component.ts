@@ -35,6 +35,7 @@ export class HistoricalEventsPartFeatureComponent
   protected override getReqThesauriIds(): string[] {
     return [
       'event-types',
+      'event-tags',
       'event-relations',
       'chronotope-tags',
       'assertion-tags',

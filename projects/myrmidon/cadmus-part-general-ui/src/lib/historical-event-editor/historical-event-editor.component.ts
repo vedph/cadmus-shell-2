@@ -42,6 +42,11 @@ export class HistoricalEventEditorComponent {
   @Input()
   public eventTypeEntries: ThesaurusEntry[] | undefined;
   /**
+   * Thesaurus event-tags.
+   */
+  @Input()
+  public eventTagEntries: ThesaurusEntry[] | undefined;
+  /**
    * Thesaurus event-relations (pseudo-hierarchical; the
    * separator used is : rather than .).
    */
@@ -94,6 +99,7 @@ export class HistoricalEventEditorComponent {
   // event
   public eid: FormControl<string | null>;
   public type: FormControl<string | null>;
+  public tag: FormControl<string | null>;
   public description: FormControl<string | null>;
   public note: FormControl<string | null>;
   public relatedEntities: FormControl<RelatedEntity[]>;
@@ -123,6 +129,7 @@ export class HistoricalEventEditorComponent {
       Validators.required,
       Validators.maxLength(500),
     ]);
+    this.tag = formBuilder.control(null, Validators.maxLength(50));
     this.description = formBuilder.control(null, Validators.maxLength(1000));
     this.note = formBuilder.control(null, Validators.maxLength(1000));
     this.relatedEntities = formBuilder.control([], { nonNullable: true });
@@ -132,6 +139,7 @@ export class HistoricalEventEditorComponent {
     this.form = formBuilder.group({
       eid: this.eid,
       type: this.type,
+      tag: this.tag,
       description: this.description,
       note: this.note,
       relatedEntities: this.relatedEntities,
@@ -213,6 +221,7 @@ export class HistoricalEventEditorComponent {
 
     this.eid.setValue(model.eid);
     this.type.setValue(model.type);
+    this.tag.setValue(model.tag || null);
     this.description.setValue(model.description || null);
     this.note.setValue(model.note || null);
     this.chronotopes.setValue(model.chronotopes || []);
@@ -231,6 +240,7 @@ export class HistoricalEventEditorComponent {
     return {
       eid: this.eid.value?.trim() || '',
       type: this.type.value?.trim() || '',
+      tag: this.tag.value?.trim() || '',
       description: this.description.value?.trim() || undefined,
       note: this.note.value?.trim() || undefined,
       chronotopes: this.chronotopes.value.length

@@ -23,6 +23,7 @@ export interface RelatedEntity {
 export interface HistoricalEvent {
   eid: string;
   type: string;
+  tag?: string;
   chronotopes?: AssertedChronotope[];
   assertion?: Assertion;
   description?: string;
@@ -100,6 +101,9 @@ export const HISTORICAL_EVENTS_PART_SCHEMA = {
                 type: 'string',
               },
               type: {
+                type: 'string',
+              },
+              tag: {
                 type: 'string',
               },
               chronotopes: {

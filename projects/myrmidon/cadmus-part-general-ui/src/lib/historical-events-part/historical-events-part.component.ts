@@ -21,8 +21,8 @@ import {
 
 /**
  * Historical events part.
- * Thesauri (all optional): event-types, event-relations, chronotope-tags,
- * assertion-tags, doc-reference-tags, doc-reference-types.
+ * Thesauri (all optional): event-types, event-tags, event-relations,
+ * chronotope-tags, assertion-tags, doc-reference-tags, doc-reference-types.
  */
 @Component({
   selector: 'cadmus-historical-events-part',
@@ -41,6 +41,10 @@ export class HistoricalEventsPartComponent
    * Thesaurus event-types.
    */
   public eventTypeEntries: ThesaurusEntry[] | undefined;
+  /**
+   * Thesaurus event-tags.
+   */
+  public eventTagEntries: ThesaurusEntry[] | undefined;
   /**
    * Thesaurus event-relations.
    */
@@ -94,6 +98,12 @@ export class HistoricalEventsPartComponent
       this.eventTypeEntries = thesauri[key].entries;
     } else {
       this.eventTypeEntries = undefined;
+    }
+    key = 'event-tags';
+    if (this.hasThesaurus(key)) {
+      this.eventTagEntries = thesauri[key].entries;
+    } else {
+      this.eventTagEntries = undefined;
     }
     key = 'event-relations';
     if (this.hasThesaurus(key)) {
