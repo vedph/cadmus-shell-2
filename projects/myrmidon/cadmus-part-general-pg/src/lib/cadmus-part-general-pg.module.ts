@@ -36,6 +36,7 @@ import {
   EXTERNAL_IDS_PART_TYPEID,
   PIN_LINKS_PART_TYPEID,
   PIN_LINKS_FRAGMENT_TYPEID,
+  GALLERY_IMAGE_ANNOTATIONS_PART_TYPEID,
 } from '@myrmidon/cadmus-part-general-ui';
 import { CadmusStateModule } from '@myrmidon/cadmus-state';
 import {
@@ -67,6 +68,7 @@ import { TiledTextLayerPartFeatureComponent } from './tiled-text-layer-part-feat
 import { TokenTextLayerPartFeatureComponent } from './token-text-layer-part-feature/token-text-layer-part-feature.component';
 import { TokenTextPartFeatureComponent } from './token-text-part-feature/token-text-part-feature.component';
 import { PinLinksFragmentFeatureComponent } from './pin-links-fragment-feature/pin-links-fragment-feature.component';
+import { GalleryImageAnnotationsPartFeatureComponent } from './gallery-image-annotations-part-feature/gallery-image-annotations-part-feature.component';
 
 // https://github.com/ng-packagr/ng-packagr/issues/778
 export const RouterModuleForChild = RouterModule.forChild([
@@ -104,6 +106,12 @@ export const RouterModuleForChild = RouterModule.forChild([
     path: `${EXTERNAL_IDS_PART_TYPEID}/:pid`,
     pathMatch: 'full',
     component: ExternalIdsPartFeatureComponent,
+    canDeactivate: [PendingChangesGuard],
+  },
+  {
+    path: `${GALLERY_IMAGE_ANNOTATIONS_PART_TYPEID}/:pid`,
+    pathMatch: 'full',
+    component: GalleryImageAnnotationsPartFeatureComponent,
     canDeactivate: [PendingChangesGuard],
   },
   {
@@ -235,6 +243,7 @@ export const RouterModuleForChild = RouterModule.forChild([
     CommentPartFeatureComponent,
     DocReferencesPartFeatureComponent,
     ExternalIdsPartFeatureComponent,
+    GalleryImageAnnotationsPartFeatureComponent,
     HistoricalDatePartFeatureComponent,
     HistoricalEventsPartFeatureComponent,
     IndexKeywordsPartFeatureComponent,
@@ -258,6 +267,7 @@ export const RouterModuleForChild = RouterModule.forChild([
     CommentPartFeatureComponent,
     DocReferencesPartFeatureComponent,
     ExternalIdsPartFeatureComponent,
+    GalleryImageAnnotationsPartFeatureComponent,
     HistoricalDatePartFeatureComponent,
     HistoricalEventsPartFeatureComponent,
     IndexKeywordsPartFeatureComponent,

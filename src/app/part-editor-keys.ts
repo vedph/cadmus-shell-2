@@ -18,6 +18,7 @@ import {
   EXTERNAL_IDS_PART_TYPEID,
   PIN_LINKS_PART_TYPEID,
   PIN_LINKS_FRAGMENT_TYPEID,
+  GALLERY_IMAGE_ANNOTATIONS_PART_TYPEID,
 } from '@myrmidon/cadmus-part-general-ui';
 import {
   APPARATUS_FRAGMENT_TYPEID,
@@ -58,6 +59,9 @@ export const PART_EDITOR_KEYS: PartEditorKeys = {
     part: GENERAL,
   },
   [EXTERNAL_IDS_PART_TYPEID]: {
+    part: GENERAL,
+  },
+  [GALLERY_IMAGE_ANNOTATIONS_PART_TYPEID]: {
     part: GENERAL,
   },
   [HISTORICAL_EVENTS_PART_TYPEID]: {

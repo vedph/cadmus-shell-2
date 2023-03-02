@@ -59,6 +59,14 @@ import { CadmusRefsDocReferencesModule } from '@myrmidon/cadmus-refs-doc-referen
 import { CadmusRefsHistoricalDateModule } from '@myrmidon/cadmus-refs-historical-date';
 import { CadmusRefsAssertedIdsModule } from '@myrmidon/cadmus-refs-asserted-ids';
 import { CadmusRefsLookupModule } from '@myrmidon/cadmus-refs-lookup';
+import { CadmusTextBlockViewModule } from '@myrmidon/cadmus-text-block-view';
+import {
+  CadmusImgGalleryModule,
+  IMAGE_GALLERY_OPTIONS_KEY,
+  IMAGE_GALLERY_SERVICE_KEY,
+  MockGalleryService,
+} from '@myrmidon/cadmus-img-gallery';
+import { CadmusImgAnnotatorModule } from '@myrmidon/cadmus-img-annotator';
 
 // libraries in this workspace
 // notice that when you import the libraries into another workspace, you must change
@@ -94,7 +102,6 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { PART_EDITOR_KEYS } from './part-editor-keys';
 import { INDEX_LOOKUP_DEFINITIONS } from './index-lookup-definitions';
 import { ITEM_BROWSER_KEYS } from './item-browser-keys';
-import { CadmusTextBlockViewModule } from '@myrmidon/cadmus-text-block-view';
 
 // https://ngneat.github.io/elf/docs/dev-tools/
 export function initElfDevTools(actions: Actions) {
@@ -171,6 +178,9 @@ export function initElfDevTools(actions: Actions) {
     CadmusRefsAssertedIdsModule,
     // - for preview:
     CadmusTextBlockViewModule,
+    // - for gallery:
+    CadmusImgAnnotatorModule,
+    CadmusImgGalleryModule,
     // cadmus
     CadmusApiModule,
     CadmusCoreModule,
@@ -226,6 +236,20 @@ export function initElfDevTools(actions: Actions) {
       multi: true,
       useFactory: initElfDevTools,
       deps: [Actions],
+    },
+    // image gallery
+    {
+      provide: IMAGE_GALLERY_SERVICE_KEY,
+      useClass: MockGalleryService,
+    },
+    {
+      provide: IMAGE_GALLERY_OPTIONS_KEY,
+      useValue: {
+        baseUri: '',
+        count: 50,
+        width: 300,
+        height: 400,
+      },
     },
   ],
   bootstrap: [AppComponent],

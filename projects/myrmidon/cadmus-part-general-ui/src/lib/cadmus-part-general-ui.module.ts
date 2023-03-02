@@ -26,6 +26,10 @@ import { NgToolsModule } from '@myrmidon/ng-tools';
 import { NgMatToolsModule } from '@myrmidon/ng-mat-tools';
 import { CadmusCoreModule } from '@myrmidon/cadmus-core';
 import { CadmusUiModule } from '@myrmidon/cadmus-ui';
+
+// bricks
+import { CadmusImgAnnotatorModule } from '@myrmidon/cadmus-img-annotator';
+import { CadmusImgGalleryModule } from '@myrmidon/cadmus-img-gallery';
 import { CadmusRefsAssertedIdsModule } from '@myrmidon/cadmus-refs-asserted-ids';
 import { CadmusRefsDocReferencesModule } from '@myrmidon/cadmus-refs-doc-references';
 import { CadmusRefsHistoricalDateModule } from '@myrmidon/cadmus-refs-historical-date';
@@ -43,20 +47,21 @@ import { ChronotopesPartComponent } from './chronotopes-part/chronotopes-part.co
 import { CommentEditorComponent } from './comment-editor/comment-editor.component';
 import { DocReferencesPartComponent } from './doc-references-part/doc-references-part.component';
 import { ExternalIdsPartComponent } from './external-ids-part/external-ids-part.component';
+import { GalleryImageAnnotationsPartComponent } from './gallery-image-annotations-part/gallery-image-annotations-part.component';
 import { HistoricalDatePartComponent } from './historical-date-part/historical-date-part.component';
 import { HistoricalEventEditorComponent } from './historical-event-editor/historical-event-editor.component';
+import { HistoricalEventsPartComponent } from './historical-events-part/historical-events-part.component';
 import { IndexKeywordComponent } from './index-keyword/index-keyword.component';
 import { IndexKeywordsPartComponent } from './index-keywords-part/index-keywords-part.component';
 import { KeywordsPartComponent } from './keywords-part/keywords-part.component';
 import { MetadataPartComponent } from './metadata-part/metadata-part.component';
+import { NamesPartComponent } from './names-part/names-part.component';
 import { NotePartComponent } from './note-part/note-part.component';
+import { PinLinksPartComponent } from './pin-links-part/pin-links-part.component';
+import { PinLinksFragmentComponent } from './pin-links-fragment/pin-links-fragment.component';
 import { TextTileComponent } from './text-tile/text-tile.component';
 import { TiledDataComponent } from './tiled-data/tiled-data.component';
 import { TiledTextPartComponent } from './tiled-text-part/tiled-text-part.component';
-import { HistoricalEventsPartComponent } from './historical-events-part/historical-events-part.component';
-import { NamesPartComponent } from './names-part/names-part.component';
-import { PinLinksPartComponent } from './pin-links-part/pin-links-part.component';
-import { PinLinksFragmentComponent } from './pin-links-fragment/pin-links-fragment.component';
 
 @NgModule({
   imports: [
@@ -87,6 +92,8 @@ import { PinLinksFragmentComponent } from './pin-links-fragment/pin-links-fragme
     NgMatToolsModule,
     CadmusCoreModule,
     CadmusUiModule,
+    CadmusImgAnnotatorModule,
+    CadmusImgGalleryModule,
     CadmusRefsAssertedIdsModule,
     CadmusRefsDocReferencesModule,
     CadmusRefsHistoricalDateModule,
@@ -104,6 +111,7 @@ import { PinLinksFragmentComponent } from './pin-links-fragment/pin-links-fragme
     CommentEditorComponent,
     DocReferencesPartComponent,
     ExternalIdsPartComponent,
+    GalleryImageAnnotationsPartComponent,
     HistoricalDatePartComponent,
     HistoricalEventEditorComponent,
     HistoricalEventsPartComponent,
@@ -128,6 +136,7 @@ import { PinLinksFragmentComponent } from './pin-links-fragment/pin-links-fragme
     ChronotopesPartComponent,
     DocReferencesPartComponent,
     ExternalIdsPartComponent,
+    GalleryImageAnnotationsPartComponent,
     HistoricalDatePartComponent,
     HistoricalEventEditorComponent,
     HistoricalEventsPartComponent,

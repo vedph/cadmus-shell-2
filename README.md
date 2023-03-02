@@ -48,6 +48,10 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2023-03-02: added gallery image annotations part. In the demo shell I added new modules (`CadmusImgAnnotatorModule`, `CadmusImgGalleryModule`) and an `img_anno_eid` index lookup definition to let users play with references to image annotations via EID. Also, the gallery requires additional injection providers in `app.module`, and the following libraries:
+  - `@myrmidon/cadmus-img-annotator` (brick)
+  - `@myrmidon/cadmus-img-gallery` (brick)
+  - `@recogito/annotorious` which also requires adding CSS to `angular.json`.
 - 2023-02-27:
   - added `tag` to historical event.
   - added feature: role ID suffix for thesauri (in `edit-part-feature-base.ts`): this is a new opt-in mechanism by which a part can request its thesauri IDs to be suffixed by its role ID (preceded by underscore). The categories part now opts into this new mechanism, so that you can have multiple categories parts each with its own, distinct set of categories. To opt in, just add `this.roleIdInThesauri = true;` in your feature component constructor: the part will then request suffixed thesauri. For instance, the categories part, which requests a `categories` thesaurus, when having a role equal to `eras` will rather request a `categories_eras` thesaurus to the server. Still, the returned set key will not change: its name will still be `categories`, so that the part code is not broken, but in fact the content of the thesaurus was got from `categories_eras` (which is still the ID of the thesaurus keyed under `categories`). If some of the requested thesauri need not to change, just add an alias thesaurus with the role suffix, pointing to the original thesaurus.

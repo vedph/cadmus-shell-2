@@ -1,0 +1,8 @@
+<cadmus-current-item-bar></cadmus-current-item-bar>
+<cadmus-gallery-image-annotations-part
+  [identity]="identity"
+  [data]="$any(data)"
+  (dataChange)="save($event)"
+  (editorClose)="close()"
+  (dirtyChange)="onDirtyChange($event)"
+></cadmus-gallery-image-annotations-part>
