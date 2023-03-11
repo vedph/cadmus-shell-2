@@ -19,8 +19,6 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { LoginPageComponent } from './login-page/login-page.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent },
   // auth
   { path: 'login', component: LoginPageComponent },
   {
@@ -48,14 +46,6 @@ const routes: Routes = [
   },
   // cadmus - items
   {
-    path: 'items',
-    loadChildren: () =>
-      import('@myrmidon/cadmus-item-list').then(
-        (module) => module.CadmusItemListModule
-      ),
-    canActivate: [AuthJwtGuardService],
-  },
-  {
     path: 'items/:id',
     loadChildren: () =>
       import('@myrmidon/cadmus-item-editor').then(
@@ -63,6 +53,14 @@ const routes: Routes = [
       ),
     canActivate: [AuthJwtGuardService],
     canDeactivate: [PendingChangesGuard],
+  },
+  {
+    path: 'items',
+    loadChildren: () =>
+      import('@myrmidon/cadmus-item-list').then(
+        (module) => module.CadmusItemListModule
+      ),
+    canActivate: [AuthJwtGuardService],
   },
   {
     path: 'search',
@@ -73,14 +71,6 @@ const routes: Routes = [
     canActivate: [AuthJwtGuardService],
   },
   // cadmus - thesauri
-  {
-    path: 'thesauri',
-    loadChildren: () =>
-      import('@myrmidon/cadmus-thesaurus-list').then(
-        (module) => module.CadmusThesaurusListModule
-      ),
-    canActivate: [EditorGuardService],
-  },
   {
     path: 'thesauri/:id',
     loadChildren: () =>
@@ -105,6 +95,14 @@ const routes: Routes = [
         (module) => module.CadmusPartPhilologyPgModule
       ),
     canActivate: [AuthJwtGuardService],
+  },
+  {
+    path: 'thesauri',
+    loadChildren: () =>
+      import('@myrmidon/cadmus-thesaurus-list').then(
+        (module) => module.CadmusThesaurusListModule
+      ),
+    canActivate: [EditorGuardService],
   },
   // cadmus - graph
   // {
@@ -132,6 +130,9 @@ const routes: Routes = [
       ),
     canActivate: [AuthJwtGuardService],
   },
+  // home
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', component: HomeComponent },
   // fallback
   { path: '**', component: HomeComponent },
 ];

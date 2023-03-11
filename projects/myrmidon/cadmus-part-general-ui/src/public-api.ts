@@ -26,9 +26,6 @@ export * from './lib/doc-references-part/doc-references-part.component';
 export * from './lib/external-ids-part';
 export * from './lib/external-ids-part/external-ids-part.component';
 
-export * from './lib/gallery-image-annotations-part';
-export * from './lib/gallery-image-annotations-part/gallery-image-annotations-part.component';
-
 export * from './lib/historical-events-part';
 export * from './lib/historical-event-editor/historical-event-editor.component';
 

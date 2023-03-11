@@ -28,8 +28,6 @@ import { CadmusCoreModule } from '@myrmidon/cadmus-core';
 import { CadmusUiModule } from '@myrmidon/cadmus-ui';
 
 // bricks
-import { CadmusImgAnnotatorModule } from '@myrmidon/cadmus-img-annotator';
-import { CadmusImgGalleryModule } from '@myrmidon/cadmus-img-gallery';
 import { CadmusRefsAssertedIdsModule } from '@myrmidon/cadmus-refs-asserted-ids';
 import { CadmusRefsDocReferencesModule } from '@myrmidon/cadmus-refs-doc-references';
 import { CadmusRefsHistoricalDateModule } from '@myrmidon/cadmus-refs-historical-date';
@@ -47,7 +45,6 @@ import { ChronotopesPartComponent } from './chronotopes-part/chronotopes-part.co
 import { CommentEditorComponent } from './comment-editor/comment-editor.component';
 import { DocReferencesPartComponent } from './doc-references-part/doc-references-part.component';
 import { ExternalIdsPartComponent } from './external-ids-part/external-ids-part.component';
-import { GalleryImageAnnotationsPartComponent } from './gallery-image-annotations-part/gallery-image-annotations-part.component';
 import { HistoricalDatePartComponent } from './historical-date-part/historical-date-part.component';
 import { HistoricalEventEditorComponent } from './historical-event-editor/historical-event-editor.component';
 import { HistoricalEventsPartComponent } from './historical-events-part/historical-events-part.component';
@@ -92,8 +89,6 @@ import { TiledTextPartComponent } from './tiled-text-part/tiled-text-part.compon
     NgMatToolsModule,
     CadmusCoreModule,
     CadmusUiModule,
-    CadmusImgAnnotatorModule,
-    CadmusImgGalleryModule,
     CadmusRefsAssertedIdsModule,
     CadmusRefsDocReferencesModule,
     CadmusRefsHistoricalDateModule,
@@ -111,7 +106,6 @@ import { TiledTextPartComponent } from './tiled-text-part/tiled-text-part.compon
     CommentEditorComponent,
     DocReferencesPartComponent,
     ExternalIdsPartComponent,
-    GalleryImageAnnotationsPartComponent,
     HistoricalDatePartComponent,
     HistoricalEventEditorComponent,
     HistoricalEventsPartComponent,
@@ -136,7 +130,6 @@ import { TiledTextPartComponent } from './tiled-text-part/tiled-text-part.compon
     ChronotopesPartComponent,
     DocReferencesPartComponent,
     ExternalIdsPartComponent,
-    GalleryImageAnnotationsPartComponent,
     HistoricalDatePartComponent,
     HistoricalEventEditorComponent,
     HistoricalEventsPartComponent,

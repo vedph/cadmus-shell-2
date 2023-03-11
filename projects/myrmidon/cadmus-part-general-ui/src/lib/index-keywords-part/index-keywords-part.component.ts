@@ -31,7 +31,6 @@ export class IndexKeywordsPartComponent
   implements OnInit
 {
   public editedKeyword?: IndexKeyword;
-  public tabIndex: number;
   // thesaurus
   public idxEntries: ThesaurusEntry[] | undefined;
   public langEntries: ThesaurusEntry[] | undefined;
@@ -46,7 +45,6 @@ export class IndexKeywordsPartComponent
       validators: NgToolsValidators.strictMinLengthValidator(1),
       nonNullable: true,
     });
-    this.tabIndex = 0;
   }
 
   public override ngOnInit(): void {
@@ -188,16 +186,13 @@ export class IndexKeywordsPartComponent
 
   public editKeyword(keyword: IndexKeyword): void {
     this.editedKeyword = keyword;
-    this.tabIndex = 1;
   }
 
   public onKeywordClose(): void {
-    this.tabIndex = 0;
     this.editedKeyword = undefined;
   }
 
   public onKeywordSave(keyword: IndexKeyword): void {
-    this.tabIndex = 0;
     this.addKeyword(keyword);
     this.editedKeyword = undefined;
   }

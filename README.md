@@ -2,6 +2,7 @@
 
 - [Cadmus Shell](#cadmus-shell)
   - [History](#history)
+    - [4.1.0](#410)
     - [4.0.12](#4012)
     - [4.0.11](#4011)
     - [4.0.10](#4010)
@@ -45,10 +46,15 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 1. `npm run build-lib`;
 2. update version in `env.js` (and Docker files), and then `ng build --configuration=production`;
-3. `docker build . -t vedph2020/cadmus-shell:4.0.12 -t vedph2020/cadmus-shell:latest` (replace with the current version).
+3. `docker build . -t vedph2020/cadmus-shell:4.1.0 -t vedph2020/cadmus-shell:latest` (replace with the current version).
 
 ## History
 
+### 4.1.0
+
+- 2023-03-11:
+  - moved imaging parts (gallery image annotations part) out of general parts into its own library, removing unnecessary packages from this demo.
+  - better UI layout in categories and index keywords.
 - 2023-03-07: updated packages.
 
 ### 4.0.12
