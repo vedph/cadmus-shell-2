@@ -30,6 +30,7 @@ export class NotePartFeatureComponent
       thesaurusService,
       editorService
     );
+    this.roleIdInThesauri = true;
   }
 
   protected override getReqThesauriIds(): string[] {
