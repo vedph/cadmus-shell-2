@@ -50,6 +50,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2023-05-11: updated to Angular 16.
 - 2023-04-28: added `this.roleIdInThesauri = true;` to comment, names, and note parts.
 - 2023-04-21: added `this.roleIdInThesauri = true;` to the historical events part, thus enabling it to have role-dependent thesauri like the categories part.
 

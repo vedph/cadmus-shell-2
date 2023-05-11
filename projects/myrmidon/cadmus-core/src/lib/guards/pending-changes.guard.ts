@@ -1,4 +1,4 @@
-import { CanDeactivate } from '@angular/router';
+
 import { Injectable } from '@angular/core';
 import { map, Observable, take } from 'rxjs';
 import { DialogService } from '@myrmidon/ng-mat-tools';
@@ -18,7 +18,7 @@ export interface ComponentCanDeactivate {
   providedIn: 'root',
 })
 export class PendingChangesGuard
-  implements CanDeactivate<ComponentCanDeactivate>
+  
 {
   constructor(private _dialogService: DialogService) {
   }
