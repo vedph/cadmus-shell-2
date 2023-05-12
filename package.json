@@ -9,14 +9,15 @@
     "test": "ng test",
     "build-cor": "ng build @myrmidon/cadmus-core",
     "build-api": "ng build @myrmidon/cadmus-api",
-    "build-ui": "ng build @myrmidon/cadmus-ui && ng build @myrmidon/cadmus-state && ng build @myrmidon/cadmus-ui-pg",
+    "build-ui": "ng build @myrmidon/cadmus-ui && ng build @myrmidon/cadmus-state",
+    "build-uip": "ng build @myrmidon/cadmus-ui-pg",
     "build-ths": "ng build @myrmidon/cadmus-profile-core && ng build @myrmidon/cadmus-thesaurus-ui && ng build @myrmidon/cadmus-thesaurus-editor && ng build @myrmidon/cadmus-thesaurus-list",
     "build-gen": "ng build @myrmidon/cadmus-part-general-ui && ng build @myrmidon/cadmus-part-general-pg",
     "build-phi": "ng build @myrmidon/cadmus-part-philology-ui && ng build @myrmidon/cadmus-part-philology-pg",
     "build-itm": "ng build @myrmidon/cadmus-item-list && ng build @myrmidon/cadmus-item-editor && ng build @myrmidon/cadmus-item-search && ng build @myrmidon/cadmus-layer-demo",
     "build-grp": "ng build @myrmidon/cadmus-graph-ui && ng build @myrmidon/cadmus-graph-pg && ng build @myrmidon/cadmus-graph-pg-ex",
     "build-pre": "ng build @myrmidon/cadmus-preview-ui && ng build @myrmidon/cadmus-preview-pg",
-    "build-lib": "npm run build-cor && npm run build-api && npm run build-itm && npm run build-ui && npm run build-ths && npm run build-gen && npm run build-phi && npm run build-grp && npm run build-pre"
+    "build-lib": "npm run build-cor && npm run build-api && npm run build-ui && npm run build-itm && npm run build-uip && npm run build-ths && npm run build-gen && npm run build-phi && npm run build-grp && npm run build-pre"
   },
   "overrides": {
     "d3-selection": "3.0.0"
