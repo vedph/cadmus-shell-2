@@ -3,7 +3,7 @@
     <h2>Semantic Graph</h2>
   </mat-card-header>
   <mat-card-content>
-    <mat-tab-group [(selectedIndex)]="tabIndex" preserveContent dynamicHeight>
+    <mat-tab-group [(selectedIndex)]="tabIndex" preserveContent>
       <!-- nodes -->
       <mat-tab label="&#9679; nodes">
         <cadmus-graph-node-list
@@ -23,6 +23,8 @@
       <mat-tab label="&#x25c6; walker">
         <cadmus-graph-walker
           [nodeId]="walkerNodeId"
+          [canPick]="true"
+          [canMoveToSource]="true"
           (nodePick)="onWalkerNodePick($event)"
           (moveToSource)="onWalkerMoveToSource($event)"
         ></cadmus-graph-walker>
