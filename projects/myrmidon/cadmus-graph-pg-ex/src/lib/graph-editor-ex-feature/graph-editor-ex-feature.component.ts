@@ -1,10 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { take } from 'rxjs/operators';
 
-import { UriNode, ThesaurusService } from '@myrmidon/cadmus-api';
-import { ThesauriSet, ThesaurusEntry } from '@myrmidon/cadmus-core';
+import { UriNode, ThesaurusService, ItemService } from '@myrmidon/cadmus-api';
+import {
+  LibraryRouteService,
+  ThesauriSet,
+  ThesaurusEntry,
+} from '@myrmidon/cadmus-core';
 import { Node as GraphNode } from '@swimlane/ngx-graph';
 import { WalkerNodeData } from '@myrmidon/cadmus-graph-ui-ex';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const TAB_NODES = 0;
 const TAB_WALKER = 2;
@@ -22,7 +29,13 @@ export class GraphEditorExFeatureComponent implements OnInit {
   public editedNode?: UriNode;
   public walkerNodeId: number;
 
-  constructor(private _thesService: ThesaurusService) {
+  constructor(
+    private _thesService: ThesaurusService,
+    private _router: Router,
+    private _itemService: ItemService,
+    private _libraryRouteService: LibraryRouteService,
+    private _snackbar: MatSnackBar
+  ) {
     this.tabIndex = 0;
     this.walkerNodeId = 0;
   }
@@ -67,7 +80,53 @@ export class GraphEditorExFeatureComponent implements OnInit {
       sourceType: data.sourceType,
       tag: data.tag,
       sid: data.sid,
-      uri: data.uri
+      uri: data.uri,
+    };
+  }
+
+  public onWalkerMoveToSource(node: GraphNode) {
+    const data = node.data as WalkerNodeData;
+    if (!data) {
+      return;
+    }
+    switch (data.sourceType) {
+      case 1: // item
+        this._router.navigate(['/items', data.sid!.substring(0, 36)]);
+        break;
+      case 2: // part
+        // get the part and navigate to it
+        this._itemService.getPart(data.sid!.substring(0, 36)).subscribe({
+          next: (part) => {
+            if (part) {
+              // build the target route to the appropriate part editor
+              const route = this._libraryRouteService.buildPartEditorRoute(
+                part.itemId,
+                part.id,
+                part.typeId,
+                part.roleId
+              );
+
+              // navigate to the editor
+              this._router.navigate(
+                [route.route],
+                route.rid
+                  ? {
+                      queryParams: {
+                        rid: route.rid,
+                      },
+                    }
+                  : {}
+              );
+            }
+          },
+          error: (error) => {
+            if (error) {
+              console.error(JSON.stringify(error));
+            }
+            this._snackbar.open('Error loading part', 'OK');
+          },
+        });
+        break;
     }
   }
 }

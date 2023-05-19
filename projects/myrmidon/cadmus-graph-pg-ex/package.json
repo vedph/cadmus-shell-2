@@ -1,6 +1,6 @@
 {
   "name": "@myrmidon/cadmus-graph-pg-ex",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Cadmus - extended semantic graph page.",
   "keywords": [
     "Cadmus"

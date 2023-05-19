@@ -50,6 +50,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2023-05-19:
+  - preserve content and dynamic height for graph page in `CadmusGraphPgEx`.
+  - added move to source capability to `CadmusGraphPgEx`.
 - 2023-05-16: updated source type filters in graph UI (`@myrmidon/cadmus-graph-ui`).
 - 2023-05-11: updated to Angular 16.
 - 2023-04-28: added `this.roleIdInThesauri = true;` to comment, names, and note parts.

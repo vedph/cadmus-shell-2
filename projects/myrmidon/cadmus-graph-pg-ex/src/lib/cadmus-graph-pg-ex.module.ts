@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { MatCardModule } from '@angular/material/card';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 
 import { NgMatToolsModule } from '@myrmidon/ng-mat-tools';
@@ -34,6 +35,7 @@ export const RouterModuleForChild = RouterModule.forChild([
     ReactiveFormsModule,
     // material
     MatCardModule,
+    MatSnackBarModule,
     MatTabsModule,
     // vendor
     NgxGraphModule,
