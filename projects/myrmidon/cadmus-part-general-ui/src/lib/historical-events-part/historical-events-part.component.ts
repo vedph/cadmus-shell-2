@@ -21,8 +21,9 @@ import {
 
 /**
  * Historical events part.
- * Thesauri (all optional): event-types, event-tags, event-relations,
- * chronotope-tags, assertion-tags, doc-reference-tags, doc-reference-types.
+ * Thesauri: event-types, event-tags, event-relations, chronotope-tags,
+ * asserted-id-scopes, asserted-id-tags, assertion-tags, doc-reference-tags,
+ * doc-reference-types, pin-link-scopes, pin-link-tags, pin-link-settings.
  */
 @Component({
   selector: 'cadmus-historical-events-part',
@@ -36,6 +37,13 @@ export class HistoricalEventsPartComponent
   private _editedIndex: number;
 
   public editedEvent: HistoricalEvent | undefined;
+  // settings
+  // by-type: true/false
+  public pinByTypeMode?: boolean;
+  // switch-mode: true/false
+  public canSwitchMode?: boolean;
+  // edit-target: true/false
+  public canEditTarget?: boolean;
 
   /**
    * Thesaurus event-types.
@@ -65,6 +73,15 @@ export class HistoricalEventsPartComponent
    * Thesaurus doc-reference-types.
    */
   public refTypeEntries: ThesaurusEntry[] | undefined;
+  // pin-link-scopes
+  public idScopeEntries?: ThesaurusEntry[];
+  // pin-link-tags
+  public idTagEntries?: ThesaurusEntry[];
+  // pin-link-settings; these include:
+  // - by-type: true/false
+  // - switch-mode: true/false
+  // - edit-target: true/false
+  public setTagEntries?: ThesaurusEntry[];
 
   public events: FormControl<HistoricalEvent[]>;
 
@@ -90,6 +107,25 @@ export class HistoricalEventsPartComponent
     return formBuilder.group({
       events: this.events,
     });
+  }
+
+  /**
+   * Load settings from thesaurus entries.
+   *
+   * @param entries The thesaurus entries if any.
+   */
+  private loadSettings(entries?: ThesaurusEntry[]): void {
+    if (!entries?.length) {
+      this.pinByTypeMode = undefined;
+      this.canSwitchMode = undefined;
+      this.canEditTarget = undefined;
+    }
+    this.pinByTypeMode =
+      entries?.find((e) => e.id === 'by-type')?.value === 'true';
+    this.canSwitchMode =
+      entries?.find((e) => e.id === 'switch-mode')?.value === 'true';
+    this.canEditTarget =
+      entries?.find((e) => e.id === 'edit-target')?.value === 'true';
   }
 
   private updateThesauri(thesauri: ThesauriSet): void {
@@ -135,6 +171,21 @@ export class HistoricalEventsPartComponent
     } else {
       this.refTypeEntries = undefined;
     }
+    // pin-link
+    key = 'pin-link-scopes';
+    if (this.hasThesaurus(key)) {
+      this.idScopeEntries = thesauri[key].entries;
+    } else {
+      this.idScopeEntries = undefined;
+    }
+    key = 'pin-link-tags';
+    if (this.hasThesaurus(key)) {
+      this.idTagEntries = thesauri[key].entries;
+    } else {
+      this.idTagEntries = undefined;
+    }
+    // load settings from thesaurus
+    this.loadSettings(thesauri['pin-link-settings']?.entries);
   }
 
   private updateForm(part?: HistoricalEventsPart | null): void {
@@ -166,40 +217,37 @@ export class HistoricalEventsPartComponent
     return part;
   }
 
+  public closeEvent(): void {
+    this._editedIndex = -1;
+    this.editedEvent = undefined;
+  }
+
   public addEvent(): void {
-    const ev: HistoricalEvent = {
-      eid: '',
-      type: this.eventTypeEntries?.length ? this.eventTypeEntries[0].id : '',
-    };
-    this.events.setValue([...this.events.value, ev]);
-    this.events.updateValueAndValidity();
-    this.events.markAsDirty();
-    this.editEvent(this.events.value.length - 1);
-  }
-
-  public editEvent(index: number): void {
-    if (index < 0) {
-      this._editedIndex = -1;
-      this.editedEvent = undefined;
-    } else {
-      this._editedIndex = index;
-      this.editedEvent = this.events.value[index];
-    }
-  }
-
-  public onEventSave(entry: HistoricalEvent): void {
-    this.events.setValue(
-      this.events.value.map((e: HistoricalEvent, i: number) =>
-        i === this._editedIndex ? entry : e
-      )
+    this.editEvent(
+      {
+        eid: '',
+        type: this.eventTypeEntries?.length ? this.eventTypeEntries[0].id : '',
+      },
+      -1
     );
-    this.events.updateValueAndValidity();
-    this.events.markAsDirty();
-    this.editEvent(-1);
   }
 
-  public onEventClose(): void {
-    this.editEvent(-1);
+  public editEvent(event: HistoricalEvent, index: number): void {
+    this._editedIndex = index;
+    this.editedEvent = event;
+  }
+
+  public onEventSave(event: HistoricalEvent): void {
+    const events = [...this.events.value];
+    if (this._editedIndex === -1) {
+      events.push(event);
+    } else {
+      events[this._editedIndex] = event;
+    }
+    this.events.setValue(events);
+    this.events.updateValueAndValidity();
+    this.events.markAsDirty();
+    this.closeEvent();
   }
 
   public deleteEvent(index: number): void {

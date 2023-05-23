@@ -12,9 +12,13 @@ import { Assertion } from '@myrmidon/cadmus-refs-assertion';
 import { renderLabelFromLastColon } from '@myrmidon/cadmus-ui';
 
 import { HistoricalEvent, RelatedEntity } from '../historical-events-part';
+import { AssertedCompositeId } from '@myrmidon/cadmus-refs-asserted-ids';
 
 const RELATION_SEP = ':';
 
+/**
+ * Historical event editor.
+ */
 @Component({
   selector: 'cadmus-historical-event-editor',
   templateUrl: './historical-event-editor.component.html',
@@ -40,38 +44,57 @@ export class HistoricalEventEditorComponent {
    * Thesaurus event-types (hierarchical).
    */
   @Input()
-  public eventTypeEntries: ThesaurusEntry[] | undefined;
+  public eventTypeEntries?: ThesaurusEntry[];
   /**
    * Thesaurus event-tags.
    */
   @Input()
-  public eventTagEntries: ThesaurusEntry[] | undefined;
+  public eventTagEntries?: ThesaurusEntry[];
   /**
    * Thesaurus event-relations (pseudo-hierarchical; the
    * separator used is : rather than .).
    */
   @Input()
-  public relationEntries: ThesaurusEntry[] | undefined;
+  public relationEntries?: ThesaurusEntry[];
   /**
    * Thesaurus chronotope-tags.
    */
   @Input()
-  public ctTagEntries: ThesaurusEntry[] | undefined;
+  public ctTagEntries?: ThesaurusEntry[];
+  /**
+   * Thesaurus asserted-id-scopes.
+   */
+  @Input()
+  public idScopeEntries?: ThesaurusEntry[];
+  /**
+   * Thesaurus asserted-id-tags.
+   */
+  @Input()
+  public idTagEntries?: ThesaurusEntry[];
   /**
    * Thesaurus assertion-tags.
    */
   @Input()
-  public assTagEntries: ThesaurusEntry[] | undefined;
+  public assTagEntries?: ThesaurusEntry[];
   /**
    * Thesaurus doc-reference-tags.
    */
   @Input()
-  public refTagEntries: ThesaurusEntry[] | undefined;
+  public refTagEntries?: ThesaurusEntry[];
   /**
    * Thesaurus doc-reference-types.
    */
   @Input()
-  public refTypeEntries: ThesaurusEntry[] | undefined;
+  public refTypeEntries?: ThesaurusEntry[];
+  /*
+   * Thesaurus pin-link-settings; these include:
+   * - by-type: true/false
+   * - switch-mode: true/false
+   * - edit-target: true/false
+   */
+  @Input()
+  public setTagEntries?: ThesaurusEntry[];
+
   /**
    * The number of event type portions to cut from the event type ID when
    * building the prefix used to filter the corresponding relations IDs.
@@ -84,6 +107,17 @@ export class HistoricalEventEditorComponent {
    */
   @Input()
   public eventTypeTailCut: number;
+
+  // settings for lookup
+  // by-type: true/false
+  @Input()
+  public pinByTypeMode?: boolean;
+  // switch-mode: true/false
+  @Input()
+  public canSwitchMode?: boolean;
+  // edit-target: true/false
+  @Input()
+  public canEditTarget?: boolean;
 
   /**
    * True to disable ID lookup via scoped pin lookup.
@@ -112,7 +146,7 @@ export class HistoricalEventEditorComponent {
   public currentRelEntries: ThesaurusEntry[];
   public currentEntity?: RelatedEntity;
   public relation: FormControl<string | null>;
-  public id: FormControl<string | null>;
+  public id: FormControl<AssertedCompositeId | null>;
   public reForm: FormGroup;
 
   constructor(formBuilder: FormBuilder) {
@@ -269,7 +303,7 @@ export class HistoricalEventEditorComponent {
 
   public newCurrentEntity(): void {
     this.setCurrentEntity({
-      id: '',
+      id: { target: { gid: '', label: '' } },
       relation: this.relationEntries?.length ? this.relationEntries[0].id : '',
     });
   }
@@ -292,7 +326,7 @@ export class HistoricalEventEditorComponent {
       return;
     }
     const entity: RelatedEntity = {
-      id: this.id.value!.trim(),
+      id: this.id.value!,
       relation: this.relation.value!.trim(),
     };
     // nope if already present
@@ -331,7 +365,7 @@ export class HistoricalEventEditorComponent {
     }
   }
 
-  public onIdPick(id: string): void {
+  public onIdChange(id: AssertedCompositeId): void {
     this.setCurrentEntity({
       id: id,
       relation: this.relation.value || '',

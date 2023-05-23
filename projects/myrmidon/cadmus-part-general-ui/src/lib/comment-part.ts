@@ -1,5 +1,5 @@
 import { Part } from '@myrmidon/cadmus-core';
-import { AssertedId } from '@myrmidon/cadmus-refs-asserted-ids';
+import { AssertedCompositeId } from '@myrmidon/cadmus-refs-asserted-ids';
 import { DocReference } from '@myrmidon/cadmus-refs-doc-references';
 
 import { IndexKeyword } from './index-keywords-part';
@@ -11,7 +11,7 @@ export interface Comment {
   tag?: string;
   text: string;
   references?: DocReference[];
-  externalIds?: AssertedId[];
+  links?: AssertedCompositeId[];
   categories?: string[];
   keywords?: IndexKeyword[];
 }
@@ -85,23 +85,88 @@ export const COMMENT_PART_SCHEMA = {
         ],
       },
     },
-    externalIds: {
+    links: {
       type: 'array',
       items: {
         type: 'object',
-        required: ['value'],
+        default: {},
+        required: ['target'],
         properties: {
-          value: {
-            type: 'string',
+          target: {
+            type: 'object',
+            required: ['gid', 'label'],
+            properties: {
+              gid: {
+                type: 'string',
+              },
+              label: {
+                type: 'string',
+              },
+              itemId: {
+                type: 'string',
+              },
+              partId: {
+                type: 'string',
+              },
+              partTypeId: {
+                type: 'string',
+              },
+              roleId: {
+                type: 'string',
+              },
+              name: {
+                type: 'string',
+              },
+              value: {
+                type: 'string',
+              },
+            },
           },
-          type: {
+          scope: {
             type: 'string',
           },
           tag: {
             type: 'string',
           },
-          note: {
-            type: 'string',
+          assertion: {
+            type: 'object',
+            required: ['rank'],
+            properties: {
+              tag: {
+                type: 'string',
+              },
+              rank: {
+                type: 'integer',
+              },
+              note: {
+                type: 'string',
+              },
+              references: {
+                type: 'array',
+                items: {
+                  anyOf: [
+                    {
+                      type: 'object',
+                      required: ['citation'],
+                      properties: {
+                        type: {
+                          type: 'string',
+                        },
+                        tag: {
+                          type: 'string',
+                        },
+                        citation: {
+                          type: 'string',
+                        },
+                        note: {
+                          type: 'string',
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
           },
         },
       },

@@ -42,6 +42,9 @@ export class HistoricalEventsPartFeatureComponent
       'assertion-tags',
       'doc-reference-tags',
       'doc-reference-types',
+      'pin-link-scopes',
+      'pin-link-tags',
+      'pin-link-settings',
     ];
   }
 }

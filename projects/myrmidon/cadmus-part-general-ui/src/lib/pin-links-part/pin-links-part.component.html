@@ -7,82 +7,18 @@
       <mat-card-title>Pin Links Part</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <fieldset [formGroup]="keyForm" class="form-row">
-        <!-- key -->
-        <mat-form-field *ngIf="keys?.length">
-          <mat-label>type</mat-label>
-          <mat-select [formControl]="key">
-            <mat-option *ngFor="let k of keys" [value]="k">{{ k }}</mat-option>
-          </mat-select>
-          <mat-error
-            *ngIf="$any(key).errors?.required && (key.dirty || key.touched)"
-            >type required</mat-error
-          >
-        </mat-form-field>
-
-        <!-- tag (bound) -->
-        <mat-form-field *ngIf="tagEntries?.length">
-          <mat-label>tag</mat-label>
-          <mat-select [formControl]="tag">
-            <mat-option *ngFor="let e of tagEntries" [value]="e.id">{{
-              e.value
-            }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <!-- tag (free) -->
-        <mat-form-field *ngIf="!this.tagEntries?.length">
-          <mat-label>tag</mat-label>
-          <input matInput [formControl]="tag" />
-          <mat-error
-            *ngIf="$any(tag).errors?.maxLength && (tag.dirty || tag.touched)"
-            >tag too long</mat-error
-          >
-        </mat-form-field>
-
-        <!-- lookup -->
-        <cadmus-lookup-pin
-          *ngIf="key.value"
-          [lookupKey]="key.value"
-          label="target"
-          (entryChange)="onEntryChange($event)"
-        ></cadmus-lookup-pin>
-      </fieldset>
-
-      <!-- progress -->
-      <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-
-      <!-- list -->
-      <table *ngIf="links.value.length" style="width: 100%">
-        <thead>
-          <tr>
-            <th></th>
-            <th>label</th>
-            <th>item ID</th>
-            <th>part ID</th>
-            <th>tag</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let link of links.value; let i = index">
-            <td>
-              <button
-                type="button"
-                mat-icon-button
-                color="warn"
-                matTooltip="Delete this link"
-                (click)="deleteLink(i)"
-              >
-                <mat-icon>remove_circle</mat-icon>
-              </button>
-            </td>
-            <td>{{ link.label }}</td>
-            <td>{{ link.itemId }}</td>
-            <td>{{ link.partId }}</td>
-            <td>{{ link.tag }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <cadmus-refs-asserted-composite-ids
+        [ids]="links.value || []"
+        [idScopeEntries]="idScopeEntries"
+        [idTagEntries]="idTagEntries"
+        [assTagEntries]="assTagEntries"
+        [refTypeEntries]="refTypeEntries"
+        [refTagEntries]="refTagEntries"
+        [pinByTypeMode]="pinByTypeMode"
+        [canSwitchMode]="canSwitchMode"
+        [canEditTarget]="canEditTarget"
+        (idsChange)="onIdsChange($event)"
+      ></cadmus-refs-asserted-composite-ids>
     </mat-card-content>
     <mat-card-actions>
       <cadmus-close-save-buttons

@@ -1,32 +1,5 @@
 # Cadmus Shell
 
-- [Cadmus Shell](#cadmus-shell)
-  - [History](#history)
-    - [4.1.0](#410)
-    - [4.0.12](#4012)
-    - [4.0.11](#4011)
-    - [4.0.10](#4010)
-    - [4.0.9](#409)
-    - [4.0.8](#408)
-    - [4.0.7](#407)
-    - [4.0.6](#406)
-    - [4.0.5](#405)
-    - [4.0.4](#404)
-    - [4.0.3](#403)
-    - [4.0.2](#402)
-    - [4.0.1](#401)
-    - [4.0.0](#400)
-    - [3.1.5](#315)
-    - [3.1.4](#314)
-    - [3.1.3](#313)
-    - [3.1.2](#312)
-    - [3.1.1](#311)
-    - [3.1.0](#310)
-    - [3.0.0](#300)
-    - [2.0.3](#203)
-    - [2.0.1](#201)
-    - [2.0.0](#200)
-
 This is the second iteration of [Cadmus](https://myrmex.github.io/overview/cadmus) frontend refactoring.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.4, and upgraded since then up to version 14. For version 15, which implies dropping a number of obsolete libraries, the repository has been cloned into this one. Development will continue on this repository, while others are kept for backwards compatibility only. Historical versions are listed here:
@@ -49,6 +22,15 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 3. `docker build . -t vedph2020/cadmus-shell:4.1.0 -t vedph2020/cadmus-shell:latest` (replace with the current version).
 
 ## History
+
+### 6.0.0
+
+- 2023-05-22: breaking changes for parts using the new [asserted composite ID](https://github.com/vedph/cadmus-bricks-shell/blob/master/projects/myrmidon/cadmus-refs-asserted-ids/README.md#asserted-composite-id):
+  - refactored _pin links part_ and _pin links fragment_ (`@myrmidon/cadmus-part-general-ui`, `@myrmidon/cadmus-part-general-pg`: bump version to 6.0.0): links are now of type `AssertedCompositeId` (from bricks).
+  - refactored related entity ID for _historical events part_: ID now is an `AssertedCompositeId` rather than a string.
+  - refactored comments for _comments part and fragment_: `externalIds` (an array of items of type `AssertedId`) now is `links`, an array of items of type `AssertedCompositeId`.
+
+### 5.0.0
 
 - 2023-05-19:
   - preserve content for graph page in `CadmusGraphPgEx`.

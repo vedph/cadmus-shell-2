@@ -1,12 +1,11 @@
 import { Fragment } from '@myrmidon/cadmus-core';
-
-import { PinLink } from './pin-links-part';
+import { AssertedCompositeId } from '@myrmidon/cadmus-refs-asserted-ids';
 
 /**
  * The pin-based links layer fragment server model.
  */
 export interface PinLinksFragment extends Fragment {
-  links: PinLink[];
+  links: AssertedCompositeId[];
 }
 
 export const PIN_LINKS_FRAGMENT_TYPEID = 'fr.it.vedph.pin-links';
@@ -35,31 +34,83 @@ export const PIN_LINKS_FRAGMENT_SCHEMA = {
       items: {
         type: 'object',
         default: {},
-        required: ['label', 'itemId', 'partId', 'partTypeId', 'name', 'value'],
+        required: ['target'],
         properties: {
-          label: {
-            type: 'string',
+          target: {
+            type: 'object',
+            required: ['gid', 'label'],
+            properties: {
+              gid: {
+                type: 'string',
+              },
+              label: {
+                type: 'string',
+              },
+              itemId: {
+                type: 'string',
+              },
+              partId: {
+                type: 'string',
+              },
+              partTypeId: {
+                type: 'string',
+              },
+              roleId: {
+                type: 'string',
+              },
+              name: {
+                type: 'string',
+              },
+              value: {
+                type: 'string',
+              },
+            },
           },
-          itemId: {
-            type: 'string',
-          },
-          partId: {
-            type: 'string',
-          },
-          partTypeId: {
-            type: 'string',
-          },
-          roleId: {
-            type: 'string',
-          },
-          name: {
-            type: 'string',
-          },
-          value: {
+          scope: {
             type: 'string',
           },
           tag: {
             type: 'string',
+          },
+          assertion: {
+            type: 'object',
+            required: ['rank'],
+            properties: {
+              tag: {
+                type: 'string',
+              },
+              rank: {
+                type: 'integer',
+              },
+              note: {
+                type: 'string',
+              },
+              references: {
+                type: 'array',
+                items: {
+                  anyOf: [
+                    {
+                      type: 'object',
+                      required: ['citation'],
+                      properties: {
+                        type: {
+                          type: 'string',
+                        },
+                        tag: {
+                          type: 'string',
+                        },
+                        citation: {
+                          type: 'string',
+                        },
+                        note: {
+                          type: 'string',
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
           },
         },
       },

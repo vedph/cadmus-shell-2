@@ -28,6 +28,13 @@ export class PinLinksFragmentFeatureComponent
   }
 
   protected override getReqThesauriIds(): string[] {
-    return ['pin-link-tags'];
+    return [
+      'pin-link-scopes',
+      'pin-link-tags',
+      'pin-link-assertion-tags',
+      'pin-link-docref-types',
+      'pin-link-docref-tags',
+      'pin-link-settings',
+    ];
   }
 }

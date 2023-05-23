@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   FormControl,
   FormBuilder,
@@ -16,7 +16,7 @@ import {
 import { ThesauriSet, ThesaurusEntry } from '@myrmidon/cadmus-core';
 import { AuthJwtService } from '@myrmidon/auth-jwt-login';
 import { DocReference } from '@myrmidon/cadmus-refs-doc-references';
-import { AssertedId } from '@myrmidon/cadmus-refs-asserted-ids';
+import { AssertedCompositeId } from '@myrmidon/cadmus-refs-asserted-ids';
 
 import { Comment, CommentPart, COMMENT_PART_TYPEID } from '../comment-part';
 import { IndexKeyword } from '../index-keywords-part';
@@ -25,8 +25,8 @@ import { CommentFragment } from '../comment-fragment';
 /**
  * Comment part/fragment editor component.
  * Thesauri: comment-tags, doc-reference-tags, doc-reference-types, comment-categories,
- * languages, keyword-indexes, keyword-tags, comment-id-scopes, comment-id-tags
- * (all optional).
+ * languages, keyword-indexes, keyword-tags, comment-id-scopes, comment-id-tags,
+ * assertion-tags, pin-link-settings.
  */
 @Component({
   selector: 'cadmus-comment-editor',
@@ -40,16 +40,16 @@ export class CommentEditorComponent
   public tag: FormControl<string | null>;
   public text: FormControl<string | null>;
   public references: FormControl<DocReference[]>;
-  public ids: FormControl<AssertedId[]>;
+  public links: FormControl<AssertedCompositeId[]>;
   public categories: FormControl<ThesaurusEntry[]>;
   public keywords: FormArray;
 
   // comment-tags
   public comTagEntries: ThesaurusEntry[] | undefined;
   // doc-reference-tags
-  public docTagEntries: ThesaurusEntry[] | undefined;
+  public refTagEntries: ThesaurusEntry[] | undefined;
   // doc-reference-types
-  public docTypeEntries: ThesaurusEntry[] | undefined;
+  public refTypeEntries: ThesaurusEntry[] | undefined;
   // comment-categories
   public catEntries: ThesaurusEntry[] | undefined;
   // languages
@@ -64,6 +64,19 @@ export class CommentEditorComponent
   public idTagEntries: ThesaurusEntry[] | undefined;
   // assertion-tags
   public assTagEntries: ThesaurusEntry[] | undefined;
+  // pin-link-settings; these include:
+  // - by-type: true/false
+  // - switch-mode: true/false
+  // - edit-target: true/false
+  public setTagEntries?: ThesaurusEntry[];
+
+  // settings
+  // by-type: true/false
+  public pinByTypeMode?: boolean;
+  // switch-mode: true/false
+  public canSwitchMode?: boolean;
+  // edit-target: true/false
+  public canEditTarget?: boolean;
 
   public editorOptions = {
     theme: 'vs-light',
@@ -82,7 +95,7 @@ export class CommentEditorComponent
       Validators.maxLength(50000),
     ]);
     this.references = formBuilder.control([], { nonNullable: true });
-    this.ids = formBuilder.control([], { nonNullable: true });
+    this.links = formBuilder.control([], { nonNullable: true });
     this.categories = formBuilder.control([], { nonNullable: true });
     this.keywords = formBuilder.array([]);
   }
@@ -96,10 +109,29 @@ export class CommentEditorComponent
       tag: this.tag,
       text: this.text,
       references: this.references,
-      ids: this.ids,
+      ids: this.links,
       categories: this.categories,
       keywords: this.keywords,
     });
+  }
+
+  /**
+   * Load settings from thesaurus entries.
+   *
+   * @param entries The thesaurus entries if any.
+   */
+  private loadSettings(entries?: ThesaurusEntry[]): void {
+    if (!entries?.length) {
+      this.pinByTypeMode = undefined;
+      this.canSwitchMode = undefined;
+      this.canEditTarget = undefined;
+    }
+    this.pinByTypeMode =
+      entries?.find((e) => e.id === 'by-type')?.value === 'true';
+    this.canSwitchMode =
+      entries?.find((e) => e.id === 'switch-mode')?.value === 'true';
+    this.canEditTarget =
+      entries?.find((e) => e.id === 'edit-target')?.value === 'true';
   }
 
   private updateThesauri(thesauri: ThesauriSet): void {
@@ -112,16 +144,16 @@ export class CommentEditorComponent
 
     key = 'doc-reference-tags';
     if (this.hasThesaurus(key)) {
-      this.docTagEntries = thesauri[key].entries;
+      this.refTagEntries = thesauri[key].entries;
     } else {
-      this.docTagEntries = undefined;
+      this.refTagEntries = undefined;
     }
 
     key = 'doc-reference-types';
     if (this.hasThesaurus(key)) {
-      this.docTypeEntries = thesauri[key].entries;
+      this.refTypeEntries = thesauri[key].entries;
     } else {
-      this.docTypeEntries = undefined;
+      this.refTypeEntries = undefined;
     }
 
     key = 'comment-categories';
@@ -165,17 +197,25 @@ export class CommentEditorComponent
     } else {
       this.idTagEntries = undefined;
     }
+    key = 'assertion-tags';
+    if (this.hasThesaurus(key)) {
+      this.assTagEntries = thesauri[key].entries;
+    } else {
+      this.assTagEntries = undefined;
+    }
+    // load settings from thesaurus
+    this.loadSettings(thesauri['pin-link-settings']?.entries);
   }
 
   private updateForm(comment?: CommentPart | CommentFragment | null): void {
     if (!comment) {
-      this.form!.reset();
+      this.form.reset();
       return;
     }
     this.tag.setValue(comment.tag || null);
     this.text.setValue(comment.text);
     this.references.setValue(comment.references || []);
-    this.ids.setValue(comment.externalIds || []);
+    this.links.setValue(comment.links || []);
     // keywords
     this.keywords.clear();
     if (comment.keywords?.length) {
@@ -227,7 +267,7 @@ export class CommentEditorComponent
     comment.references = this.references.value?.length
       ? this.references.value
       : undefined;
-    comment.externalIds = this.ids.value?.length ? this.ids.value : undefined;
+    comment.links = this.links.value?.length ? this.links.value : undefined;
     comment.categories = this.categories.value?.length
       ? this.categories.value.map((entry: ThesaurusEntry) => {
           return entry.id;
@@ -252,14 +292,14 @@ export class CommentEditorComponent
     this.references.setValue(references || []);
     this.references.updateValueAndValidity();
     this.references.markAsDirty();
-    this.form!.markAsDirty();
+    this.form.markAsDirty();
   }
 
-  public onIdsChange(ids: AssertedId[]): void {
-    this.ids.setValue(ids || []);
-    this.ids.updateValueAndValidity();
-    this.ids.markAsDirty();
-    this.form!.markAsDirty();
+  public onIdsChange(ids: AssertedCompositeId[]): void {
+    this.links.setValue(ids || []);
+    this.links.updateValueAndValidity();
+    this.links.markAsDirty();
+    this.form.markAsDirty();
   }
 
   //#region Categories

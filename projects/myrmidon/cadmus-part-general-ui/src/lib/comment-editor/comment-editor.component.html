@@ -11,7 +11,7 @@
         <mat-tab label="comment">
           <!-- tag (bound) -->
           <div>
-            <mat-form-field *ngIf="comTagEntries?.length" style="width: 8em">
+            <mat-form-field *ngIf="comTagEntries?.length">
               <mat-label>tag</mat-label>
               <mat-select [formControl]="tag">
                 <mat-option *ngFor="let e of comTagEntries" [value]="e.id">{{
@@ -21,7 +21,7 @@
             </mat-form-field>
 
             <!-- tag (free) -->
-            <mat-form-field *ngIf="!comTagEntries?.length" style="width: 8em">
+            <mat-form-field *ngIf="!comTagEntries?.length">
               <mat-label>tag</mat-label>
               <input matInput [formControl]="tag" />
               <mat-error
@@ -49,33 +49,35 @@
         </mat-tab>
 
         <mat-tab label="references">
-          <h3>references</h3>
           <!-- references -->
-          <div>
+          <fieldset>
+            <legend>references</legend>
             <cadmus-refs-doc-references
               [references]="references.value"
-              [tagEntries]="docTagEntries"
-              [typeEntries]="docTypeEntries"
+              [tagEntries]="refTagEntries"
+              [typeEntries]="refTypeEntries"
               (referencesChange)="onReferencesChange($event)"
             >
             </cadmus-refs-doc-references>
-          </div>
+          </fieldset>
 
-          <!-- ids -->
-          <br />
-          <h3>external IDs</h3>
-          <div>
-            <cadmus-refs-asserted-ids
-              [ids]="ids.value"
+          <!-- links -->
+          <fieldset>
+            <legend>links</legend>
+            <cadmus-refs-asserted-composite-ids
               [idScopeEntries]="idScopeEntries"
               [idTagEntries]="idTagEntries"
               [assTagEntries]="assTagEntries"
-              [refTagEntries]="docTagEntries"
-              [refTypeEntries]="docTypeEntries"
+              [refTypeEntries]="refTypeEntries"
+              [refTagEntries]="refTagEntries"
+              [pinByTypeMode]="pinByTypeMode"
+              [canSwitchMode]="canSwitchMode"
+              [canEditTarget]="canEditTarget"
+              [ids]="links.value"
               (idsChange)="onIdsChange($event)"
             >
-            </cadmus-refs-asserted-ids>
-          </div>
+            </cadmus-refs-asserted-composite-ids>
+          </fieldset>
         </mat-tab>
 
         <!-- categories -->
@@ -167,7 +169,7 @@
 
                 <!-- child controls -->
                 <!-- indexId (bound) -->
-                <mat-form-field *ngIf="idxEntries?.length" style="width: 8em">
+                <mat-form-field *ngIf="idxEntries?.length">
                   <mat-label>index</mat-label>
                   <mat-select formControlName="indexId">
                     <mat-option *ngFor="let e of idxEntries" [value]="e.id">{{
@@ -176,7 +178,7 @@
                   </mat-select>
                 </mat-form-field>
                 <!-- indexId (free) -->
-                <mat-form-field *ngIf="!idxEntries?.length" style="width: 8em">
+                <mat-form-field *ngIf="!idxEntries?.length">
                   <mat-label>index</mat-label>
                   <input matInput formControlName="indexId" />
                   <mat-error
@@ -190,10 +192,7 @@
                 </mat-form-field>
 
                 <!-- tag (bound) -->
-                <mat-form-field
-                  *ngIf="keyTagEntries?.length"
-                  style="width: 8em"
-                >
+                <mat-form-field *ngIf="keyTagEntries?.length">
                   <mat-label>tag</mat-label>
                   <mat-select formControlName="tag">
                     <mat-option
@@ -204,10 +203,7 @@
                   </mat-select>
                 </mat-form-field>
                 <!-- tag (free) -->
-                <mat-form-field
-                  *ngIf="!keyTagEntries?.length"
-                  style="width: 8em"
-                >
+                <mat-form-field *ngIf="!keyTagEntries?.length">
                   <mat-label>tag</mat-label>
                   <input matInput formControlName="tag" />
                   <mat-error
@@ -221,7 +217,7 @@
                 </mat-form-field>
 
                 <!-- language (bound) -->
-                <mat-form-field *ngIf="langEntries?.length" style="width: 8em">
+                <mat-form-field *ngIf="langEntries?.length">
                   <mat-label>language</mat-label>
                   <mat-select formControlName="language">
                     <mat-option *ngFor="let e of langEntries" [value]="e.id">{{
@@ -239,7 +235,7 @@
                 </mat-form-field>
 
                 <!-- language (free) -->
-                <mat-form-field *ngIf="!langEntries?.length" style="width: 8em">
+                <mat-form-field *ngIf="!langEntries?.length">
                   <mat-label>language</mat-label>
                   <input matInput formControlName="language" />
                   <mat-error

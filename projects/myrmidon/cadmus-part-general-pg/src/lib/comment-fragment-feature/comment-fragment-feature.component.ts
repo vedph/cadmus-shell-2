@@ -38,6 +38,8 @@ export class CommentFragmentFeatureComponent
       'keyword-tags',
       'comment-id-scopes',
       'comment-id-tags',
+      'assertion-tags',
+      'pin-link-settings',
     ];
   }
 }

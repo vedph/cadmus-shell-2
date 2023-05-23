@@ -171,7 +171,7 @@
             <td>
               {{ e.relation | flatLookup : relationEntries : "id" : "value" }}
             </td>
-            <td>{{ e.id }}</td>
+            <td>{{ e.id.target.label }}</td>
           </tr>
         </tbody>
       </table>
@@ -223,33 +223,20 @@
             </mat-form-field>
 
             <!-- id -->
-            <mat-form-field>
-              <mat-label>ID</mat-label>
-              <input matInput [formControl]="id" autoFocus />
-              <mat-error
-                *ngIf="$any(id).errors?.required && (id.dirty || id.touched)"
-                >ID required</mat-error
-              >
-              <mat-error
-                *ngIf="$any(id).errors?.maxLength && (id.dirty || id.touched)"
-                >ID too long</mat-error
-              >
-            </mat-form-field>
-
-            <!-- lookup -->
-            <cadmus-scoped-pin-lookup
-              *ngIf="!noLookup"
-              (idPick)="onIdPick($event)"
-            ></cadmus-scoped-pin-lookup>
-
-            <button
-              mat-icon-button
-              type="button"
-              color="warn"
-              (click)="setCurrentEntity(undefined)"
+            <cadmus-refs-asserted-composite-id
+              [idScopeEntries]="idScopeEntries"
+              [idTagEntries]="idTagEntries"
+              [assTagEntries]="assTagEntries"
+              [refTagEntries]="refTagEntries"
+              [refTypeEntries]="refTypeEntries"
+              [pinByTypeMode]="pinByTypeMode"
+              [canSwitchMode]="canSwitchMode"
+              [canEditTarget]="canEditTarget"
+              [id]="id.value"
+              (idChange)="onIdChange($event)"
             >
-              <mat-icon>close</mat-icon>
-            </button>
+            </cadmus-refs-asserted-composite-id>
+
             <button mat-icon-button type="submit" color="primary">
               <mat-icon>check_circle</mat-icon>
             </button>
