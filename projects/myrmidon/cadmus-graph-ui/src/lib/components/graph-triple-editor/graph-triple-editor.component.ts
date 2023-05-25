@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -6,11 +13,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 import { GraphService, UriNode, UriTriple } from '@myrmidon/cadmus-api';
 import { ThesaurusEntry } from '@myrmidon/cadmus-core';
-import { NgToolsValidators } from '@myrmidon/ng-tools';
 
 import { GraphNodeLookupService } from '../../services/graph-node-lookup.service';
 
@@ -19,8 +26,9 @@ import { GraphNodeLookupService } from '../../services/graph-node-lookup.service
   templateUrl: './graph-triple-editor.component.html',
   styleUrls: ['./graph-triple-editor.component.css'],
 })
-export class GraphTripleEditorComponent implements OnInit {
+export class GraphTripleEditorComponent implements OnInit, OnDestroy {
   private _triple: UriTriple | undefined;
+  private _sub?: Subscription;
 
   @Input()
   public get triple(): UriTriple | undefined | null {
@@ -75,20 +83,11 @@ export class GraphTripleEditorComponent implements OnInit {
     this.subjectNode = formBuilder.control(null, Validators.required);
     this.predicateNode = formBuilder.control(null, Validators.required);
     this.objectNode = formBuilder.control(null, {
-      validators: [
-        NgToolsValidators.conditionalValidator(() => {
-          return !this.isLiteral?.value;
-        }, Validators.required),
-      ],
+      validators: Validators.required,
     });
     this.isLiteral = formBuilder.control(true, { nonNullable: true });
     this.literal = formBuilder.control(null, {
-      validators: [
-        NgToolsValidators.conditionalValidator(() => {
-          return this.isLiteral?.value;
-        }, Validators.required),
-        Validators.maxLength(15000),
-      ],
+      validators: [Validators.required, Validators.maxLength(15000)],
       updateOn: 'change',
     });
     this.tag = formBuilder.control(null, Validators.maxLength(50));
@@ -102,7 +101,25 @@ export class GraphTripleEditorComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  public ngOnInit(): void {
+    this._sub = this.isLiteral.valueChanges.subscribe((value) => {
+      if (value) {
+        this.objectNode.setValidators(null);
+        this.literal.setValidators([
+          Validators.required,
+          Validators.maxLength(15000),
+        ]);
+      } else {
+        this.objectNode.setValidators(Validators.required);
+        this.literal.setValidators(null);
+      }
+      this.literal.updateValueAndValidity();
+    });
+  }
+
+  public ngOnDestroy(): void {
+    this._sub?.unsubscribe();
+  }
 
   public onSubjectChange(node?: UriNode | null): void {
     this.subjectNode.setValue(node || null);

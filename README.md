@@ -23,6 +23,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2023-05-25: fix validation in triple editor (conditional validator did not work because control value was not up to date when evaluating).
+
 ### 6.0.0
 
 - 2023-05-22: breaking changes for parts using the new [asserted composite ID](https://github.com/vedph/cadmus-bricks-shell/blob/master/projects/myrmidon/cadmus-refs-asserted-ids/README.md#asserted-composite-id):
