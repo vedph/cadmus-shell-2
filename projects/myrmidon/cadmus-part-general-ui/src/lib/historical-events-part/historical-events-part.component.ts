@@ -77,11 +77,6 @@ export class HistoricalEventsPartComponent
   public idScopeEntries?: ThesaurusEntry[];
   // pin-link-tags
   public idTagEntries?: ThesaurusEntry[];
-  // pin-link-settings; these include:
-  // - by-type: true/false
-  // - switch-mode: true/false
-  // - edit-target: true/false
-  public setTagEntries?: ThesaurusEntry[];
 
   public events: FormControl<HistoricalEvent[]>;
 
