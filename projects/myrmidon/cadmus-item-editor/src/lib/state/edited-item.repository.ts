@@ -189,6 +189,7 @@ export class EditedItemRepository {
         .getItemLayerInfo('new', true)
         .pipe(take(1))
         .subscribe((layers) => {
+          const facet = this.pickDefaultFacet(app.facets);
           this._store.update(updateRequestStatus('edited-item', 'success'));
           this._store.update((state) => ({
             ...state,
@@ -196,7 +197,7 @@ export class EditedItemRepository {
               id: '',
               title: '',
               description: '',
-              facetId: '',
+              facetId: facet?.id || '',
               groupId: '',
               sortKey: '',
               flags: 0,
@@ -208,7 +209,7 @@ export class EditedItemRepository {
             parts: [],
             partGroups: [],
             layerPartInfos: layers,
-            facet: this.pickDefaultFacet(app.facets),
+            facet: facet,
           }));
           this._store.update(
             setProp('newPartDefinitions', this.getNewPartDefinitions())

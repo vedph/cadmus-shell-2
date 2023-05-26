@@ -2,7 +2,7 @@
   <table id="parts">
     <thead>
       <tr>
-        <th style="min-width: 32px"></th>
+        <th></th>
         <th>type</th>
         <th>role</th>
         <th>scope</th>
@@ -15,26 +15,31 @@
         formArrayName="checks"
         *ngFor="let ctl of checks.controls; let i = index"
       >
-        <td>
-          &nbsp;
+        <td class="fit-width">
           <mat-checkbox [formControlName]="i"></mat-checkbox>
         </td>
         <td>
           <span
             class="model-type"
-            [style.background-color]="getPartColor($any(parts)[i].typeId, $any(parts)[i].roleId)"
-            [style.color]="getContrastColor($any(parts)[i].typeId, $any(parts)[i].roleId)"
+            [style.background-color]="
+              getPartColor($any(parts)[i].typeId, $any(parts)[i].roleId)
+            "
+            [style.color]="
+              getContrastColor($any(parts)[i].typeId, $any(parts)[i].roleId)
+            "
             >{{ getTypeIdName($any(parts)[i].typeId) }}</span
           >
         </td>
         <td>{{ getRoleIdName($any(parts)[i].roleId) }}</td>
         <td>{{ $any(parts)[i].thesaurusScope }}</td>
-        <td>{{ $any(parts)[i].timeModified | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+        <td>
+          {{ $any(parts)[i].timeModified | date : "yyyy-MM-dd HH:mm:ss" }}
+        </td>
         <td>{{ $any(parts)[i].userId }}</td>
       </tr>
     </tbody>
   </table>
-  <div>
+  <div class="form-row">
     <mat-form-field>
       <mat-label>scope</mat-label>
       <input matInput formControlName="scope" />
@@ -47,14 +52,14 @@
         >invalid scope</mat-error
       >
     </mat-form-field>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="form.invalid || readonly"
+      matTooltip="Assign the scope to the checked parts"
+    >
+      assign
+    </button>
   </div>
-  <button
-    mat-raised-button
-    color="primary"
-    type="submit"
-    [disabled]="form.invalid || readonly"
-    matTooltip="Assign the scope to the checked parts"
-  >
-    assign
-  </button>
 </form>
