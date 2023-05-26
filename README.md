@@ -26,6 +26,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 - 2023-05-26:
   - fix default facet in new item.
   - removed stale code from events.
+  - refactored event editor for related entities.
 - 2023-05-25: fix validation in triple editor (conditional validator did not work because control value was not up to date when evaluating).
 
 ### 6.0.0

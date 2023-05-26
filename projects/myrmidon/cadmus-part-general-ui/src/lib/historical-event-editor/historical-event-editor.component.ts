@@ -10,9 +10,9 @@ import { ThesaurusEntry } from '@myrmidon/cadmus-core';
 import { AssertedChronotope } from '@myrmidon/cadmus-refs-asserted-chronotope';
 import { Assertion } from '@myrmidon/cadmus-refs-assertion';
 import { renderLabelFromLastColon } from '@myrmidon/cadmus-ui';
+import { AssertedCompositeId } from '@myrmidon/cadmus-refs-asserted-ids';
 
 import { HistoricalEvent, RelatedEntity } from '../historical-events-part';
-import { AssertedCompositeId } from '@myrmidon/cadmus-refs-asserted-ids';
 
 const RELATION_SEP = ':';
 
@@ -26,7 +26,7 @@ const RELATION_SEP = ':';
 })
 export class HistoricalEventEditorComponent {
   private _model: HistoricalEvent | undefined;
-  private _currentEntityIndex: number;
+  private _editedEntityIndex: number;
 
   @Input()
   public get model(): HistoricalEvent | undefined {
@@ -144,15 +144,12 @@ export class HistoricalEventEditorComponent {
 
   // related entity
   public currentRelEntries: ThesaurusEntry[];
-  public currentEntity?: RelatedEntity;
-  public relation: FormControl<string | null>;
-  public id: FormControl<AssertedCompositeId | null>;
-  public reForm: FormGroup;
+  public editedEntity?: RelatedEntity;
 
   constructor(formBuilder: FormBuilder) {
     this.modelChange = new EventEmitter<HistoricalEvent>();
     this.editorClose = new EventEmitter<any>();
-    this._currentEntityIndex = -1;
+    this._editedEntityIndex = -1;
     this.eventTypeTailCut = 0;
     // form
     this.eid = formBuilder.control(null, [
@@ -181,20 +178,7 @@ export class HistoricalEventEditorComponent {
       hasAssertion: this.hasAssertion,
       assertion: this.assertion,
     });
-    // related entity
     this.currentRelEntries = [];
-    this.relation = formBuilder.control(null, [
-      Validators.required,
-      Validators.maxLength(500),
-    ]);
-    this.id = formBuilder.control(null, [
-      Validators.required,
-      Validators.maxLength(500),
-    ]);
-    this.reForm = formBuilder.group({
-      relation: this.relation,
-      id: this.id,
-    });
   }
 
   public renderLabel(label: string): string {
@@ -252,7 +236,6 @@ export class HistoricalEventEditorComponent {
       this.form.reset();
       return;
     }
-
     this.eid.setValue(model.eid);
     this.type.setValue(model.type);
     this.tag.setValue(model.tag || null);
@@ -301,75 +284,62 @@ export class HistoricalEventEditorComponent {
     this.assertion.markAsDirty();
   }
 
-  public newCurrentEntity(): void {
-    this.setCurrentEntity({
-      id: { target: { gid: '', label: '' } },
-      relation: this.relationEntries?.length ? this.relationEntries[0].id : '',
-    });
+  public addEntity(): void {
+    this.editEntity(
+      {
+        id: { target: { gid: '', label: '' } },
+        relation: this.currentRelEntries?.length
+          ? this.currentRelEntries[0].id
+          : '',
+      },
+      -1
+    );
   }
 
-  public setCurrentEntity(entity: RelatedEntity | undefined): void {
-    this.currentEntity = entity;
-    if (!entity) {
-      this._currentEntityIndex = -1;
-      this.reForm.reset();
-    } else {
-      this._currentEntityIndex = this.relatedEntities.value.indexOf(entity);
-      this.relation.setValue(entity.relation);
-      this.id.setValue(entity.id);
-      this.reForm.markAsPristine();
-    }
+  public editEntity(entity: RelatedEntity, index: number): void {
+    this._editedEntityIndex = index;
+    this.editedEntity = entity;
   }
 
-  public saveCurrentEntity(): void {
-    if (!this.currentEntity || this.reForm.invalid) {
-      return;
-    }
-    const entity: RelatedEntity = {
-      id: this.id.value!,
-      relation: this.relation.value!.trim(),
-    };
+  public onEntityChange(entity: RelatedEntity): void {
     // nope if already present
     if (
       this.relatedEntities.value.find(
         (e) => e.id === entity.id && e.relation === entity.relation
       )
     ) {
-      this.setCurrentEntity(undefined);
+      this.closeEntity();
       return;
     }
-    // replace
-    if (this._currentEntityIndex > -1) {
-      const entities = [...this.relatedEntities.value];
-      entities.splice(this._currentEntityIndex, 1, entity);
-      this.relatedEntities.setValue(entities);
+    // add or replace
+    const entities = [...this.relatedEntities.value];
+    if (this._editedEntityIndex === -1) {
+      entities.push(entity);
     } else {
-      this.relatedEntities.setValue([...this.relatedEntities.value, entity]);
+      entities.splice(this._editedEntityIndex, 1, entity);
     }
+    this.relatedEntities.setValue(entities);
     this.relatedEntities.updateValueAndValidity();
     this.relatedEntities.markAsDirty();
-    this.setCurrentEntity(undefined);
+    this.closeEntity();
   }
 
-  public deleteRelatedEntity(entity: RelatedEntity): void {
-    if (this.currentEntity?.id === entity.id) {
-      this.setCurrentEntity(undefined);
+  public closeEntity(): void {
+    this._editedEntityIndex = -1;
+    this.editedEntity = undefined;
+  }
+
+  public deleteEntity(index: number): void {
+    if (this._editedEntityIndex === index) {
+      this.closeEntity();
     }
-    const i = this.relatedEntities.value.findIndex((e) => e.id === entity.id);
-    if (i > -1) {
+    if (index > -1) {
       const entities = [...this.relatedEntities.value];
-      entities.splice(i, 1);
+      entities.splice(index, 1);
       this.relatedEntities.setValue(entities);
       this.relatedEntities.updateValueAndValidity();
       this.relatedEntities.markAsDirty();
     }
-  }
-
-  public onIdChange(id: AssertedCompositeId): void {
-    this.setCurrentEntity({
-      id: id,
-      relation: this.relation.value || '',
-    });
   }
 
   public cancel(): void {

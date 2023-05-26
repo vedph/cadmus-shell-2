@@ -184,6 +184,7 @@ export class HistoricalEventsPartComponent
   }
 
   private updateForm(part?: HistoricalEventsPart | null): void {
+    this.closeEvent();
     if (!part) {
       this.form.reset();
       return;
@@ -251,6 +252,9 @@ export class HistoricalEventsPartComponent
       .pipe(take(1))
       .subscribe((yes) => {
         if (yes) {
+          if (this._editedIndex === index) {
+            this.closeEvent();
+          }
           const entries = [...this.events.value];
           entries.splice(index, 1);
           this.events.setValue(entries);

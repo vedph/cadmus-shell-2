@@ -59,6 +59,7 @@ import { PinLinksFragmentComponent } from './pin-links-fragment/pin-links-fragme
 import { TextTileComponent } from './text-tile/text-tile.component';
 import { TiledDataComponent } from './tiled-data/tiled-data.component';
 import { TiledTextPartComponent } from './tiled-text-part/tiled-text-part.component';
+import { RelatedEntityComponent } from './related-entity/related-entity.component';
 
 @NgModule({
   imports: [
@@ -117,6 +118,7 @@ import { TiledTextPartComponent } from './tiled-text-part/tiled-text-part.compon
     NotePartComponent,
     PinLinksFragmentComponent,
     PinLinksPartComponent,
+    RelatedEntityComponent,
     TextTileComponent,
     TiledTextPartComponent,
     TiledDataComponent,
@@ -141,6 +143,7 @@ import { TiledTextPartComponent } from './tiled-text-part/tiled-text-part.compon
     NotePartComponent,
     PinLinksFragmentComponent,
     PinLinksPartComponent,
+    RelatedEntityComponent,
     TiledDataComponent,
     TextTileComponent,
     TiledTextPartComponent,

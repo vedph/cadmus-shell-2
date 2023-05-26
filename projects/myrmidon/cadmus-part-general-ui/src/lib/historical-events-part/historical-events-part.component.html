@@ -90,23 +90,25 @@
       <!-- event editor -->
       <mat-expansion-panel [expanded]="editedEvent" [disabled]="!editedEvent">
         <mat-expansion-panel-header>event</mat-expansion-panel-header>
-        <cadmus-historical-event-editor
-          [eventTagEntries]="eventTagEntries"
-          [eventTypeEntries]="eventTypeEntries"
-          [relationEntries]="relationEntries"
-          [ctTagEntries]="ctTagEntries"
-          [assTagEntries]="assTagEntries"
-          [refTagEntries]="refTagEntries"
-          [refTypeEntries]="refTypeEntries"
-          [idScopeEntries]="idScopeEntries"
-          [idTagEntries]="idTagEntries"
-          [pinByTypeMode]="pinByTypeMode"
-          [canSwitchMode]="canSwitchMode"
-          [canEditTarget]="canEditTarget"
-          [model]="editedEvent"
-          (modelChange)="onEventSave($event)"
-          (editorClose)="closeEvent()"
-        ></cadmus-historical-event-editor>
+        <fieldset>
+          <cadmus-historical-event-editor
+            [eventTagEntries]="eventTagEntries"
+            [eventTypeEntries]="eventTypeEntries"
+            [relationEntries]="relationEntries"
+            [ctTagEntries]="ctTagEntries"
+            [assTagEntries]="assTagEntries"
+            [refTagEntries]="refTagEntries"
+            [refTypeEntries]="refTypeEntries"
+            [idScopeEntries]="idScopeEntries"
+            [idTagEntries]="idTagEntries"
+            [pinByTypeMode]="pinByTypeMode"
+            [canSwitchMode]="canSwitchMode"
+            [canEditTarget]="canEditTarget"
+            [model]="editedEvent"
+            (modelChange)="onEventSave($event)"
+            (editorClose)="closeEvent()"
+          ></cadmus-historical-event-editor>
+        </fieldset>
       </mat-expansion-panel>
     </mat-card-content>
     <mat-card-actions>

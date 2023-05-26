@@ -26,3 +26,8 @@ fieldset {
 .form-row * {
   flex: 0 0 auto;
 }
+.button-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}

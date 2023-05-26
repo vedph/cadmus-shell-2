@@ -32,6 +32,7 @@ export * from './lib/historical-event-editor/historical-event-editor.component';
 export * from './lib/historical-date-part';
 export * from './lib/historical-date-part/historical-date-part.component';
 export * from './lib/historical-events-part/historical-events-part.component';
+export * from './lib/related-entity/related-entity.component';
 
 export * from './lib/index-keyword/index-keyword.component';
 export * from './lib/index-keywords-part';

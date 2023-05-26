@@ -133,7 +133,7 @@
           type="button"
           mat-flat-button
           color="primary"
-          (click)="newCurrentEntity()"
+          (click)="addEntity()"
         >
           <mat-icon>add_circle</mat-icon> related
         </button>
@@ -147,13 +147,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let e of relatedEntities.value">
+          <tr *ngFor="let e of relatedEntities.value; let i = index">
             <td>
               <button
                 type="button"
                 mat-icon-button
                 color="primary"
-                (click)="setCurrentEntity(e)"
+                (click)="editEntity(e, i)"
                 matTooltip="Edit this entity"
               >
                 <mat-icon>edit</mat-icon>
@@ -162,7 +162,7 @@
                 type="button"
                 mat-icon-button
                 color="warn"
-                (click)="deleteRelatedEntity(e)"
+                (click)="deleteEntity(i)"
                 matTooltip="Delete this entity"
               >
                 <mat-icon>delete</mat-icon>
@@ -177,95 +177,43 @@
       </table>
 
       <!-- entity editor -->
-      <mat-expansion-panel
-        [disabled]="!currentEntity"
-        [expanded]="currentEntity"
-      >
+      <mat-expansion-panel [disabled]="!editedEntity" [expanded]="editedEntity">
         <mat-expansion-panel-header>entity</mat-expansion-panel-header>
-        <form [formGroup]="reForm" (submit)="saveCurrentEntity()">
-          <fieldset class="form-row">
-            <!-- relation (bound) -->
-            <mat-form-field *ngIf="currentRelEntries">
-              <mat-label>relation</mat-label>
-              <mat-select [formControl]="relation">
-                <mat-option
-                  *ngFor="let e of currentRelEntries"
-                  [value]="e.id"
-                  >{{ e.value }}</mat-option
-                >
-              </mat-select>
-              <mat-error
-                *ngIf="
-                  $any(relation).errors?.required &&
-                  (relation.dirty || relation.touched)
-                "
-                >relation required</mat-error
-              >
-            </mat-form-field>
-            <!-- relation (free) -->
-            <mat-form-field *ngIf="!relationEntries?.length">
-              <mat-label>relation</mat-label>
-              <input matInput [formControl]="relation" />
-              <mat-error
-                *ngIf="
-                  $any(relation).errors?.required &&
-                  (relation.dirty || relation.touched)
-                "
-                >relation required</mat-error
-              >
-              <mat-error
-                *ngIf="
-                  $any(relation).errors?.maxLength &&
-                  (relation.dirty || relation.touched)
-                "
-                >relation too long</mat-error
-              >
-            </mat-form-field>
-
-            <!-- id -->
-            <cadmus-refs-asserted-composite-id
-              [idScopeEntries]="idScopeEntries"
-              [idTagEntries]="idTagEntries"
-              [assTagEntries]="assTagEntries"
-              [refTagEntries]="refTagEntries"
-              [refTypeEntries]="refTypeEntries"
-              [pinByTypeMode]="pinByTypeMode"
-              [canSwitchMode]="canSwitchMode"
-              [canEditTarget]="canEditTarget"
-              [id]="id.value"
-              (idChange)="onIdChange($event)"
-            >
-            </cadmus-refs-asserted-composite-id>
-
-            <button mat-icon-button type="submit" color="primary">
-              <mat-icon>check_circle</mat-icon>
-            </button>
-          </fieldset>
-        </form>
+        <fieldset>
+          <cadmus-related-entity
+            [relationEntries]="currentRelEntries"
+            [idScopeEntries]="idScopeEntries"
+            [idTagEntries]="idTagEntries"
+            [assTagEntries]="assTagEntries"
+            [refTagEntries]="refTagEntries"
+            [refTypeEntries]="refTypeEntries"
+            [pinByTypeMode]="pinByTypeMode"
+            [canSwitchMode]="canSwitchMode"
+            [canEditTarget]="canEditTarget"
+            [entity]="editedEntity"
+            (entityChange)="onEntityChange($event)"
+            (editorClose)="closeEntity()"
+          ></cadmus-related-entity>
+        </fieldset>
       </mat-expansion-panel>
     </mat-tab>
   </mat-tab-group>
 
   <!-- buttons -->
   <hr />
-  <div>
-    <button
-      type="button"
-      color="warn"
-      mat-icon-button
-      matTooltip="Discard changes"
-      (click)="cancel()"
-    >
+  <div class="button-row">
+    <button type="button" color="warn" mat-icon-button (click)="cancel()">
       <mat-icon>clear</mat-icon>
     </button>
     <button
       type="submit"
       color="primary"
       mat-icon-button
-      matTooltip="Accept changes"
+      matTooltip="Save event"
       [disabled]="form.invalid || form.pristine"
     >
       <mat-icon>check_circle</mat-icon>
     </button>
+    <span>event</span>
   </div>
 </form>
