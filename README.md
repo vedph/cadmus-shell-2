@@ -13,17 +13,21 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 - Angular Material has been upgraded to 15, which implies a number of style adjustments.
 - `@angular/flex-layout`, which has been obsoleted, has been removed and replaced by pure CSS with some media queries where required.
 
-💡 For **pre-Angular-15** projects, see the [migration instructions](migration.md).
+>For **pre-Angular-15** projects, see the [migration instructions](migration.md).
 
 🐋 Quick Docker image build:
 
 1. `npm run build-lib`;
 2. update version in `env.js` (and Docker files), and then `ng build --configuration=production`;
-3. `docker build . -t vedph2020/cadmus-shell:4.1.0 -t vedph2020/cadmus-shell:latest` (replace with the current version).
+3. `docker build . -t vedph2020/cadmus-shell:6.0.1 -t vedph2020/cadmus-shell:latest` (replace with the current version).
 
 ## History
 
-- 2023-06-16: updated Angular.
+### 6.0.1
+
+- 2023-06-16:
+  - updated Angular.
+  - refactored Docker compose script for PostgreSQL.
 - 2023-05-26:
   - fix default facet in new item.
   - removed stale code from events.
