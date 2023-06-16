@@ -32,7 +32,7 @@ services:
 
   # Cadmus API
   cadmus-api:
-    image: vedph2020/cadmus_api:8.0.0
+    image: vedph2020/cadmus-api:8.0.0
     container_name: cadmus-api
     ports:
       - 60380:80
@@ -59,7 +59,7 @@ services:
 
   # Cadmus App
   cadmus-app:
-    image: vedph2020/cadmus-shell:4.1.1
+    image: vedph2020/cadmus-shell:6.0.1
     container_name: cadmus-app
     ports:
       - 4200:80
