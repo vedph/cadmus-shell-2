@@ -23,6 +23,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2023-06-16: updated Angular.
 - 2023-05-26:
   - fix default facet in new item.
   - removed stale code from events.
