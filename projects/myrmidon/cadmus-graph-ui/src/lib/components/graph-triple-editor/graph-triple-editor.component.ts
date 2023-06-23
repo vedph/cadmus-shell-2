@@ -20,6 +20,7 @@ import { GraphService, UriNode, UriTriple } from '@myrmidon/cadmus-api';
 import { ThesaurusEntry } from '@myrmidon/cadmus-core';
 
 import { GraphNodeLookupService } from '../../services/graph-node-lookup.service';
+import { NgToolsValidators } from '@myrmidon/ng-tools';
 
 @Component({
   selector: 'cadmus-graph-triple-editor',
@@ -67,6 +68,8 @@ export class GraphTripleEditorComponent implements OnInit, OnDestroy {
   public objectNode: FormControl<UriNode | null>;
   public isLiteral: FormControl<boolean>;
   public literal: FormControl<string | null>;
+  public literalLang: FormControl<string | null>;
+  public literalType: FormControl<string | null>;
   public tag: FormControl<string | null>;
   public form: FormGroup;
 
@@ -83,13 +86,18 @@ export class GraphTripleEditorComponent implements OnInit, OnDestroy {
     this.subjectNode = formBuilder.control(null, Validators.required);
     this.predicateNode = formBuilder.control(null, Validators.required);
     this.objectNode = formBuilder.control(null, {
-      validators: Validators.required,
+      validators: NgToolsValidators.conditionalValidator(
+        () => !this.isLiteral.value,
+        Validators.required
+      ),
     });
     this.isLiteral = formBuilder.control(true, { nonNullable: true });
     this.literal = formBuilder.control(null, {
       validators: [Validators.required, Validators.maxLength(15000)],
       updateOn: 'change',
     });
+    this.literalLang = formBuilder.control(null, Validators.maxLength(10));
+    this.literalType = formBuilder.control(null, Validators.maxLength(100));
     this.tag = formBuilder.control(null, Validators.maxLength(50));
     this.form = formBuilder.group({
       subjectNode: this.subjectNode,
@@ -97,6 +105,8 @@ export class GraphTripleEditorComponent implements OnInit, OnDestroy {
       objectNode: this.objectNode,
       isLiteral: this.isLiteral,
       literal: this.literal,
+      literalLang: this.literalLang,
+      literalType: this.literalType,
       tag: this.tag,
     });
   }
@@ -201,6 +211,8 @@ export class GraphTripleEditorComponent implements OnInit, OnDestroy {
     } else {
       this.isLiteral.setValue(true);
       this.literal.setValue(triple.objectLiteral || null);
+      this.literalLang.setValue(triple.literalLanguage || null);
+      this.literalType.setValue(triple.literalType || null);
     }
     this.isNew = triple.id ? false : true;
     this.form.markAsPristine();
@@ -215,6 +227,12 @@ export class GraphTripleEditorComponent implements OnInit, OnDestroy {
         ? undefined
         : this.objectNode.value?.id || 0,
       objectLiteral: this.isLiteral.value ? this.literal.value! : undefined,
+      literalLanguage: this.isLiteral.value
+        ? this.literalLang.value || undefined
+        : undefined,
+      literalType: this.isLiteral.value
+        ? this.literalType.value || undefined
+        : undefined,
       subjectUri: this.subjectNode.value?.uri || '',
       predicateUri: this.predicateNode.value?.uri || '',
       objectUri: this.isLiteral.value

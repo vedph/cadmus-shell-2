@@ -38,7 +38,7 @@
         label="object"
         (itemChange)="onObjectChange($event)"
       ></cadmus-ref-lookup>
-      <!-- literal -->
+      <!-- literal value -->
       <mat-form-field style="width: 100%" *ngIf="isLiteral?.value">
         <mat-label>object</mat-label>
         <textarea matInput [formControl]="literal"></textarea>
@@ -56,6 +56,34 @@
           >literal too long</mat-error
         >
       </mat-form-field>
+      <div class="form-row">
+        <!-- literal language -->
+        <mat-form-field *ngIf="isLiteral?.value">
+          <mat-label>language</mat-label>
+          <input matInput [formControl]="literalLang" />
+          <mat-hint>ISO-639 etc.</mat-hint>
+          <mat-error
+            *ngIf="
+              $any(literalLang).errors?.maxLength &&
+              (literalLang.dirty || literalLang.touched)
+            "
+            >language too long</mat-error
+          >
+        </mat-form-field>
+        <!-- literal type -->
+        <mat-form-field *ngIf="isLiteral?.value">
+          <mat-label>type</mat-label>
+          <input matInput [formControl]="literalType" />
+          <mat-hint>XML data type (xs:...)</mat-hint>
+          <mat-error
+            *ngIf="
+              $any(literalType).errors?.maxLength &&
+              (literalType.dirty || literalType.touched)
+            "
+            >type too long</mat-error
+          >
+        </mat-form-field>
+      </div>
     </fieldset>
   </div>
 

@@ -23,6 +23,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2023-06-23: more controls for triple literal (`@myrmidon/cadmus-graph-ui@5.0.3`).
+
 ### 6.0.1
 
 - 2023-06-16:

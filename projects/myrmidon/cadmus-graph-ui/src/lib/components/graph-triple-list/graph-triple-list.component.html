@@ -98,8 +98,8 @@
     <!-- editor -->
     <mat-expansion-panel
       id="editor"
-      [expanded]="editedTriple ? true : false"
-      [disabled]="editedTriple ? false : true"
+      [expanded]="editedTriple"
+      [disabled]="!editedTriple"
     >
       <mat-expansion-panel-header>Triple</mat-expansion-panel-header>
       <cadmus-graph-triple-editor
