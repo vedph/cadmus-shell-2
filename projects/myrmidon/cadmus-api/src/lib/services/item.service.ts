@@ -215,13 +215,16 @@ export class ItemService {
    * @param id The item ID.
    * @param type The part type or "any".
    * @param role The part role or "default".
+   * @param noErrIfNotFound If true, no error will be thrown if the part is not found.
+   * Rather, null will be returned.
    * @returns Observable with result.
    */
   public getPartFromTypeAndRole(
     id: string,
     type: string,
-    role = 'default'
-  ): Observable<Part> {
+    role = 'default',
+    noErrIfNotFound = false
+  ): Observable<Part | null> {
     if (!type) {
       type = 'any';
     }
@@ -230,7 +233,15 @@ export class ItemService {
     }
     return this._http
       .get<Part>(`${this._env.get('apiUrl')}items/${id}/parts/${type}/${role}`)
-      .pipe(retry(3), catchError(this._error.handleError));
+      .pipe(
+        retry(3),
+        catchError((error) => {
+          if (noErrIfNotFound && error?.status === 404) {
+            return of(null);
+          }
+          return this._error.handleError(error);
+        })
+      );
   }
 
   /**
