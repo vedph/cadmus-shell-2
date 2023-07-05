@@ -162,14 +162,27 @@ export class ItemService {
    * Get the item with the specified ID.
    * @param id Items filter.
    * @param parts True to get also item's parts.
+   * @param noErrIfNotFound True to return null if the item is not found.
    * @returns Observable with paged result.
    */
-  public getItem(id: string, parts: boolean): Observable<Item> {
+  public getItem(
+    id: string,
+    parts: boolean,
+    noErrIfNotFound = false
+  ): Observable<Item | null> {
     let url = `${this._env.get('apiUrl')}items/${id}`;
     if (parts) {
       url += '?parts=true';
     }
-    return this._http.get<Item>(url).pipe(retry(3));
+    return this._http.get<Item>(url).pipe(
+      retry(3),
+      catchError((error) => {
+        if (noErrIfNotFound && error?.status === 404) {
+          return of(null);
+        }
+        return this._error.handleError(error);
+      })
+    );
   }
 
   /**
