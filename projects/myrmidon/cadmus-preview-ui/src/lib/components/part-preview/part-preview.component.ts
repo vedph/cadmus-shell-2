@@ -73,7 +73,7 @@ export class PartPreviewComponent implements OnInit {
       .subscribe({
         next: (result) => {
           this.busy = false;
-          this.item = result.item;
+          this.item = result.item || undefined;
           this.html = result.preview.result;
         },
         error: (error) => {

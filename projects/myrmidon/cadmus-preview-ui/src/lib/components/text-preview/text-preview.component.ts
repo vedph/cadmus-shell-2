@@ -148,7 +148,7 @@ export class TextPreviewComponent implements OnInit {
       .subscribe({
         next: (result) => {
           this.busy = false;
-          this.item = result.item;
+          this.item = result.item || undefined;
           this.layers = result.layers;
           // select layer if requested
           if (this._source!.layerId) {

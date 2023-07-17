@@ -227,16 +227,16 @@ export class EditedItemRepository {
             this._store.update(updateRequestStatus('edited-item', 'success'));
 
             const itemFacet = app.facets.find((f) => {
-              return f.id === result.item.facetId;
+              return f.id === result.item!.facetId;
             });
             const facetParts = itemFacet ? itemFacet.partDefinitions : [];
 
             this._store.update((state) => ({
               ...state,
-              item: result.item,
-              parts: result.item.parts || [],
+              item: result.item!,
+              parts: result.item!.parts || [],
               partGroups: this._itemService.groupParts(
-                result.item.parts || [],
+                result.item!.parts || [],
                 facetParts
               ),
               layerPartInfos: result.layers,
