@@ -13,3 +13,7 @@ footer {
   padding: 4px;
   text-align: center;
 }
+
+#logo {
+  flex: 0 0 60px;
+}

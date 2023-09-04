@@ -23,6 +23,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2023-09-04: updated Angular.
 - 2023-07-17:
   - updated packages.
   - set default internal link for most asserted composite IDs used in general parts (except comments).
