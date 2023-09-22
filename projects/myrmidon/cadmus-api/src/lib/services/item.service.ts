@@ -409,6 +409,32 @@ export class ItemService {
   }
 
   /**
+   * Get the specified page of item group IDs.
+   * @param pageNumber The page number.
+   * @param pageSize The page size.
+   * @param filter The optional ID filter. If specified, it should be included
+   * in each group ID returned.
+   * @returns Page.
+   */
+  public getItemGroupIds(
+    pageNumber: number,
+    pageSize: number,
+    filter?: string
+  ): Observable<DataPage<string>> {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.set('pageNumber', pageNumber.toString());
+    httpParams = httpParams.set('pageSize', pageSize.toString());
+    if (filter) {
+      httpParams = httpParams.set('filter', filter);
+    }
+    return this._http
+      .get<DataPage<string>>(`${this._env.get('apiUrl')}items/groups`, {
+        params: httpParams,
+      })
+      .pipe(retry(3), catchError(this._error.handleError));
+  }
+
+  /**
    * Set the group ID value for all the specified items.
    *
    * @param ids The item IDs.

@@ -23,6 +23,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2023-09-22:
+  - updated Angular and packages.
+  - added method `getItemGroupIds` to item service in `@myrmidon/cadmus-api`.
 - 2023-09-04: updated Angular.
 - 2023-07-17:
   - updated packages.
