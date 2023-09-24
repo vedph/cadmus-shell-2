@@ -29,23 +29,19 @@ td.fit-width {
 
 div#container {
   display: grid;
-  grid-template-rows: 1fr auto auto;
+  grid-template-rows: 1fr auto;
   grid-template-columns: auto 1fr;
   grid-template-areas:
     "filters list"
-    ". paginator"
     ". editor";
   gap: 8px;
 }
 div#filters {
   grid-area: filters;
+  max-width: 350px;
 }
 div#list {
   grid-area: list;
-}
-div#paginator {
-  grid-area: paginator;
-  justify-content: end;
 }
 div#editor {
   grid-area: editor;
@@ -54,12 +50,15 @@ div#editor {
 /* lt-md */
 @media only screen and (max-width: 959px) {
   div#container {
+    grid-template-rows: 1fr auto auto;
     grid-template-columns: 1fr;
     grid-template-areas:
       "list"
-      "paginator"
       "filters"
       "editor";
+  }
+  div#filters {
+    max-width: none;
   }
   .noif-lt-md {
     display: none;

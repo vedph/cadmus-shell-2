@@ -19,10 +19,18 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 1. `npm run build-lib`;
 2. update version in `env.js` (and Docker files), and then `ng build --configuration=production`;
-3. `docker build . -t vedph2020/cadmus-shell:6.0.1 -t vedph2020/cadmus-shell:latest` (replace with the current version).
+3. `docker build . -t vedph2020/cadmus-shell:6.0.2 -t vedph2020/cadmus-shell:latest` (replace with the current version).
 
 ## History
 
+### 6.0.2
+
+- 2023-09-24:
+  - added upload service to `@myrmidon/cadmus-api`.
+  - added thesaurus download and thesauri import to thesaurus list in `@myrmidon/cadmus-thesaurus-list`. Note that for importing you must opt-in by setting an env variable like this: `window.__env.thesImportEnabled = true;`. At any rate, import is available only to admin users. To enable import on the server side, be sure to import `Cadmus.Api.Controllers.Import` in your API project.
+  - fixes to list layout in `@myrmidon/cadmus-item-list`.
+  - fixes to list layout in `@myrmidon/cadmus-item-search`.
+  - fixes to list layout in `@myrmidon/cadmus-graph-ui`.
 - 2023-09-22:
   - updated Angular and packages.
   - added method `getItemGroupIds` to item service in `@myrmidon/cadmus-api`.

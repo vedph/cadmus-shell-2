@@ -5,7 +5,7 @@
   <mat-card-content>
     <div id="container">
       <!-- query -->
-      <div style="grid-area: query">
+      <div id="query">
         <cadmus-item-query
           [lastQueries]="(lastQueries$ | async) || []"
           (querySubmit)="submitQuery($event)"
@@ -13,20 +13,14 @@
       </div>
 
       <!-- list -->
-      <div style="grid-area: list" *ngIf="pagination$ | async as pagination">
+      <div id="list" *ngIf="pagination$ | async as pagination">
         <div *ngIf="loading$ | async">
           <mat-progress-bar mode="indeterminate"></mat-progress-bar>
         </div>
         <div *ngIf="error$ | async as error">{{ error }}</div>
-        <table *ngIf="pagination.data.length" style="width: 100%">
+        <table *ngIf="pagination.data.length">
           <thead>
             <th></th>
-            <th
-              *ngIf="
-                user?.roles?.includes('admin') ||
-                user?.roles?.includes('editor')
-              "
-            ></th>
             <th>facet</th>
             <th>flags</th>
             <th>title</th>
@@ -38,7 +32,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of pagination.data">
-              <td class="command">
+              <td class="fit-width">
                 <button
                   mat-icon-button
                   type="button"
@@ -47,14 +41,6 @@
                 >
                   <mat-icon>mode_edit</mat-icon>
                 </button>
-              </td>
-              <td
-                class="command"
-                *ngIf="
-                  user?.roles?.includes('admin') ||
-                  user?.roles?.includes('editor')
-                "
-              >
                 <button
                   *ngIf="userLevel > 2"
                   mat-icon-button
@@ -88,10 +74,7 @@
         </table>
 
         <!-- paginator -->
-        <div
-          style="grid-area: paginator; justify-content: end"
-          class="form-row"
-        >
+        <div class="form-row">
           <button
             type="button"
             mat-icon-button

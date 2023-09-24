@@ -1,3 +1,6 @@
+table {
+  width: 100%;
+}
 tr:nth-child(odd) {
   background-color: #eaeaea;
 }
@@ -26,18 +29,24 @@ div#container {
   display: grid;
   grid-template-rows: 1fr auto;
   grid-template-columns: 1fr 2fr;
-  grid-template-areas:
-    "query list"
-    ". paginator";
-  gap: 8px;
+  grid-template-areas: "query list";
+  gap: 16px;
 }
+div#query {
+  grid-area: query;
+}
+div#list {
+  grid-area: list;
+}
+
 /* lt-md */
 @media only screen and (max-width: 959px) {
   div#container {
+    grid-template-rows: 1fr auto;
     grid-template-columns: 1fr;
     grid-template-areas:
       "list"
-      "paginator";
+      "query";
   }
   .noif-lt-md {
     display: none;

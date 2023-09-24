@@ -19,31 +19,31 @@ td.fit-width {
 
 div#container {
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: 1fr;
   grid-template-columns: auto 1fr;
   grid-template-areas:
-    "filters list"
-    ". paginator";
-  gap: 8px;
+    "filters list";
+  gap: 16px;
 }
 #filters {
   grid-area: filters;
+  max-width: 230px;
 }
 #list {
   grid-area: list;
-}
-#paginator {
-  grid-area: paginator;
 }
 
 /* lt-md */
 @media only screen and (max-width: 959px) {
   div#container {
+    grid-template-rows: 1fr auto;
     grid-template-columns: 1fr;
     grid-template-areas:
       "list"
-      "paginator"
       "filters";
+  }
+  #filters {
+    max-width: none;
   }
   .noif-lt-md {
     display: none;

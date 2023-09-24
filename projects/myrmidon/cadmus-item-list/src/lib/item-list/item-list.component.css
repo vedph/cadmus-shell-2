@@ -1,3 +1,7 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
 tr:nth-child(odd) {
   background-color: #eaeaea;
 }
@@ -6,8 +10,9 @@ th {
   font-weight: normal;
   color: silver;
 }
-td.command {
-  width: 24px;
+td.fit-width {
+  width: 1px;
+  white-space: nowrap;
 }
 .form-row {
   display: flex;
@@ -25,21 +30,30 @@ td.fit-width {
 
 div#container {
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: 1fr;
   grid-template-columns: auto 1fr;
-  grid-template-areas:
-    "filters list"
-    ". paginator";
-  gap: 8px;
+  grid-template-areas: "filters list";
+  gap: 16px;
 }
+div#filters {
+  grid-area: filters;
+  max-width: 280px;
+}
+div#list {
+  grid-area: list;
+}
+
 /* lt-md */
 @media only screen and (max-width: 959px) {
   div#container {
+    grid-template-rows: 1fr auto;
     grid-template-columns: 1fr;
     grid-template-areas:
       "list"
-      "paginator"
       "filters";
+  }
+  div#filters {
+    max-width: none;
   }
   .noif-lt-md {
     display: none;

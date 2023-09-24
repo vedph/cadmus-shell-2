@@ -46,6 +46,7 @@
                   type="button"
                   mat-icon-button
                   matTooltip="Download this thesaurus"
+                  [disabled]="downloading"
                   (click)="downloadThesaurus(thesaurus.id)"
                 >
                   <mat-icon>download</mat-icon>
@@ -59,6 +60,16 @@
           </tbody>
         </table>
 
+        <!-- pagination -->
+        <mat-paginator
+          [length]="pagination.total"
+          [pageSize]="pagination.perPage"
+          [pageSizeOptions]="[20, 50, 75, 100]"
+          [pageIndex]="pagination.currentPage - 1"
+          [showFirstLastButtons]="true"
+          (page)="pageChange($event)"
+        ></mat-paginator>
+
         <!-- importer -->
         <div *ngIf="importEnabled">
           <mat-expansion-panel>
@@ -70,17 +81,6 @@
             ></cadmus-thesaurus-import>
           </mat-expansion-panel>
         </div>
-
-        <!-- pagination -->
-        <mat-paginator
-          id="paginator"
-          [length]="pagination.total"
-          [pageSize]="pagination.perPage"
-          [pageSizeOptions]="[20, 50, 75, 100]"
-          [pageIndex]="pagination.currentPage - 1"
-          [showFirstLastButtons]="true"
-          (page)="pageChange($event)"
-        ></mat-paginator>
       </div>
     </div>
   </mat-card-content>
