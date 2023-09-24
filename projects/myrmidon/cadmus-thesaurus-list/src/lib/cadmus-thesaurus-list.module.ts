@@ -6,12 +6,14 @@ import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { CadmusApiModule } from '@myrmidon/cadmus-api';
@@ -21,6 +23,7 @@ import { NgMatToolsModule } from '@myrmidon/ng-mat-tools';
 
 import { ThesaurusFilterComponent } from './thesaurus-filter/thesaurus-filter.component';
 import { ThesaurusListComponent } from './thesaurus-list/thesaurus-list.component';
+import { ThesaurusImportComponent } from './thesaurus-import/thesaurus-import.component';
 
 // https://github.com/ng-packagr/ng-packagr/issues/778
 export const RouterModuleForChild = RouterModule.forChild([
@@ -37,12 +40,14 @@ export const RouterModuleForChild = RouterModule.forChild([
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
+    MatExpansionModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
     MatPaginatorModule,
     MatProgressBarModule,
     MatSelectModule,
+    MatSnackBarModule,
     MatTooltipModule,
     // cadmus
     CadmusApiModule,
@@ -50,7 +55,15 @@ export const RouterModuleForChild = RouterModule.forChild([
     NgToolsModule,
     NgMatToolsModule,
   ],
-  declarations: [ThesaurusListComponent, ThesaurusFilterComponent],
-  exports: [ThesaurusListComponent],
+  declarations: [
+    ThesaurusListComponent,
+    ThesaurusFilterComponent,
+    ThesaurusImportComponent,
+  ],
+  exports: [
+    ThesaurusListComponent,
+    ThesaurusFilterComponent,
+    ThesaurusImportComponent,
+  ],
 })
 export class CadmusThesaurusListModule {}

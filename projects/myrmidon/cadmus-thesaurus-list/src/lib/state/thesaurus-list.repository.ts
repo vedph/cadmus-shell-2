@@ -116,7 +116,7 @@ export class ThesaurusListRepository {
     );
   }
 
-  public loadPage(pageNumber: number, pageSize: number): void {
+  public loadPage(pageNumber: number, pageSize?: number): void {
     if (!pageSize) {
       pageSize = PAGE_SIZE;
     }

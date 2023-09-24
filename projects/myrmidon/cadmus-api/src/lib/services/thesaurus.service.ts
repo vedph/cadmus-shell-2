@@ -82,15 +82,15 @@ export class ThesaurusService {
           params: httpParams,
         })
         .pipe(retry(3), take(1), catchError(this._error.handleError))
-        .subscribe(
-          (ids) => {
+        .subscribe({
+          next: (ids) => {
             resolve(ids.length > 0);
           },
-          (_) => {
+          error: (_) => {
             console.error('Error checking for existence of thesaurus ' + id);
             reject(false);
-          }
-        );
+          },
+        });
     });
   }
 

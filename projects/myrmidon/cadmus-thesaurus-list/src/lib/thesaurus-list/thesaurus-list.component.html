@@ -5,30 +5,24 @@
   <mat-card-content>
     <div id="container">
       <!-- filters -->
-      <div style="grid-area: filters">
+      <div id="filters">
         <cadmus-thesaurus-filter></cadmus-thesaurus-filter>
       </div>
 
       <!-- list -->
-      <div style="grid-area: list" *ngIf="pagination$ | async as pagination">
+      <div id="list" *ngIf="pagination$ | async as pagination">
         <div *ngIf="(status$ | async)?.value === 'pending'">
           <mat-progress-bar mode="indeterminate"></mat-progress-bar>
         </div>
         <table>
           <thead>
             <th></th>
-            <th
-              *ngIf="
-                user?.roles?.includes('admin') ||
-                user?.roles?.includes('editor')
-              "
-            ></th>
             <th>id</th>
             <th>entries</th>
           </thead>
           <tbody>
             <tr *ngFor="let thesaurus of pagination.data">
-              <td class="command">
+              <td class="fit-width">
                 <button
                   mat-icon-button
                   type="button"
@@ -38,14 +32,6 @@
                 >
                   <mat-icon>mode_edit</mat-icon>
                 </button>
-              </td>
-              <td
-                class="command"
-                *ngIf="
-                  user?.roles?.includes('admin') ||
-                  user?.roles?.includes('editor')
-                "
-              >
                 <button
                   *ngIf="userLevel > 2"
                   mat-icon-button
@@ -56,6 +42,14 @@
                 >
                   <mat-icon>delete</mat-icon>
                 </button>
+                <button
+                  type="button"
+                  mat-icon-button
+                  matTooltip="Download this thesaurus"
+                  (click)="downloadThesaurus(thesaurus.id)"
+                >
+                  <mat-icon>download</mat-icon>
+                </button>
               </td>
               <td>{{ thesaurus.id }}</td>
               <td>
@@ -65,9 +59,21 @@
           </tbody>
         </table>
 
+        <!-- importer -->
+        <div *ngIf="importEnabled">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Import thesauri</mat-panel-title>
+            </mat-expansion-panel-header>
+            <cadmus-thesaurus-import
+              (uploadEnd)="onUploadEnd()"
+            ></cadmus-thesaurus-import>
+          </mat-expansion-panel>
+        </div>
+
         <!-- pagination -->
         <mat-paginator
-          style="grid-area: paginator"
+          id="paginator"
           [length]="pagination.total"
           [pageSize]="pagination.perPage"
           [pageSizeOptions]="[20, 50, 75, 100]"

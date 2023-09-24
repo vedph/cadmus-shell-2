@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 import { DialogService } from '@myrmidon/ng-mat-tools';
 import { AuthJwtService, User } from '@myrmidon/auth-jwt-login';
 import { Thesaurus } from '@myrmidon/cadmus-core';
-import { UserLevelService } from '@myrmidon/cadmus-api';
+import { ThesaurusService, UserLevelService } from '@myrmidon/cadmus-api';
+import { EnvService } from '@myrmidon/ng-tools';
 
 import { StatusState } from '@ngneat/elf-requests';
 import { PaginationData } from '@ngneat/elf-pagination';
@@ -24,17 +26,26 @@ export class ThesaurusListComponent implements OnInit {
   public pagination$: Observable<PaginationData & { data: Thesaurus[] }>;
   public user?: User;
   public userLevel: number;
+  public downloading?: boolean;
+  public importEnabled?: boolean;
 
   constructor(
     private _repository: ThesaurusListRepository,
+    private _thesaurusService: ThesaurusService,
     private _dialogService: DialogService,
     private _router: Router,
     private _authService: AuthJwtService,
-    private _userLevelService: UserLevelService
+    private _userLevelService: UserLevelService,
+    private _snackbar: MatSnackBar,
+    env: EnvService
   ) {
     this.userLevel = 0;
     this.status$ = _repository.status$;
     this.pagination$ = _repository.pagination$;
+    this.importEnabled =
+      _authService.isCurrentUserInRole('admin') && env.get('thesImportEnabled')
+        ? true
+        : false;
   }
 
   ngOnInit(): void {
@@ -69,5 +80,36 @@ export class ThesaurusListComponent implements OnInit {
           this._repository.deleteThesaurus(thesaurus.id);
         }
       });
+  }
+
+  public downloadThesaurus(id: string): void {
+    if (this.downloading || !this.importEnabled) {
+      return;
+    }
+    this.downloading = true;
+
+    this._thesaurusService.getThesaurus(id).subscribe({
+      next: (thesaurus) => {
+        this.downloading = false;
+        const json = JSON.stringify(thesaurus, null, 2);
+
+        const element = document.createElement('a');
+        const file = new Blob([json], { type: 'application/json' });
+        element.href = URL.createObjectURL(file);
+        element.download = `${thesaurus.id}.json`;
+        document.body.appendChild(element);
+        element.click();
+      },
+      error: (err) => {
+        this.downloading = false;
+        console.error(err);
+        this._snackbar.open('Error downloading thesaurus', 'OK');
+      },
+    });
+  }
+
+  public onUploadEnd(): void {
+    this._repository.clearCache();
+    this._repository.loadPage(1);
   }
 }
