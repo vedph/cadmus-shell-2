@@ -83,7 +83,7 @@ export class ThesaurusListComponent implements OnInit {
   }
 
   public downloadThesaurus(id: string): void {
-    if (this.downloading || !this.importEnabled) {
+    if (this.downloading) {
       return;
     }
     this.downloading = true;

@@ -23,6 +23,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2023-09-28: enabled download in thesaurus list even when import setting is not enabled.
+
 ### 6.0.2
 
 - 2023-09-24:
