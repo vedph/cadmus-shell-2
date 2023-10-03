@@ -23,16 +23,14 @@ import {
   ThesaurusFilter,
 } from '@myrmidon/cadmus-core';
 import { ComponentSignal } from '@myrmidon/cadmus-profile-core';
+import { DataPage, NgToolsValidators } from '@myrmidon/ng-tools';
 
 import {
   ThesaurusNode,
   ThesaurusNodeFilter,
   ThesaurusNodesService,
 } from '../../services/thesaurus-nodes.service';
-
 import { ThesaurusNodeListRepository } from '../../state/thesaurus-node-list.repository';
-import { PaginationData } from '@ngneat/elf-pagination';
-import { NgToolsValidators } from '@myrmidon/ng-tools';
 
 const THES_ID_PATTERN = '^[a-zA-Z0-9][.\\-_a-zA-Z0-9]*@[a-z]{2,3}$';
 
@@ -83,7 +81,8 @@ export class ThesaurusEditorComponent implements OnInit {
   @Output()
   public editorClose: EventEmitter<any>;
 
-  public pagination$: Observable<PaginationData & { data: ThesaurusNode[] }>;
+  public loading$: Observable<boolean | undefined>;
+  public page$: Observable<DataPage<ThesaurusNode>>;
   public filter$: Observable<ThesaurusNodeFilter>;
 
   // thesaurus form
@@ -106,8 +105,9 @@ export class ThesaurusEditorComponent implements OnInit {
     private _repository: ThesaurusNodeListRepository,
     formBuilder: FormBuilder
   ) {
+    this.loading$ = _repository.loading$;
     this.filter$ = _repository.filter$;
-    this.pagination$ = _repository.pagination$;
+    this.page$ = _repository.page$;
 
     this.thesaurusChange = new EventEmitter<Thesaurus>();
     this.editorClose = new EventEmitter<any>();
@@ -141,9 +141,8 @@ export class ThesaurusEditorComponent implements OnInit {
     });
   }
 
-  private refresh(): void {
-    this._repository.clearCache();
-    this._repository.loadPage(1);
+  private reset(): void {
+    this._repository.reset();
   }
 
   /**
@@ -187,8 +186,8 @@ export class ThesaurusEditorComponent implements OnInit {
     this.targetId.setValue(id);
   }
 
-  public pageChange(event: PageEvent): void {
-    this._repository.loadPage(event.pageIndex + 1, event.pageSize);
+  public onPageChange(event: PageEvent): void {
+    this._repository.setPage(event.pageIndex + 1, event.pageSize);
   }
 
   public applyFilter(): void {
@@ -200,17 +199,17 @@ export class ThesaurusEditorComponent implements OnInit {
 
   public addNode(node: ThesaurusNode): void {
     this._nodesService.add(node);
-    this.refresh();
+    this.reset();
   }
 
   public expandAll(): void {
     this._nodesService.toggleAll(false);
-    this.refresh();
+    this.reset();
   }
 
   public collapseAll(): void {
     this._nodesService.toggleAll(true);
-    this.refresh();
+    this.reset();
   }
 
   public onSignal(signal: ComponentSignal<ThesaurusNode>): void {
@@ -219,20 +218,20 @@ export class ThesaurusEditorComponent implements OnInit {
       case 'expand':
         node.collapsed = false;
         this._nodesService.add(node);
-        this.refresh();
+        this.reset();
         break;
       case 'collapse':
         node.collapsed = true;
         this._nodesService.add(node);
-        this.refresh();
+        this.reset();
         break;
       case 'move-up':
         this._nodesService.moveUp(node.id);
-        this.refresh();
+        this.reset();
         break;
       case 'move-down':
         this._nodesService.moveDown(node.id);
-        this.refresh();
+        this.reset();
         break;
       case 'delete':
         this._dialogService
@@ -242,7 +241,7 @@ export class ThesaurusEditorComponent implements OnInit {
               return;
             }
             this._nodesService.delete(node.id);
-            this.refresh();
+            this.reset();
           });
         break;
       case 'add-sibling':
@@ -256,7 +255,7 @@ export class ThesaurusEditorComponent implements OnInit {
           parentId: node.parentId,
         };
         this._nodesService.add(sibling);
-        this.refresh();
+        this.reset();
         break;
       case 'add-child':
         // add child
@@ -273,7 +272,7 @@ export class ThesaurusEditorComponent implements OnInit {
           node.collapsed = false;
           this._nodesService.add(node);
         }
-        this.refresh();
+        this.reset();
         break;
     }
   }
@@ -286,7 +285,7 @@ export class ThesaurusEditorComponent implements OnInit {
       ordinal: 1,
     };
     this._nodesService.add(node);
-    this.refresh();
+    this.reset();
   }
 
   private updateForm(thesaurus?: Thesaurus): void {
@@ -309,7 +308,7 @@ export class ThesaurusEditorComponent implements OnInit {
       entries,
       thesaurus.id?.startsWith('model-types@')
     );
-    this.refresh();
+    this.reset();
   }
 
   private getThesaurus(): Thesaurus {

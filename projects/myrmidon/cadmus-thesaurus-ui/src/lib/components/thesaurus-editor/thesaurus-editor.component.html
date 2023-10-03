@@ -87,9 +87,9 @@
         </form>
 
         <!-- list -->
-        <div *ngIf="pagination$ | async as pagination">
+        <div *ngIf="page$ | async as page">
           <cadmus-thesaurus-node
-            *ngFor="let node of pagination.data"
+            *ngFor="let node of page.items"
             [node]="node"
             (nodeChange)="addNode($event)"
             (signal)="onSignal($event)"
@@ -99,7 +99,7 @@
             mat-flat-button
             color="primary"
             (click)="appendNode()"
-            *ngIf="pagination.total === 0"
+            *ngIf="page.total === 0"
             style="margin: 8px 0"
           >
             <mat-icon>add_circle</mat-icon> node
@@ -107,13 +107,12 @@
 
           <!-- paginator -->
           <mat-paginator
-            *ngIf="pagination.data?.length"
-            [length]="pagination.total"
-            [pageSize]="pagination.perPage"
-            [pageSizeOptions]="[20, 50, 75, 100]"
-            [pageIndex]="pagination.currentPage - 1"
+            [length]="page.total"
+            [pageIndex]="page.pageNumber - 1"
+            [pageSize]="page.pageSize"
+            [pageSizeOptions]="[5, 10, 20, 50, 100]"
+            (page)="onPageChange($event)"
             [showFirstLastButtons]="true"
-            (page)="pageChange($event)"
           ></mat-paginator>
         </div>
       </div>

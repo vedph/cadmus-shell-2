@@ -15,6 +15,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { CadmusUiModule } from '@myrmidon/cadmus-ui';
 import { NgToolsModule } from '@myrmidon/ng-tools';
+import { PagedDataBrowsersModule } from '@myrmidon/paged-data-browsers';
 
 import { ThesaurusEditorComponent } from './components/thesaurus-editor/thesaurus-editor.component';
 import { ThesaurusLookupComponent } from './components/thesaurus-lookup/thesaurus-lookup.component';
@@ -39,6 +40,7 @@ import { ThesaurusNodeComponent } from './components/thesaurus-node/thesaurus-no
     // cadmus
     CadmusUiModule,
     NgToolsModule,
+    PagedDataBrowsersModule,
   ],
   declarations: [
     ThesaurusEditorComponent,
