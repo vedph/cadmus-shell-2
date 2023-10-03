@@ -27,6 +27,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
   - updated Angular and packages.
   - refactored `@myrmidon/cadmus-graph-ui` (bumped to 6.0.0) to replace ELF with simpler repository from `@myrmidon/paged-data-browsers`.
   - refactored `@myrmidon/cadmus-item-editor` (bumped to 6.0.0) to replace ELF with simpler repository from `@myrmidon/paged-data-browsers`.
+  - refactored `@myrmidon/cadmus-item-list` (bumped to 6.0.0) to replace ELF with simpler repository from `@myrmidon/paged-data-browsers`.
 - 2023-09-28: enabled download in thesaurus list even when import setting is not enabled.
 
 ### 6.0.2

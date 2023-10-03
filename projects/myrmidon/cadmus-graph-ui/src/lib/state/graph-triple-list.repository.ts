@@ -17,12 +17,12 @@ import { GraphService } from '@myrmidon/cadmus-api';
 export class GraphTripleListRepository
   implements PagedListStoreService<TripleFilter, UriTriple>
 {
-  private _store: PagedListStore<TripleFilter, UriTriple>;
-  private _loading$: BehaviorSubject<boolean | undefined>;
-  private _filter$: BehaviorSubject<TripleFilter>;
-  private _subjectNode$: BehaviorSubject<UriNode | undefined>;
-  private _predicateNode$: BehaviorSubject<UriNode | undefined>;
-  private _objectNode$: BehaviorSubject<UriNode | undefined>;
+  private readonly _store: PagedListStore<TripleFilter, UriTriple>;
+  private readonly _loading$: BehaviorSubject<boolean | undefined>;
+  private readonly _filter$: BehaviorSubject<TripleFilter>;
+  private readonly _subjectNode$: BehaviorSubject<UriNode | undefined>;
+  private readonly _predicateNode$: BehaviorSubject<UriNode | undefined>;
+  private readonly _objectNode$: BehaviorSubject<UriNode | undefined>;
 
   public get loading$(): Observable<boolean | undefined> {
     return this._loading$.asObservable();

@@ -16,11 +16,11 @@ import { GraphService } from '@myrmidon/cadmus-api';
 export class NodeListRepository
   implements PagedListStoreService<NodeFilter, UriNode>
 {
-  private _store: PagedListStore<NodeFilter, UriNode>;
-  private _loading$: BehaviorSubject<boolean | undefined>;
-  private _filter$: BehaviorSubject<NodeFilter>;
-  private _linkedNode$: BehaviorSubject<UriNode | undefined>;
-  private _classNodes$: BehaviorSubject<UriNode[]>;
+  private readonly _store: PagedListStore<NodeFilter, UriNode>;
+  private readonly _loading$: BehaviorSubject<boolean | undefined>;
+  private readonly _filter$: BehaviorSubject<NodeFilter>;
+  private readonly _linkedNode$: BehaviorSubject<UriNode | undefined>;
+  private readonly _classNodes$: BehaviorSubject<UriNode[]>;
 
   public get loading$(): Observable<boolean | undefined> {
     return this._loading$.asObservable();

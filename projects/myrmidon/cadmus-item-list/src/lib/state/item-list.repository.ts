@@ -1,173 +1,95 @@
 import { Injectable } from '@angular/core';
-import { combineLatest, debounceTime, map, Observable, take } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
+import { DataPage } from '@myrmidon/ng-tools';
 import {
-  deleteAllPages,
-  hasPage,
-  PaginationData,
-  selectCurrentPageEntities,
-  selectPaginationData,
-  setCurrentPage,
-  setPage,
-  updatePaginationData,
-  withPagination,
-} from '@ngneat/elf-pagination';
-import {
-  selectRequestStatus,
-  StatusState,
-  updateRequestStatus,
-  withRequestsCache,
-  withRequestsStatus,
-} from '@ngneat/elf-requests';
+  PagedListStore,
+  PagedListStoreService,
+} from '@myrmidon/paged-data-browsers';
 
 import { ItemFilter, ItemInfo } from '@myrmidon/cadmus-core';
 import { ItemService } from '@myrmidon/cadmus-api';
-import {
-  deleteAllEntities,
-  deleteEntities,
-  selectActiveEntity,
-  updateEntities,
-  upsertEntities,
-  withActiveId,
-  withEntities,
-} from '@ngneat/elf-entities';
-import { createStore, select, withProps } from '@ngneat/elf';
-import { DataPage } from '@myrmidon/ng-tools';
-
-const PAGE_SIZE = 20;
-const NAME = 'item-list';
-
-export interface ItemListProps {
-  filter: ItemFilter;
-}
 
 /**
- * Item list ELF repository.
+ * Item list repository.
  */
 @Injectable({ providedIn: 'root' })
-export class ItemListRepository {
-  private _store;
-  private _lastPageSize: number;
+export class ItemListRepository
+  implements PagedListStoreService<ItemFilter, ItemInfo>
+{
+  private readonly _store: PagedListStore<ItemFilter, ItemInfo>;
+  private readonly _loading$: BehaviorSubject<boolean | undefined>;
 
-  public activeItem$: Observable<ItemInfo | undefined>;
-  public filter$: Observable<ItemFilter>;
-  public pagination$: Observable<PaginationData & { data: ItemInfo[] }>;
-  public status$: Observable<StatusState>;
+  public get loading$(): Observable<boolean | undefined> {
+    return this._loading$.asObservable();
+  }
+  public get filter$(): Observable<ItemFilter> {
+    return this._store.filter$;
+  }
+  public get page$(): Observable<DataPage<ItemInfo>> {
+    return this._store.page$;
+  }
 
   constructor(private _itemService: ItemService) {
-    this._store = this.createStore();
-    this._lastPageSize = PAGE_SIZE;
-
-    this.pagination$ = combineLatest([
-      this._store.pipe(selectPaginationData()),
-      this._store.pipe(selectCurrentPageEntities()),
-    ]).pipe(
-      map(([pagination, data]) => ({ ...pagination, data })),
-      debounceTime(0)
-    );
-
-    this.activeItem$ = this._store.pipe(selectActiveEntity());
-    this.status$ = this._store.pipe(selectRequestStatus(NAME));
-
-    this.filter$ = this._store.pipe(select((state) => state.filter));
-    this.filter$.subscribe((filter) => {
-      // when filter changed, reset any existing page and move to page 1
-      const paginationData = this._store.getValue().pagination;
-      console.log('Deleting all pages');
-      this._store.update(deleteAllPages());
-      // load page 1
-      this.loadPage(1, paginationData.perPage);
-    });
-
-    this.loadPage(1, PAGE_SIZE);
-    this.pagination$.subscribe(console.log);
+    this._store = new PagedListStore<ItemFilter, ItemInfo>(this);
+    this._loading$ = new BehaviorSubject<boolean | undefined>(undefined);
+    this._store.reset();
   }
 
-  private createStore(): typeof store {
-    const store = createStore(
-      { name: NAME },
-      withProps<ItemListProps>({
-        filter: {},
-      }),
-      withEntities<ItemInfo>(),
-      withActiveId(),
-      withRequestsCache<'item-list'>(),
-      withRequestsStatus(),
-      withPagination()
-    );
-
-    return store;
-  }
-
-  private adaptPage(
-    page: DataPage<ItemInfo>
-  ): PaginationData & { data: ItemInfo[] } {
-    return {
-      currentPage: page.pageNumber,
-      perPage: page.pageSize,
-      lastPage: page.pageCount,
-      total: page.total,
-      data: page.items,
-    };
-  }
-
-  private addPage(response: PaginationData & { data: ItemInfo[] }): void {
-    const { data, ...paginationData } = response;
-    this._store.update(
-      upsertEntities(data),
-      updatePaginationData(paginationData),
-      setPage(
-        paginationData.currentPage,
-        data.map((c) => c.id)
-      )
+  public loadPage(
+    pageNumber: number,
+    pageSize: number,
+    filter: ItemFilter
+  ): Observable<DataPage<ItemInfo>> {
+    this._loading$.next(true);
+    return this._itemService.getItems(filter, pageNumber, pageSize).pipe(
+      tap({
+        next: () => this._loading$.next(false),
+        error: () => this._loading$.next(false),
+      })
     );
   }
 
-  public loadPage(pageNumber: number, pageSize?: number): void {
-    if (!pageSize) {
-      pageSize = PAGE_SIZE;
+  public async reset(): Promise<void> {
+    this._loading$.next(true);
+    try {
+      await this._store.reset();
+    } catch (error) {
+      throw error;
+    } finally {
+      this._loading$.next(false);
     }
-    if (
-      this._store.query(hasPage(pageNumber)) &&
-      pageSize === this._lastPageSize
-    ) {
-      this._store.update(setCurrentPage(pageNumber));
-      return;
-    }
-
-    if (this._lastPageSize !== pageSize) {
-      this._store.update(deleteAllPages());
-      this._lastPageSize = pageSize;
-    }
-
-    this._store.update(updateRequestStatus(NAME, 'pending'));
-    this._itemService
-      .getItems(this._store.getValue().filter, pageNumber, pageSize)
-      .pipe(take(1))
-      .subscribe((page) => {
-        this.addPage({ ...this.adaptPage(page), data: page.items });
-        this._store.update(updateRequestStatus(NAME, 'success'));
-      });
   }
 
-  clearCache() {
-    this._store.update(deleteAllEntities(), deleteAllPages());
+  public async setFilter(filter: ItemFilter): Promise<void> {
+    this._loading$.next(true);
+    try {
+      await this._store.setFilter(filter);
+    } catch (error) {
+      throw error;
+    } finally {
+      this._loading$.next(false);
+    }
   }
 
-  public updateEntity(entity: ItemInfo): void {
-    this._store.update(updateEntities(entity.id, entity));
+  public getFilter(): ItemFilter {
+    return this._store.getFilter();
   }
 
-  public setFilter(filter: ItemFilter): void {
-    this._store.update((state) => ({ ...state, filter: filter }));
+  public async setPage(pageNumber: number, pageSize: number): Promise<void> {
+    this._loading$.next(true);
+    try {
+      await this._store.setPage(pageNumber, pageSize);
+    } catch (error) {
+      throw error;
+    } finally {
+      this._loading$.next(false);
+    }
   }
 
   public deleteItem(id: ItemInfo['id']) {
-    this._itemService
-      .deleteItem(id)
-      .pipe(take(1))
-      .subscribe((_) => {
-        this._store.update(deleteEntities(id));
-      });
+    this._itemService.deleteItem(id).subscribe((_) => {
+      this._store.reset();
+    });
   }
 }

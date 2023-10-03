@@ -17,20 +17,20 @@ import { AppRepository } from '@myrmidon/cadmus-state';
  */
 @Injectable({ providedIn: 'root' })
 export class EditedItemRepository {
-  private _loading$: BehaviorSubject<boolean | undefined>;
+  private readonly _loading$: BehaviorSubject<boolean | undefined>;
   // the item being edited
-  private _item$: BehaviorSubject<Item | undefined>;
+  private readonly _item$: BehaviorSubject<Item | undefined>;
   // the raw list of item's parts
-  private _parts$: BehaviorSubject<Part[]>;
-  private _partGroups$: BehaviorSubject<PartGroup[]>;
+  private readonly _parts$: BehaviorSubject<Part[]>;
+  private readonly _partGroups$: BehaviorSubject<PartGroup[]>;
   // the set of all the possible layer parts for this item, either
   // present or absent
-  private _layersPartInfo$: BehaviorSubject<LayerPartInfo[]>;
+  private readonly _layersPartInfo$: BehaviorSubject<LayerPartInfo[]>;
   // the facet definition assigned to the item
-  private _facet$: BehaviorSubject<FacetDefinition | undefined>;
+  private readonly _facet$: BehaviorSubject<FacetDefinition | undefined>;
   // the part definitions for adding a new part, filtered by the selected
   // facet and the parts already present in the item.
-  private _newPartDefinitions$: BehaviorSubject<PartDefinition[]>;
+  private readonly _newPartDefinitions$: BehaviorSubject<PartDefinition[]>;
 
   public get loading$(): Observable<boolean | undefined> {
     return this._loading$.asObservable();

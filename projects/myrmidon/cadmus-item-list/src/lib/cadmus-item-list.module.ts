@@ -17,6 +17,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { NgToolsModule } from '@myrmidon/ng-tools';
 import { NgMatToolsModule } from '@myrmidon/ng-mat-tools';
+import { PagedDataBrowsersModule } from '@myrmidon/paged-data-browsers';
+import { CadmusCoreModule } from '@myrmidon/cadmus-core';
 import { CadmusApiModule } from '@myrmidon/cadmus-api';
 import { CadmusUiModule } from '@myrmidon/cadmus-ui';
 import { CadmusStateModule } from '@myrmidon/cadmus-state';
@@ -24,7 +26,6 @@ import { CadmusRefsLookupModule } from '@myrmidon/cadmus-refs-lookup';
 
 import { ItemListComponent } from './item-list/item-list.component';
 import { ItemFilterComponent } from './item-filter/item-filter.component';
-import { CadmusCoreModule } from '@myrmidon/cadmus-core';
 
 // https://github.com/ng-packagr/ng-packagr/issues/778
 export const RouterModuleForChild = RouterModule.forChild([
@@ -52,6 +53,7 @@ export const RouterModuleForChild = RouterModule.forChild([
     // cadmus
     NgToolsModule,
     NgMatToolsModule,
+    PagedDataBrowsersModule,
     CadmusCoreModule,
     CadmusApiModule,
     CadmusRefsLookupModule,

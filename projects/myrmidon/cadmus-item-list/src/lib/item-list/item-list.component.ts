@@ -3,13 +3,11 @@ import { Router } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { Observable } from 'rxjs';
 
-import { PaginationData } from '@ngneat/elf-pagination';
-import { StatusState } from '@ngneat/elf-requests';
-
-import { ItemInfo } from '@myrmidon/cadmus-core';
-
+import { DataPage } from '@myrmidon/ng-tools';
 import { DialogService } from '@myrmidon/ng-mat-tools';
 import { AuthJwtService, User } from '@myrmidon/auth-jwt-login';
+
+import { ItemInfo } from '@myrmidon/cadmus-core';
 import { UserLevelService } from '@myrmidon/cadmus-api';
 import { AppProps, AppRepository } from '@myrmidon/cadmus-state';
 
@@ -21,8 +19,8 @@ import { ItemListRepository } from '../state/item-list.repository';
   styleUrls: ['./item-list.component.css'],
 })
 export class ItemListComponent implements OnInit {
-  public status$: Observable<StatusState>;
-  public pagination$: Observable<PaginationData & { data: ItemInfo[] }>;
+  public loading$: Observable<boolean | undefined>;
+  public page$: Observable<DataPage<ItemInfo>>;
   public app: AppProps;
 
   public user?: User;
@@ -37,8 +35,8 @@ export class ItemListComponent implements OnInit {
     appRepository: AppRepository
   ) {
     this.userLevel = 0;
-    this.status$ = _repository.status$;
-    this.pagination$ = _repository.pagination$;
+    this.loading$ = _repository.loading$;
+    this.page$ = _repository.page$;
     this.app = appRepository.getValue();
   }
 
@@ -49,8 +47,8 @@ export class ItemListComponent implements OnInit {
     });
   }
 
-  public pageChange(event: PageEvent): void {
-    this._repository.loadPage(event.pageIndex + 1, event.pageSize);
+  public onPageChange(event: PageEvent): void {
+    this._repository.setPage(event.pageIndex + 1, event.pageSize);
   }
 
   public addItem(): void {
@@ -75,8 +73,7 @@ export class ItemListComponent implements OnInit {
       });
   }
 
-  public clearCache(): void {
-    this._repository.clearCache();
-    this._repository.loadPage(1);
+  public reset(): void {
+    this._repository.reset();
   }
 }

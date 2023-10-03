@@ -10,8 +10,8 @@
       </div>
 
       <!-- list -->
-      <div id="list" *ngIf="pagination$ | async as pagination">
-        <div *ngIf="(status$ | async)?.value === 'pending'">
+      <div id="list" *ngIf="page$ | async as page">
+        <div *ngIf="loading$ | async">
           <mat-progress-bar mode="indeterminate"></mat-progress-bar>
         </div>
         <table>
@@ -27,7 +27,7 @@
             <th class="noif-lt-md">creator</th>
           </thead>
           <tbody>
-            <tr *ngFor="let item of pagination.data">
+            <tr *ngFor="let item of page.items">
               <td class="fit-width">
                 <button
                   mat-icon-button
@@ -75,19 +75,19 @@
             type="button"
             mat-icon-button
             color="warn"
-            matTooltip="Clear items cache"
-            (click)="clearCache()"
+            matTooltip="Reset list"
+            (click)="reset()"
           >
             <mat-icon>autorenew</mat-icon>
           </button>
 
           <mat-paginator
-            [length]="pagination.total"
-            [pageSize]="pagination.perPage"
-            [pageSizeOptions]="[20, 50, 75, 100]"
-            [pageIndex]="pagination.currentPage - 1"
+            [length]="page.total"
+            [pageIndex]="page.pageNumber - 1"
+            [pageSize]="page.pageSize"
+            [pageSizeOptions]="[5, 10, 20, 50, 100]"
+            (page)="onPageChange($event)"
             [showFirstLastButtons]="true"
-            (page)="pageChange($event)"
           ></mat-paginator>
         </div>
       </div>
