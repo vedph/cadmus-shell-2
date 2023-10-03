@@ -95,8 +95,6 @@ export class GraphNodeFilterComponent implements OnInit {
 
   private getFilter(): NodeFilter {
     return {
-      pageNumber: 1,  // not used
-      pageSize: 20,   // not used
       label: this.label.value?.trim(),
       isClass: this.isClass.value === 0 ? undefined : this.isClass.value === 1,
       uid: this.uid.value?.trim(),

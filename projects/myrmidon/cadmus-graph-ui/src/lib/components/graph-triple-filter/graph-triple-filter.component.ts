@@ -85,8 +85,6 @@ export class GraphTripleFilterComponent implements OnInit {
   private getFilter(): TripleFilter {
     const pid = this._repository.getTerm('P')?.id;
     return {
-      pageNumber: 1, // not used,
-      pageSize: 20, // not used
       subjectId: this._repository.getTerm('S')?.id,
       predicateIds: pid ? [pid] : undefined,
       objectId: this.literal.value

@@ -1,180 +1,109 @@
 import { Injectable } from '@angular/core';
-import {
-  combineLatest,
-  debounceTime,
-  forkJoin,
-  map,
-  Observable,
-  take,
-} from 'rxjs';
-
-import {
-  deleteAllPages,
-  hasPage,
-  PaginationData,
-  selectCurrentPageEntities,
-  selectPaginationData,
-  setCurrentPage,
-  setPage,
-  updatePaginationData,
-  withPagination,
-} from '@ngneat/elf-pagination';
-import {
-  selectRequestStatus,
-  StatusState,
-  updateRequestStatus,
-  withRequestsCache,
-  withRequestsStatus,
-} from '@ngneat/elf-requests';
+import { BehaviorSubject, forkJoin, Observable, tap } from 'rxjs';
 
 import { NodeFilter, UriNode } from '@myrmidon/cadmus-api';
 import {
-  deleteAllEntities,
-  selectActiveEntity,
-  upsertEntities,
-  withActiveId,
-  withEntities,
-} from '@ngneat/elf-entities';
-import { createStore, select, setProp, withProps } from '@ngneat/elf';
+  PagedListStore,
+  PagedListStoreService,
+} from '@myrmidon/paged-data-browsers';
 import { DataPage } from '@myrmidon/ng-tools';
 import { GraphService } from '@myrmidon/cadmus-api';
-
-const PAGE_SIZE = 20;
-const NAME = 'graph-node-list';
-
-export interface NodeListProps {
-  filter: NodeFilter;
-  linkedNode?: UriNode;
-  classNodes?: UriNode[];
-}
 
 /**
  * Graph nodes list ELF repository.
  */
 @Injectable({ providedIn: 'root' })
-export class NodeListRepository {
-  private _store;
-  private _lastPageSize: number;
+export class NodeListRepository
+  implements PagedListStoreService<NodeFilter, UriNode>
+{
+  private _store: PagedListStore<NodeFilter, UriNode>;
+  private _loading$: BehaviorSubject<boolean | undefined>;
+  private _filter$: BehaviorSubject<NodeFilter>;
+  private _linkedNode$: BehaviorSubject<UriNode | undefined>;
+  private _classNodes$: BehaviorSubject<UriNode[]>;
 
-  public activeItem$: Observable<UriNode | undefined>;
-  public filter$: Observable<NodeFilter>;
-  public pagination$: Observable<PaginationData & { data: UriNode[] }>;
-  public status$: Observable<StatusState>;
-  public linkedNode$: Observable<UriNode | undefined>;
-  public classNodes$: Observable<UriNode[] | undefined>;
-
-  constructor(private _graphService: GraphService) {
-    this._store = this.createStore();
-    this._lastPageSize = PAGE_SIZE;
-
-    this.pagination$ = combineLatest([
-      this._store.pipe(selectPaginationData()),
-      this._store.pipe(selectCurrentPageEntities()),
-    ]).pipe(
-      map(([pagination, data]) => ({ ...pagination, data })),
-      debounceTime(0)
-    );
-
-    this.activeItem$ = this._store.pipe(selectActiveEntity());
-    this.status$ = this._store.pipe(selectRequestStatus(NAME));
-    this.linkedNode$ = this._store.pipe(select((state) => state.linkedNode));
-    this.classNodes$ = this._store.pipe(select((state) => state.classNodes));
-
-    this.filter$ = this._store.pipe(select((state) => state.filter));
-    this.filter$.subscribe((filter) => {
-      // when filter changed, reset any existing page and move to page 1
-      const paginationData = this._store.getValue().pagination;
-      console.log('Deleting all pages');
-      this._store.update(deleteAllPages());
-      // load page 1
-      this.loadPage(1, paginationData.perPage);
-    });
-
-    this.loadPage(1, PAGE_SIZE);
-    this.pagination$.subscribe(console.log);
+  public get loading$(): Observable<boolean | undefined> {
+    return this._loading$.asObservable();
+  }
+  public get filter$(): Observable<NodeFilter> {
+    return this._filter$.asObservable();
+  }
+  public get page$(): Observable<DataPage<UriNode>> {
+    return this._store.page$;
+  }
+  public get linkedNode$(): Observable<UriNode | undefined> {
+    return this._linkedNode$.asObservable();
+  }
+  public get classNodes$(): Observable<UriNode[] | undefined> {
+    return this._classNodes$.asObservable();
   }
 
-  private createStore(): typeof store {
-    const store = createStore(
-      { name: NAME },
-      withProps<NodeListProps>({
-        filter: { pageNumber: 1, pageSize: 20 },
-      }),
-      withEntities<UriNode>(),
-      withActiveId(),
-      withRequestsCache<'graph-node-list'>(),
-      withRequestsStatus(),
-      withPagination()
-    );
-
-    return store;
+  constructor(private _graphService: GraphService) {
+    this._store = new PagedListStore<NodeFilter, UriNode>(this);
+    this._loading$ = new BehaviorSubject<boolean | undefined>(undefined);
+    this._filter$ = new BehaviorSubject<NodeFilter>({});
+    this._linkedNode$ = new BehaviorSubject<UriNode | undefined>(undefined);
+    this._classNodes$ = new BehaviorSubject<UriNode[]>([]);
+    this._store.reset();
   }
 
   public getLinkedNode(): UriNode | undefined {
-    return this._store.query((state) => state.linkedNode);
+    return this._linkedNode$.value;
   }
 
-  public getClassNodes(): UriNode[] | undefined {
-    return this._store.query((state) => state.classNodes);
+  public getClassNodes(): UriNode[] {
+    return this._classNodes$.value;
   }
 
-  private adaptPage(
-    page: DataPage<UriNode>
-  ): PaginationData & { data: UriNode[] } {
-    return {
-      currentPage: page.pageNumber,
-      perPage: page.pageSize,
-      lastPage: page.pageCount,
-      total: page.total,
-      data: page.items,
-    };
-  }
-
-  private addPage(response: PaginationData & { data: UriNode[] }): void {
-    const { data, ...paginationData } = response;
-    this._store.update(
-      upsertEntities(data),
-      updatePaginationData(paginationData),
-      setPage(
-        paginationData.currentPage,
-        data.map((c) => c.id)
-      )
+  public loadPage(
+    pageNumber: number,
+    pageSize: number,
+    filter: NodeFilter
+  ): Observable<DataPage<UriNode>> {
+    this._loading$.next(true);
+    return this._graphService.getNodes(pageNumber, pageSize, filter).pipe(
+      tap({
+        next: () => this._loading$.next(false),
+        error: () => this._loading$.next(false),
+      })
     );
   }
 
-  public loadPage(pageNumber: number, pageSize?: number): void {
-    if (!pageSize) {
-      pageSize = PAGE_SIZE;
+  public async reset(): Promise<void> {
+    this._loading$.next(true);
+    try {
+      await this._store.reset();
+    } catch (error) {
+      throw error;
+    } finally {
+      this._loading$.next(false);
     }
-    if (
-      this._store.query(hasPage(pageNumber)) &&
-      pageSize === this._lastPageSize
-    ) {
-      this._store.update(setCurrentPage(pageNumber));
-      return;
-    }
-
-    if (this._lastPageSize !== pageSize) {
-      this._store.update(deleteAllPages());
-      this._lastPageSize = pageSize;
-    }
-
-    this._store.update(updateRequestStatus(NAME, 'pending'));
-    this._graphService
-      .getNodes({ ...this._store.getValue().filter, pageNumber, pageSize })
-      .pipe(take(1))
-      .subscribe((page) => {
-        this.addPage({ ...this.adaptPage(page), data: page.items });
-        this._store.update(updateRequestStatus(NAME, 'success'));
-      });
   }
 
-  public clearCache() {
-    this._store.update(deleteAllEntities(), deleteAllPages());
+  public async setFilter(filter: NodeFilter): Promise<void> {
+    this._loading$.next(true);
+    try {
+      await this._store.setFilter(filter);
+    } catch (error) {
+      throw error;
+    } finally {
+      this._loading$.next(false);
+    }
   }
 
-  public setFilter(filter: NodeFilter): void {
-    this._store.update((state) => ({ ...state, filter: filter }));
+  public getFilter(): NodeFilter {
+    return this._store.getFilter();
+  }
+
+  public async setPage(pageNumber: number, pageSize: number): Promise<void> {
+    this._loading$.next(true);
+    try {
+      await this._store.setPage(pageNumber, pageSize);
+    } catch (error) {
+      throw error;
+    } finally {
+      this._loading$.next(false);
+    }
   }
 
   /**
@@ -183,7 +112,7 @@ export class NodeListRepository {
    * @param node The node or undefined.
    */
   public setLinkedNode(node?: UriNode): void {
-    this._store.update(setProp('linkedNode', node));
+    this._linkedNode$.next(node);
   }
 
   /**
@@ -193,22 +122,19 @@ export class NodeListRepository {
    */
   public setLinkedNodeId(id?: number): void {
     if (!id) {
-      this._store.update(setProp('linkedNode', undefined));
+      this._linkedNode$.next(undefined);
     } else {
-      this._graphService
-        .getNode(id)
-        .pipe(take(1))
-        .subscribe({
-          next: (node) => {
-            this.setLinkedNode(node);
-          },
-          error: (error) => {
-            if (error) {
-              console.error(JSON.stringify(error));
-            }
-            console.warn('Node ID not found: ' + id);
-          },
-        });
+      this._graphService.getNode(id).subscribe({
+        next: (node) => {
+          this._linkedNode$.next(node);
+        },
+        error: (error) => {
+          if (error) {
+            console.error(JSON.stringify(error));
+          }
+          console.warn('Node ID not found: ' + id);
+        },
+      });
     }
   }
 
@@ -219,12 +145,12 @@ export class NodeListRepository {
    * @param node The node to add.
    */
   public addClassNode(node: UriNode): void {
-    const nodes = [...(this._store.query((state) => state.classNodes) || [])];
+    const nodes = [...this._classNodes$.value];
     if (nodes.some((n) => n.id === node.id)) {
       return;
     }
     nodes.push(node);
-    this._store.update(setProp('classNodes', nodes));
+    this._classNodes$.next(nodes);
   }
 
   /**
@@ -234,26 +160,24 @@ export class NodeListRepository {
    */
   public setClassNodeIds(ids?: number[]): void {
     if (!ids || !ids.length) {
-      this._store.update(setProp('classNodes', undefined));
+      this._classNodes$.next([]);
       return;
     }
 
     const requests: Observable<UriNode>[] = [];
     ids.forEach((id) => {
-      requests.push(this._graphService.getNode(id).pipe(take(1)));
+      requests.push(this._graphService.getNode(id));
     });
-    forkJoin(requests)
-      .pipe(take(1))
-      .subscribe({
-        next: (nodes: UriNode[]) => {
-          this._store.update(setProp('classNodes', nodes));
-        },
-        error: (error) => {
-          if (error) {
-            console.error(JSON.stringify(error));
-          }
-        },
-      });
+    forkJoin(requests).subscribe({
+      next: (nodes: UriNode[]) => {
+        this._classNodes$.next(nodes);
+      },
+      error: (error) => {
+        if (error) {
+          console.error(JSON.stringify(error));
+        }
+      },
+    });
   }
 
   /**
@@ -263,11 +187,11 @@ export class NodeListRepository {
    * @param id The node's ID.
    */
   public deleteClassNode(id: number): void {
-    const nodes = [...(this._store.query((state) => state.classNodes) || [])];
+    const nodes = [...this._classNodes$.value];
     const i = nodes.findIndex((n) => n.id === id);
     if (i > -1) {
       nodes.splice(i, 1);
-      this._store.update(setProp('classNodes', nodes));
+      this._classNodes$.next(nodes);
     }
   }
 }

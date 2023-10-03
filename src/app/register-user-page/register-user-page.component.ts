@@ -16,7 +16,7 @@ export class RegisterUserPageComponent implements OnInit {
   ngOnInit(): void {}
 
   public onRegistered(): void {
-    this._repository.clearCache();
+    this._repository.reset();
     this._router.navigate(['/home']);
   }
 }

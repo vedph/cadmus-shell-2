@@ -29,8 +29,6 @@ export interface UriNode extends Node {
 }
 
 interface NodeFilterBase {
-  pageNumber: number;
-  pageSize: number;
   uid?: string;
   isClass?: boolean;
   tag?: string;
@@ -73,8 +71,6 @@ export interface TripleGroup {
 }
 
 export interface LiteralFilter {
-  pageNumber: number;
-  pageSize: number;
   literalPattern?: string;
   literalType?: string;
   literalLanguage?: string;
@@ -133,12 +129,16 @@ export class GraphService {
    * @param filter The nodes filter.
    * @returns A page of nodes.
    */
-  public getNodes(filter: NodeFilter): Observable<DataPage<UriNode>> {
+  public getNodes(
+    pageNumber: number,
+    pageSize: number,
+    filter: NodeFilter
+  ): Observable<DataPage<UriNode>> {
     const url = this._env.get('apiUrl') + 'graph/nodes';
 
     let httpParams = new HttpParams();
-    httpParams = httpParams.set('pageNumber', filter.pageNumber.toString());
-    httpParams = httpParams.set('pageSize', filter.pageSize.toString());
+    httpParams = httpParams.set('pageNumber', pageNumber.toString());
+    httpParams = httpParams.set('pageSize', pageSize.toString());
 
     if (filter.uid) {
       httpParams = httpParams.set('uid', filter.uid);
@@ -257,11 +257,13 @@ export class GraphService {
   }
 
   private applyTripleFilter(
+    pageNumber: number,
+    pageSize: number,
     filter: TripleFilter,
     httpParams: HttpParams
   ): HttpParams {
-    httpParams = httpParams.set('pageNumber', filter.pageNumber.toString());
-    httpParams = httpParams.set('pageSize', filter.pageSize.toString());
+    httpParams = httpParams.set('pageNumber', pageNumber.toString());
+    httpParams = httpParams.set('pageSize', pageSize.toString());
 
     if (filter.subjectId) {
       httpParams = httpParams.set('subjectId', filter.subjectId.toString());
@@ -307,10 +309,19 @@ export class GraphService {
    * @param filter The filter.
    * @returns The page.
    */
-  public getTriples(filter: TripleFilter): Observable<DataPage<UriTriple>> {
+  public getTriples(
+    pageNumber: number,
+    pageSize: number,
+    filter: TripleFilter
+  ): Observable<DataPage<UriTriple>> {
     const url = this._env.get('apiUrl') + 'graph/triples';
 
-    const httpParams = this.applyTripleFilter(filter, new HttpParams());
+    const httpParams = this.applyTripleFilter(
+      pageNumber,
+      pageSize,
+      filter,
+      new HttpParams()
+    );
 
     return this._http
       .get<DataPage<UriTriple>>(url, {
@@ -390,9 +401,16 @@ export class GraphService {
    * @returns The page of triples.
    */
   public getTripleGroups(
+    pageNumber: number,
+    pageSize: number,
     filter: TripleFilter
   ): Observable<DataPage<TripleGroup>> {
-    const httpParams = this.applyTripleFilter(filter, new HttpParams());
+    const httpParams = this.applyTripleFilter(
+      pageNumber,
+      pageSize,
+      filter,
+      new HttpParams()
+    );
 
     const url = this._env.get('apiUrl') + 'graph/walk/triples';
     return this._http
@@ -408,11 +426,13 @@ export class GraphService {
    * @returns Observable with data page.
    */
   public getLinkedNodes(
+    pageNumber: number,
+    pageSize: number,
     filter: LinkedNodeFilter
   ): Observable<DataPage<UriNode>> {
     let httpParams = new HttpParams();
-    httpParams = httpParams.set('pageNumber', filter.pageNumber.toString());
-    httpParams = httpParams.set('pageSize', filter.pageSize.toString());
+    httpParams = httpParams.set('pageNumber', pageNumber.toString());
+    httpParams = httpParams.set('pageSize', pageSize.toString());
 
     // NodeFilterBase
     if (filter.uid) {
@@ -467,11 +487,13 @@ export class GraphService {
    * @returns Observable with data page.
    */
   public getLinkedLiterals(
+    pageNumber: number,
+    pageSize: number,
     filter: LinkedLiteralFilter
   ): Observable<DataPage<UriTriple>> {
     let httpParams = new HttpParams();
-    httpParams = httpParams.set('pageNumber', filter.pageNumber.toString());
-    httpParams = httpParams.set('pageSize', filter.pageSize.toString());
+    httpParams = httpParams.set('pageNumber', pageNumber.toString());
+    httpParams = httpParams.set('pageSize', pageSize.toString());
 
     // LiteralFilter
     httpParams = this.applyLiteralFilter(filter, httpParams);

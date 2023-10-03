@@ -24,9 +24,7 @@ export class GraphNodeLookupService implements RefLookupService {
       return of([]);
     }
     return this._graphService
-      .getNodes({
-        pageNumber: 1,
-        pageSize: filter.limit || 10,
+      .getNodes(1, filter.limit || 10, {
         label: filter.text,
         isClass:
           filter.isClass === undefined || filter.isClass === null

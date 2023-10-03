@@ -1,11 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
-import { StatusState } from '@ngneat/elf-requests';
-import { PaginationData } from '@ngneat/elf-pagination';
+import { PageEvent } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import {
   GraphService,
@@ -14,6 +12,7 @@ import {
 } from '@myrmidon/cadmus-api';
 import { DialogService } from '@myrmidon/ng-mat-tools';
 import { ThesaurusEntry } from '@myrmidon/cadmus-core';
+import { DataPage } from '@myrmidon/ng-tools';
 
 import { GraphTripleListRepository } from '../../state/graph-triple-list.repository';
 
@@ -23,8 +22,8 @@ import { GraphTripleListRepository } from '../../state/graph-triple-list.reposit
   styleUrls: ['./graph-triple-list.component.css'],
 })
 export class GraphTripleListComponent implements OnInit {
-  public pagination$: Observable<PaginationData & { data: UriTriple[] }>;
-  public status$: Observable<StatusState>;
+  public page$: Observable<DataPage<UriTriple>>;
+  public loading$: Observable<boolean | undefined>;
   public editedTriple?: UriTriple;
 
   /**
@@ -40,21 +39,20 @@ export class GraphTripleListComponent implements OnInit {
     private _thesService: ThesaurusService,
     private _repository: GraphTripleListRepository
   ) {
-    this.pagination$ = _repository.pagination$;
-    this.status$ = _repository.status$;
+    this.page$ = _repository.page$;
+    this.loading$ = _repository.loading$;
   }
 
   ngOnInit(): void {
     this._thesService
       .getThesaurus('graph-triple-tags@en', true)
-      .pipe(take(1))
       .subscribe((thesaurus) => {
         this.tagEntries = thesaurus?.entries || [];
       });
   }
 
-  public pageChange(event: PageEvent): void {
-    this._repository.loadPage(event.pageIndex + 1, event.pageSize);
+  public onPageChange(event: PageEvent): void {
+    this._repository.setPage(event.pageIndex + 1, event.pageSize);
   }
 
   public addTriple(): void {
@@ -79,8 +77,7 @@ export class GraphTripleListComponent implements OnInit {
       .subscribe({
         next: (n) => {
           this.editedTriple = undefined;
-          this._repository.clearCache();
-          this._repository.loadPage(1);
+          this._repository.reset();
           this._snackbar.open('Triple saved', 'OK', {
             duration: 1500,
           });
@@ -109,8 +106,7 @@ export class GraphTripleListComponent implements OnInit {
             .pipe(take(1))
             .subscribe({
               next: (_) => {
-                this._repository.clearCache();
-                this._repository.loadPage(1);
+                this._repository.reset();
               },
               error: (error) => {
                 if (error) {
@@ -123,7 +119,7 @@ export class GraphTripleListComponent implements OnInit {
       });
   }
 
-  public clearCache(): void {
-    this._repository.clearCache();
+  public reset(): void {
+    this._repository.reset();
   }
 }

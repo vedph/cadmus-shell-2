@@ -1,175 +1,107 @@
 import { Injectable } from '@angular/core';
-import { combineLatest, debounceTime, map, Observable, take } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
-import {
-  deleteAllPages,
-  hasPage,
-  PaginationData,
-  selectCurrentPageEntities,
-  selectPaginationData,
-  setCurrentPage,
-  setPage,
-  updatePaginationData,
-  withPagination,
-} from '@ngneat/elf-pagination';
-import {
-  selectRequestStatus,
-  StatusState,
-  updateRequestStatus,
-  withRequestsCache,
-  withRequestsStatus,
-} from '@ngneat/elf-requests';
-
-import {
-  NodeFilter,
-  UriNode,
-  TripleFilter,
-  UriTriple,
-} from '@myrmidon/cadmus-api';
-import {
-  deleteAllEntities,
-  selectActiveEntity,
-  upsertEntities,
-  withActiveId,
-  withEntities,
-} from '@ngneat/elf-entities';
-import { createStore, select, setProp, withProps } from '@ngneat/elf';
 import { DataPage } from '@myrmidon/ng-tools';
+import {
+  PagedListStore,
+  PagedListStoreService,
+} from '@myrmidon/paged-data-browsers';
+
+import { UriNode, TripleFilter, UriTriple } from '@myrmidon/cadmus-api';
 import { GraphService } from '@myrmidon/cadmus-api';
-
-const PAGE_SIZE = 20;
-const NAME = 'graph-triple-list';
-
-export interface TripleListProps {
-  filter: TripleFilter;
-  subjectNode?: UriNode;
-  predicateNode?: UriNode;
-  objectNode?: UriNode;
-}
 
 /**
  * Graph nodes list ELF repository.
  */
 @Injectable({ providedIn: 'root' })
-export class GraphTripleListRepository {
-  private _store;
-  private _lastPageSize: number;
+export class GraphTripleListRepository
+  implements PagedListStoreService<TripleFilter, UriTriple>
+{
+  private _store: PagedListStore<TripleFilter, UriTriple>;
+  private _loading$: BehaviorSubject<boolean | undefined>;
+  private _filter$: BehaviorSubject<TripleFilter>;
+  private _subjectNode$: BehaviorSubject<UriNode | undefined>;
+  private _predicateNode$: BehaviorSubject<UriNode | undefined>;
+  private _objectNode$: BehaviorSubject<UriNode | undefined>;
 
-  public activeItem$: Observable<UriTriple | undefined>;
-  public filter$: Observable<TripleFilter>;
-  public pagination$: Observable<PaginationData & { data: UriTriple[] }>;
-  public status$: Observable<StatusState>;
-  public subjectNode$: Observable<UriNode | undefined>;
-  public predicateNode$: Observable<UriNode | undefined>;
-  public objectNode$: Observable<UriNode | undefined>;
+  public get loading$(): Observable<boolean | undefined> {
+    return this._loading$.asObservable();
+  }
+  public get filter$(): Observable<TripleFilter> {
+    return this._filter$.asObservable();
+  }
+  public get page$(): Observable<DataPage<UriTriple>> {
+    return this._store.page$;
+  }
+  public get subjectNode$(): Observable<UriNode | undefined> {
+    return this._subjectNode$.asObservable();
+  }
+  public get predicateNode$(): Observable<UriNode | undefined> {
+    return this._predicateNode$.asObservable();
+  }
+  public get objectNode$(): Observable<UriNode | undefined> {
+    return this._objectNode$.asObservable();
+  }
 
   constructor(private _graphService: GraphService) {
-    this._store = this.createStore();
-    this._lastPageSize = PAGE_SIZE;
-
-    this.pagination$ = combineLatest([
-      this._store.pipe(selectPaginationData()),
-      this._store.pipe(selectCurrentPageEntities()),
-    ]).pipe(
-      map(([pagination, data]) => ({ ...pagination, data })),
-      debounceTime(0)
-    );
-
-    this.activeItem$ = this._store.pipe(selectActiveEntity());
-    this.status$ = this._store.pipe(selectRequestStatus(NAME));
-    this.subjectNode$ = this._store.pipe(select((state) => state.subjectNode));
-    this.predicateNode$ = this._store.pipe(
-      select((state) => state.predicateNode)
-    );
-    this.objectNode$ = this._store.pipe(select((state) => state.objectNode));
-
-    this.filter$ = this._store.pipe(select((state) => state.filter));
-    this.filter$.subscribe((filter) => {
-      // when filter changed, reset any existing page and move to page 1
-      const paginationData = this._store.getValue().pagination;
-      console.log('Deleting all pages');
-      this._store.update(deleteAllPages());
-      // load page 1
-      this.loadPage(1, paginationData.perPage);
-    });
-
-    this.loadPage(1, PAGE_SIZE);
-    this.pagination$.subscribe(console.log);
+    this._store = new PagedListStore<TripleFilter, UriTriple>(this);
+    this._filter$ = new BehaviorSubject<TripleFilter>({});
+    this._subjectNode$ = new BehaviorSubject<UriNode | undefined>(undefined);
+    this._predicateNode$ = new BehaviorSubject<UriNode | undefined>(undefined);
+    this._objectNode$ = new BehaviorSubject<UriNode | undefined>(undefined);
+    this._loading$ = new BehaviorSubject<boolean | undefined>(undefined);
+    this._store.reset();
   }
 
-  private createStore(): typeof store {
-    const store = createStore(
-      { name: NAME },
-      withProps<TripleListProps>({
-        filter: { pageNumber: 1, pageSize: 20 },
-      }),
-      withEntities<UriTriple>(),
-      withActiveId(),
-      withRequestsCache<'graph-triple-list'>(),
-      withRequestsStatus(),
-      withPagination()
-    );
-
-    return store;
-  }
-
-  private adaptPage(
-    page: DataPage<UriTriple>
-  ): PaginationData & { data: UriTriple[] } {
-    return {
-      currentPage: page.pageNumber,
-      perPage: page.pageSize,
-      lastPage: page.pageCount,
-      total: page.total,
-      data: page.items,
-    };
-  }
-
-  private addPage(response: PaginationData & { data: UriTriple[] }): void {
-    const { data, ...paginationData } = response;
-    this._store.update(
-      upsertEntities(data),
-      updatePaginationData(paginationData),
-      setPage(
-        paginationData.currentPage,
-        data.map((c) => c.id)
-      )
-    );
-  }
-
-  public loadPage(pageNumber: number, pageSize?: number): void {
-    if (!pageSize) {
-      pageSize = PAGE_SIZE;
+  public async reset(): Promise<void> {
+    this._loading$.next(true);
+    try {
+      await this._store.reset();
+    } catch (error) {
+      throw error;
+    } finally {
+      this._loading$.next(false);
     }
-    if (
-      this._store.query(hasPage(pageNumber)) &&
-      pageSize === this._lastPageSize
-    ) {
-      this._store.update(setCurrentPage(pageNumber));
-      return;
-    }
-
-    if (this._lastPageSize !== pageSize) {
-      this._store.update(deleteAllPages());
-      this._lastPageSize = pageSize;
-    }
-
-    this._store.update(updateRequestStatus(NAME, 'pending'));
-    this._graphService
-      .getTriples({ ...this._store.getValue().filter, pageNumber, pageSize })
-      .pipe(take(1))
-      .subscribe((page) => {
-        this.addPage({ ...this.adaptPage(page), data: page.items });
-        this._store.update(updateRequestStatus(NAME, 'success'));
-      });
   }
 
-  public clearCache() {
-    this._store.update(deleteAllEntities(), deleteAllPages());
+  public loadPage(
+    pageNumber: number,
+    pageSize: number,
+    filter: TripleFilter
+  ): Observable<DataPage<UriTriple>> {
+    this._loading$.next(true);
+    return this._graphService.getTriples(pageNumber, pageSize, filter).pipe(
+      tap({
+        next: () => this._loading$.next(false),
+        error: () => this._loading$.next(false),
+      })
+    );
   }
 
-  public setFilter(filter: NodeFilter): void {
-    this._store.update((state) => ({ ...state, filter: filter }));
+  public async setFilter(filter: TripleFilter): Promise<void> {
+    this._loading$.next(true);
+    try {
+      await this._store.setFilter(filter);
+    } catch (error) {
+      throw error;
+    } finally {
+      this._loading$.next(false);
+    }
+  }
+
+  public getFilter(): TripleFilter {
+    return this._store.getFilter();
+  }
+
+  public async setPage(pageNumber: number, pageSize: number): Promise<void> {
+    this._loading$.next(true);
+    try {
+      await this._store.setPage(pageNumber, pageSize);
+    } catch (error) {
+      throw error;
+    } finally {
+      this._loading$.next(false);
+    }
   }
 
   /**
@@ -184,13 +116,13 @@ export class GraphTripleListRepository {
   ): void {
     switch (type) {
       case 'S':
-        this._store.update(setProp('subjectNode', node ? node : undefined));
+        this._subjectNode$.next(node || undefined);
         break;
       case 'P':
-        this._store.update(setProp('predicateNode', node ? node : undefined));
+        this._predicateNode$.next(node || undefined);
         break;
       case 'O':
-        this._store.update(setProp('objectNode', node ? node : undefined));
+        this._objectNode$.next(node || undefined);
         break;
     }
   }
@@ -206,20 +138,17 @@ export class GraphTripleListRepository {
       this.setTerm(null, type);
       return;
     }
-    this._graphService
-      .getNode(id)
-      .pipe(take(1))
-      .subscribe({
-        next: (node) => {
-          this.setTerm(node, type);
-        },
-        error: (error) => {
-          if (error) {
-            console.error(JSON.stringify(error));
-          }
-          console.warn('Node ID not found: ' + id);
-        },
-      });
+    this._graphService.getNode(id).subscribe({
+      next: (node) => {
+        this.setTerm(node, type);
+      },
+      error: (error) => {
+        if (error) {
+          console.error(JSON.stringify(error));
+        }
+        console.warn('Node ID not found: ' + id);
+      },
+    });
   }
 
   public selectTerm(type: 'S' | 'P' | 'O'): Observable<UriNode | undefined> {
@@ -236,11 +165,11 @@ export class GraphTripleListRepository {
   public getTerm(type: 'S' | 'P' | 'O'): UriNode | undefined {
     switch (type) {
       case 'S':
-        return this._store.query((state) => state.subjectNode);
+        return this._subjectNode$.value;
       case 'P':
-        return this._store.query((state) => state.predicateNode);
+        return this._predicateNode$.value;
       case 'O':
-        return this._store.query((state) => state.objectNode);
+        return this._objectNode$.value;
     }
   }
 }

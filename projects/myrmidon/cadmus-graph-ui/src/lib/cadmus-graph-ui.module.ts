@@ -22,6 +22,7 @@ import { CadmusApiModule } from '@myrmidon/cadmus-api';
 import { NgToolsModule } from '@myrmidon/ng-tools';
 import { NgMatToolsModule } from '@myrmidon/ng-mat-tools';
 import { CadmusRefsLookupModule } from '@myrmidon/cadmus-refs-lookup';
+import { PagedDataBrowsersModule } from '@myrmidon/paged-data-browsers';
 
 import { GraphNodeFilterComponent } from './components/graph-node-filter/graph-node-filter.component';
 import { GraphNodeListComponent } from './components/graph-node-list/graph-node-list.component';
@@ -63,6 +64,7 @@ import { GraphTripleEditorComponent } from './components/graph-triple-editor/gra
     CadmusRefsLookupModule,
     NgToolsModule,
     NgMatToolsModule,
+    PagedDataBrowsersModule
   ],
   exports: [
     // GraphNodeFilterComponent,

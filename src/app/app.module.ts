@@ -53,6 +53,7 @@ import {
   AuthJwtLoginModule,
 } from '@myrmidon/auth-jwt-login';
 import { AuthJwtAdminModule } from '@myrmidon/auth-jwt-admin';
+import { PagedDataBrowsersModule } from '@myrmidon/paged-data-browsers';
 
 // cadmus bricks
 import { CadmusRefsDocReferencesModule } from '@myrmidon/cadmus-refs-doc-references';
@@ -164,6 +165,7 @@ export function initElfDevTools(actions: Actions) {
     NgMatToolsModule,
     AuthJwtLoginModule,
     AuthJwtAdminModule,
+    PagedDataBrowsersModule,
     // cadmus bricks
     CadmusRefsDocReferencesModule,
     CadmusRefsHistoricalDateModule,
