@@ -10,7 +10,7 @@ import { DataPage } from '@myrmidon/ng-tools';
 import { GraphService } from '@myrmidon/cadmus-api';
 
 /**
- * Graph nodes list ELF repository.
+ * Graph nodes list repository.
  */
 @Injectable({ providedIn: 'root' })
 export class NodeListRepository

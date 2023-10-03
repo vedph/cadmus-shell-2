@@ -11,7 +11,7 @@ import { UriNode, TripleFilter, UriTriple } from '@myrmidon/cadmus-api';
 import { GraphService } from '@myrmidon/cadmus-api';
 
 /**
- * Graph nodes list ELF repository.
+ * Graph nodes list repository.
  */
 @Injectable({ providedIn: 'root' })
 export class GraphTripleListRepository

@@ -54,12 +54,12 @@
               </td>
               <td class="fit-width">
                 <cadmus-facet-badge
-                  [data]="{ definitions: app.facets, facetId: item.facetId }"
+                  [data]="{ definitions: facets, facetId: item.facetId }"
                 ></cadmus-facet-badge>
               </td>
               <td class="fit-width">
                 <cadmus-flags-badge
-                  [data]="{ definitions: app.flags, flags: item.flags }"
+                  [data]="{ definitions: flags, flags: item.flags }"
                 ></cadmus-flags-badge>
               </td>
               <td>{{ item.title }}</td>

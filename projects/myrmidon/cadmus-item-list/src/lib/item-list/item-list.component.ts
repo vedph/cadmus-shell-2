@@ -7,9 +7,13 @@ import { DataPage } from '@myrmidon/ng-tools';
 import { DialogService } from '@myrmidon/ng-mat-tools';
 import { AuthJwtService, User } from '@myrmidon/auth-jwt-login';
 
-import { ItemInfo } from '@myrmidon/cadmus-core';
+import {
+  FacetDefinition,
+  FlagDefinition,
+  ItemInfo,
+} from '@myrmidon/cadmus-core';
 import { UserLevelService } from '@myrmidon/cadmus-api';
-import { AppProps, AppRepository } from '@myrmidon/cadmus-state';
+import { AppRepository } from '@myrmidon/cadmus-state';
 
 import { ItemListRepository } from '../state/item-list.repository';
 
@@ -21,7 +25,8 @@ import { ItemListRepository } from '../state/item-list.repository';
 export class ItemListComponent implements OnInit {
   public loading$: Observable<boolean | undefined>;
   public page$: Observable<DataPage<ItemInfo>>;
-  public app: AppProps;
+  public facets: FacetDefinition[];
+  public flags: FlagDefinition[];
 
   public user?: User;
   public userLevel: number;
@@ -37,7 +42,8 @@ export class ItemListComponent implements OnInit {
     this.userLevel = 0;
     this.loading$ = _repository.loading$;
     this.page$ = _repository.page$;
-    this.app = appRepository.getValue();
+    this.facets = appRepository.getFacets();
+    this.flags = appRepository.getFlags();
   }
 
   public ngOnInit(): void {

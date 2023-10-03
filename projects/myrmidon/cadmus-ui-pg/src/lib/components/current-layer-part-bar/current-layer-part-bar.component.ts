@@ -22,8 +22,8 @@ export class CurrentLayerPartBarComponent implements OnInit {
   public color?: string;
 
   private getTypeIdName(typeId: string): string {
-    const state = this._appRepository.getValue();
-    if (!state || !state.typeThesaurus) {
+    const typeThesaurus = this._appRepository.getTypeThesaurus();
+    if (!typeThesaurus) {
       return typeId;
     }
     // strip :suffix if any
@@ -31,7 +31,7 @@ export class CurrentLayerPartBarComponent implements OnInit {
     if (i > -1) {
       typeId = typeId.substring(0, i);
     }
-    const entry = state.typeThesaurus.entries?.find((e) => e.id === typeId);
+    const entry = typeThesaurus.entries?.find((e) => e.id === typeId);
     return entry ? entry.value : typeId;
   }
 

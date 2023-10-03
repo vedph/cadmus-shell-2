@@ -7,9 +7,9 @@ import { take } from 'rxjs/operators';
 import { DataPage } from '@myrmidon/ng-tools';
 import { DialogService } from '@myrmidon/ng-mat-tools';
 import { AuthJwtService, User } from '@myrmidon/auth-jwt-login';
-import { ItemInfo } from '@myrmidon/cadmus-core';
+import { FacetDefinition, FlagDefinition, ItemInfo } from '@myrmidon/cadmus-core';
 import { UserLevelService } from '@myrmidon/cadmus-api';
-import { AppProps, AppRepository } from '@myrmidon/cadmus-state';
+import { AppRepository } from '@myrmidon/cadmus-state';
 
 import { ItemSearchRepository } from '../state/item-search.repository';
 
@@ -21,12 +21,13 @@ import { ItemSearchRepository } from '../state/item-search.repository';
 export class ItemSearchComponent implements OnInit {
   public user?: User;
   public userLevel: number;
+  public facets: FacetDefinition[];
+  public flags: FlagDefinition[];
   public loading$: Observable<boolean | undefined>;
   public query$: Observable<string | undefined>;
   public page$: Observable<DataPage<ItemInfo>>;
   public error$: Observable<string | undefined>;
   public lastQueries$: Observable<string[]>;
-  public app: AppProps;
 
   constructor(
     private _repository: ItemSearchRepository,
@@ -42,7 +43,8 @@ export class ItemSearchComponent implements OnInit {
     this.lastQueries$ = this._repository.lastQueries$;
     this.error$ = this._repository.error$;
     this.loading$ = this._repository.loading$;
-    this.app = appRepository.getValue();
+    this.facets = appRepository.getFacets();
+    this.flags = appRepository.getFlags();
   }
 
   ngOnInit(): void {
