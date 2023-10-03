@@ -23,7 +23,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
-- ⚠️ 2023-10-03:
+- ⚠️ 2023-10-03: removed ELF dependencies. For trivial repositories like this, we can dispose of more powerful libraries and just use vanilla Angular. This makes the UI more robust and easier to use for newcomers.
   - updated Angular and packages.
   - refactored `@myrmidon/cadmus-graph-ui` (bumped to 6.0.0) to replace ELF with simpler repository from `@myrmidon/paged-data-browsers`.
   - refactored `@myrmidon/cadmus-item-editor` (bumped to 6.0.0) to replace ELF with simpler repository from `@myrmidon/paged-data-browsers`.

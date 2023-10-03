@@ -1,46 +1,32 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { createStore, select, setProp, withProps } from '@ngneat/elf';
-import { withRequestsStatus } from '@ngneat/elf-requests';
-
 import { Thesaurus } from '@myrmidon/cadmus-core';
 import { ThesaurusService } from '@myrmidon/cadmus-api';
 
-export interface EditedThesaurusState {
-  thesaurus?: Thesaurus;
-}
-
 @Injectable({ providedIn: 'root' })
 export class EditedThesaurusRepository {
-  private _store;
+  private _thesaurus$: BehaviorSubject<Thesaurus | undefined>;
   private _loading$: BehaviorSubject<boolean>;
   private _saving$: BehaviorSubject<boolean>;
 
   public loading$: Observable<boolean>;
   public saving$: Observable<boolean>;
 
-  public thesaurus$: Observable<Thesaurus | undefined>;
+  public get thesaurus$(): Observable<Thesaurus | undefined> {
+    return this._thesaurus$.asObservable();
+  }
 
   constructor(private _thesaurusService: ThesaurusService) {
-    this._store = createStore(
-      { name: 'edited-thesaurus' },
-      withProps<EditedThesaurusState>({}),
-      withRequestsStatus()
-    );
+    this._thesaurus$ = new BehaviorSubject<Thesaurus | undefined>(undefined);
     this._loading$ = new BehaviorSubject<boolean>(false);
     this.loading$ = this._loading$.asObservable();
     this._saving$ = new BehaviorSubject<boolean>(false);
     this.saving$ = this._saving$.asObservable();
-    this.thesaurus$ = this._store.pipe(select((state) => state.thesaurus));
-  }
-
-  public getValue(): EditedThesaurusState {
-    return this._store.getValue();
   }
 
   public getThesaurus(): Thesaurus | undefined {
-    return this._store.query((state) => state.thesaurus);
+    return this._thesaurus$.value;
   }
 
   /**
@@ -55,7 +41,7 @@ export class EditedThesaurusRepository {
       this._thesaurusService.getThesaurus(id, true).subscribe({
         next: (thesaurus) => {
           this._loading$.next(false);
-          this._store.update(setProp('thesaurus', thesaurus));
+          this._thesaurus$.next(thesaurus);
         },
         error: (error) => {
           this._loading$.next(false);
@@ -65,13 +51,11 @@ export class EditedThesaurusRepository {
         },
       });
     } else {
-      this._store.update(
-        setProp('thesaurus', {
-          id: '',
-          language: 'en',
-          entries: [],
-        })
-      );
+      this._thesaurus$.next({
+        id: '',
+        language: 'en',
+        entries: [],
+      });
     }
   }
 

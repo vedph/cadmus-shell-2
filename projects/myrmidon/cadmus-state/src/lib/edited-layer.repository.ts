@@ -3,120 +3,108 @@ import {
   LayerHint,
   Part,
   TextLayerPart,
+  ThesauriSet,
   TokenLocation,
 } from '@myrmidon/cadmus-core';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
-
-import { createStore, select, setProp, withProps } from '@ngneat/elf';
 
 import {
   FacetService,
   ItemService,
   ThesaurusService,
 } from '@myrmidon/cadmus-api';
-import { withRequestsStatus } from '@ngneat/elf-requests';
 import { deepCopy } from '@myrmidon/ng-tools';
 
-export interface EditedLayerState {
-  /**
-   * The layer part (=collection of fragments) being edited.
-   */
-  part?: TextLayerPart;
-  /**
-   * The base text rendered into a plain string, whatever its original model.
-   * This is used for reference (e.g. show it to the user while editing),
-   * even if in some cases it can be enough to work with the base text in the
-   * layer part editor itself (this is the case of the token-based text,
-   * but not e.g. for the tiles-based text).
-   */
-  baseText?: string;
-  /**
-   * The base text part.
-   */
-  baseTextPart?: Part;
-  /**
-   * The fragments locations, collected from all the fragments.
-   */
-  locations: TokenLocation[];
-  /**
-   * The estimated chance of broken fragments in this layer: 0=safe,
-   * 1=potentially broken, 2=broken.
-   */
-  breakChance: number;
-  /**
-   * The layer fragments reconciliation hints. There is one hint for each
-   * fragment in the layer.
-   */
-  layerHints: LayerHint[];
-}
-
 /**
- * Edited layer part ELF repository.
+ * Edited layer part repository.
  */
 @Injectable({ providedIn: 'root' })
 export class EditedLayerRepository {
-  private _store;
+  // the layer part (=collection of fragments) being edited
+  private _part$: BehaviorSubject<TextLayerPart | undefined>;
+  // the base text rendered into a plain string, whatever its original model.
+  // This is used for reference (e.g. show it to the user while editing),
+  // even if in some cases it can be enough to work with the base text in the
+  // layer part editor itself (this is the case of the token-based text,
+  // but not e.g. for the tiles-based text).
+  private _baseText$: BehaviorSubject<string | undefined>;
+  // the base text part
+  private _baseTextPart$: BehaviorSubject<Part | undefined>;
+  // the fragments locations, collected from all the fragments
+  private _locations$: BehaviorSubject<TokenLocation[]>;
+  // the estimated chance of broken fragments in this layer: 0=safe,
+  // 1=potentially broken, 2=broken
+  private _breakChance$: BehaviorSubject<number>;
+  // the layer fragments reconciliation hints. There is one hint for each
+  // fragment in the layer.
+  private _layerHints$: BehaviorSubject<LayerHint[]>;
+  private _thesauriSet: BehaviorSubject<ThesauriSet | undefined>;
+
   private _loading$: BehaviorSubject<boolean>;
   private _saving$: BehaviorSubject<boolean>;
 
-  public loading$: Observable<boolean>;
-  public saving$: Observable<boolean>;
+  public get loading$(): Observable<boolean> {
+    return this._loading$.asObservable();
+  }
+  public get saving$(): Observable<boolean> {
+    return this._saving$.asObservable();
+  }
 
-  public part$: Observable<TextLayerPart | undefined>;
-  public baseText$: Observable<string | undefined>;
-  public baseTextPart$: Observable<Part | undefined>;
-  public locations$: Observable<TokenLocation[]>;
-  public breakChance$: Observable<number>;
-  public layerHints$: Observable<LayerHint[]>;
+  public get part$(): Observable<TextLayerPart | undefined> {
+    return this._part$.asObservable();
+  }
+  public get baseText$(): Observable<string | undefined> {
+    return this._baseText$.asObservable();
+  }
+  public get baseTextPart$(): Observable<Part | undefined> {
+    return this._baseTextPart$.asObservable();
+  }
+  public get locations$(): Observable<TokenLocation[]> {
+    return this._locations$.asObservable();
+  }
+  public get breakChance$(): Observable<number> {
+    return this._breakChance$.asObservable();
+  }
+  public get layerHints$(): Observable<LayerHint[]> {
+    return this._layerHints$.asObservable();
+  }
 
   constructor(
     private _itemService: ItemService,
     private _facetService: FacetService,
     private _thesaurusService: ThesaurusService
   ) {
-    this._store = createStore(
-      { name: 'edited-layer' },
-      withProps<EditedLayerState>({
-        locations: [],
-        breakChance: 0,
-        layerHints: [],
-      }),
-      withRequestsStatus()
-    );
+    this._part$ = new BehaviorSubject<TextLayerPart | undefined>(undefined);
+    this._baseText$ = new BehaviorSubject<string | undefined>(undefined);
+    this._baseTextPart$ = new BehaviorSubject<Part | undefined>(undefined);
+    this._locations$ = new BehaviorSubject<TokenLocation[]>([]);
+    this._breakChance$ = new BehaviorSubject<number>(-1);
+    this._layerHints$ = new BehaviorSubject<LayerHint[]>([]);
+    this._thesauriSet = new BehaviorSubject<ThesauriSet | undefined>(undefined);
     this._loading$ = new BehaviorSubject<boolean>(false);
-    this.loading$ = this._loading$.asObservable();
     this._saving$ = new BehaviorSubject<boolean>(false);
-    this.saving$ = this._saving$.asObservable();
-
-    this.part$ = this._store.pipe(select((state) => state.part));
-    this.baseText$ = this._store.pipe(select((state) => state.baseText));
-    this.baseTextPart$ = this._store.pipe(
-      select((state) => state.baseTextPart)
-    );
-    this.locations$ = this._store.pipe(select((state) => state.locations));
-    this.breakChance$ = this._store.pipe(select((state) => state.breakChance));
-    this.layerHints$ = this._store.pipe(select((state) => state.layerHints));
   }
 
   public reset(): void {
-    this._store.reset();
-  }
-
-  public getValue(): EditedLayerState {
-    return this._store.getValue();
+    this._part$.next(undefined);
+    this._baseText$.next(undefined);
+    this._baseTextPart$.next(undefined);
+    this._locations$.next([]);
+    this._breakChance$.next(-1);
+    this._layerHints$.next([]);
   }
 
   public getPart(): TextLayerPart | undefined {
-    return this._store.query((state) => state.part);
+    return this._part$.value;
   }
 
   public getBaseText(): string | undefined {
-    return this._store.query((state => state.baseText));
+    return this._baseText$.value;
   }
 
   public getLocations(): TokenLocation[] {
-    return this._store.query((state) => state.locations);
+    return this._locations$.value;
   }
 
   private getPartLocations(part: TextLayerPart): TokenLocation[] {
@@ -162,18 +150,15 @@ export class EditedLayerRepository {
           this._thesaurusService.getThesauriSet(scopedIds).subscribe({
             next: (thesauri) => {
               this._loading$.next(false);
-              this._store.update((state) => ({
-                ...state,
-                part: result.layerPart as TextLayerPart,
-                baseText: result.baseText.text,
-                baseTextPart: result.baseText.part,
-                locations: this.getPartLocations(
-                  result.layerPart as TextLayerPart
-                ),
-                breakChance: result.breakChance.chance,
-                layerHints: result.layerHints,
-                thesauri: thesauri,
-              }));
+              this._part$.next(result.layerPart as TextLayerPart);
+              this._baseText$.next(result.baseText.text);
+              this._baseTextPart$.next(result.baseText.part);
+              this._locations$.next(
+                this.getPartLocations(result.layerPart as TextLayerPart)
+              );
+              this._breakChance$.next(result.breakChance.chance);
+              this._layerHints$.next(result.layerHints);
+              this._thesauriSet.next(thesauri);
             },
             error: (error) => {
               this._loading$.next(false);
@@ -184,16 +169,15 @@ export class EditedLayerRepository {
           });
         } else {
           this._loading$.next(false);
-          this._store.update((state) => ({
-            ...state,
-            part: result.layerPart as TextLayerPart,
-            baseText: result.baseText.text,
-            baseTextPart: result.baseText.part,
-            locations: this.getPartLocations(result.layerPart as TextLayerPart),
-            breakChance: result.breakChance.chance,
-            layerHints: result.layerHints,
-            thesauri: result.thesauri,
-          }));
+          this._part$.next(result.layerPart as TextLayerPart);
+          this._baseText$.next(result.baseText.text);
+          this._baseTextPart$.next(result.baseText.part);
+          this._locations$.next(
+            this.getPartLocations(result.layerPart as TextLayerPart)
+          );
+          this._breakChance$.next(result.breakChance.chance);
+          this._layerHints$.next(result.layerHints);
+          this._thesauriSet.next(result.thesauri);
         }
       },
       error: (error) => {
@@ -217,15 +201,14 @@ export class EditedLayerRepository {
     }).subscribe({
       next: (result) => {
         this._loading$.next(false);
-        this._store.update((state) => ({
-          ...state,
-          part: result.layerPart as TextLayerPart,
-          baseText: result.baseText.text,
-          baseTextPart: result.baseText.part,
-          locations: this.getPartLocations(result.layerPart as TextLayerPart),
-          breakChance: result.breakChance.chance,
-          layerHints: result.layerHints,
-        }));
+        this._part$.next(result.layerPart as TextLayerPart);
+        this._baseText$.next(result.baseText.text);
+        this._baseTextPart$.next(result.baseText.part);
+        this._locations$.next(
+          this.getPartLocations(result.layerPart as TextLayerPart)
+        );
+        this._breakChance$.next(result.breakChance.chance);
+        this._layerHints$.next(result.layerHints);
       },
       error: (error) => {
         this._loading$.next(false);
@@ -255,20 +238,19 @@ export class EditedLayerRepository {
    * Refresh the layer part break chance.
    */
   public refreshBreakChance(): void {
-    const store = this._store.getValue();
-    const part = store.part;
+    const part = this._part$.value;
     if (!part) {
       return;
     }
     this._itemService.getLayerPartBreakChance(part.id).subscribe({
       next: (result) => {
-        this._store.update(setProp('breakChance', result.chance));
+        this._breakChance$.next(result.chance);
       },
       error: (error) => {
         console.error(
           'Error calculating break chance: ' + JSON.stringify(error || {})
         );
-        this._store.update(setProp('breakChance', -1));
+        this._breakChance$.next(-1);
       },
     });
   }
@@ -296,7 +278,7 @@ export class EditedLayerRepository {
    */
   public deleteFragment(loc: TokenLocation): void {
     // find the fragment
-    let part = this._store.getValue().part;
+    let part = this._part$.value;
     if (!part) {
       return;
     }
@@ -337,7 +319,7 @@ export class EditedLayerRepository {
    */
   public saveFragment(fragment: Fragment): void {
     // find the fragment
-    let part = this._store.getValue().part;
+    let part = this._part$.value;
     if (!part) {
       return;
     }
