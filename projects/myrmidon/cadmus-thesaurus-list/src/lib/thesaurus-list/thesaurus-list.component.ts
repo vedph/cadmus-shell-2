@@ -3,16 +3,13 @@ import { Router } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
 
+import { DataPage, EnvService } from '@myrmidon/ng-tools';
 import { DialogService } from '@myrmidon/ng-mat-tools';
 import { AuthJwtService, User } from '@myrmidon/auth-jwt-login';
+
 import { Thesaurus } from '@myrmidon/cadmus-core';
 import { ThesaurusService, UserLevelService } from '@myrmidon/cadmus-api';
-import { EnvService } from '@myrmidon/ng-tools';
-
-import { StatusState } from '@ngneat/elf-requests';
-import { PaginationData } from '@ngneat/elf-pagination';
 
 import { ThesaurusListRepository } from '../state/thesaurus-list.repository';
 
@@ -22,8 +19,8 @@ import { ThesaurusListRepository } from '../state/thesaurus-list.repository';
   styleUrls: ['./thesaurus-list.component.css'],
 })
 export class ThesaurusListComponent implements OnInit {
-  public status$: Observable<StatusState>;
-  public pagination$: Observable<PaginationData & { data: Thesaurus[] }>;
+  public loading$: Observable<boolean | undefined>;
+  public page$: Observable<DataPage<Thesaurus>>;
   public user?: User;
   public userLevel: number;
   public downloading?: boolean;
@@ -40,8 +37,8 @@ export class ThesaurusListComponent implements OnInit {
     env: EnvService
   ) {
     this.userLevel = 0;
-    this.status$ = _repository.status$;
-    this.pagination$ = _repository.pagination$;
+    this.loading$ = _repository.loading$;
+    this.page$ = _repository.page$;
     this.importEnabled =
       _authService.isCurrentUserInRole('admin') && env.get('thesImportEnabled')
         ? true
@@ -55,8 +52,8 @@ export class ThesaurusListComponent implements OnInit {
     });
   }
 
-  public pageChange(event: PageEvent): void {
-    this._repository.loadPage(event.pageIndex + 1, event.pageSize);
+  public onPageChange(event: PageEvent): void {
+    this._repository.setPage(event.pageIndex + 1, event.pageSize);
   }
 
   public addThesaurus(): void {
@@ -74,7 +71,6 @@ export class ThesaurusListComponent implements OnInit {
 
     this._dialogService
       .confirm('Confirm Deletion', `Delete thesaurus "${thesaurus.id}"?`)
-      .pipe(take(1))
       .subscribe((yes: boolean) => {
         if (yes) {
           this._repository.deleteThesaurus(thesaurus.id);
@@ -109,7 +105,6 @@ export class ThesaurusListComponent implements OnInit {
   }
 
   public onUploadEnd(): void {
-    this._repository.clearCache();
-    this._repository.loadPage(1);
+    this._repository.reset();
   }
 }

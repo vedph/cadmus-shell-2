@@ -33,7 +33,6 @@ export class ThesaurusFilterComponent implements OnInit {
     this.id = formBuilder.control<string>('id', { nonNullable: true });
     this.alias = formBuilder.control<boolean>(false, { nonNullable: true });
     this.language = formBuilder.control<string>('en', {
-      validators: Validators.pattern(/^[a-z]{2,3}$/g),
       nonNullable: true,
     });
     this.form = formBuilder.group({
