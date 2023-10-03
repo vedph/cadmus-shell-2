@@ -155,13 +155,13 @@ export class EditedItemRepository {
    * @param itemId The item ID, or falsy for a new item.
    */
   public load(itemId?: string): void {
-    const app = this._appRepository.getValue();
+    const facets = this._appRepository.getFacets();
 
     this._loading$.next(true);
     if (!itemId) {
       // new item
       this._itemService.getItemLayerInfo('new', true).subscribe((layers) => {
-        const facet = this.pickDefaultFacet(app.facets);
+        const facet = this.pickDefaultFacet(facets);
         this._loading$.next(false);
         this._item$.next({
           id: '',
@@ -191,7 +191,7 @@ export class EditedItemRepository {
         next: (result) => {
           this._loading$.next(false);
 
-          const itemFacet = app.facets.find((f) => {
+          const itemFacet = facets.find((f) => {
             return f.id === result.item!.facetId;
           });
           const facetParts = itemFacet ? itemFacet.partDefinitions : [];
@@ -234,8 +234,8 @@ export class EditedItemRepository {
           // update the item and the selected facet from it;
           // this is required when the item was new, and thus loaded
           // with the default facet before saving it
-          const app = this._appRepository.getValue();
-          const itemFacet = app.facets.find((f) => {
+          const facets = this._appRepository.getFacets();
+          const itemFacet = facets.find((f) => {
             return f.id === saved.facetId;
           });
           this._item$.next(saved);

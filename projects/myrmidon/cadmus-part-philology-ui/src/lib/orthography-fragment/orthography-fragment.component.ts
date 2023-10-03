@@ -70,7 +70,7 @@ export class OrthographyFragmentComponent
   implements OnInit
 {
   private _currentOperationIndex: number;
-  private _differ?: diff_match_patch;
+  private _differ?: any;
   private _adapter?: DifferResultToMspAdapter;
 
   public standard: FormControl<string>;

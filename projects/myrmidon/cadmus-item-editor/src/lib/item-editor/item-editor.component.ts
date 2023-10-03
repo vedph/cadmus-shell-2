@@ -246,8 +246,8 @@ export class ItemEditorComponent implements OnInit, ComponentCanDeactivate {
   }
 
   public getTypeIdName(typeId: string): string {
-    const state = this._appRepository.getValue();
-    if (!state || !state.typeThesaurus) {
+    const typeThesaurus = this._appRepository.getTypeThesaurus();
+    if (!typeThesaurus) {
       return typeId;
     }
     // strip :suffix if any
@@ -255,7 +255,7 @@ export class ItemEditorComponent implements OnInit, ComponentCanDeactivate {
     if (i > -1) {
       typeId = typeId.substring(0, i);
     }
-    const entry = state.typeThesaurus.entries?.find((e) => e.id === typeId);
+    const entry = typeThesaurus.entries?.find((e) => e.id === typeId);
     return entry ? entry.value : typeId;
   }
 
@@ -288,29 +288,7 @@ export class ItemEditorComponent implements OnInit, ComponentCanDeactivate {
     this._repository
       .save(item as Item)
       .then((saved) => {
-        // once saved, a new item requires resetting the items list
-        if (!item.id) {
-          this._itemListRepository.clearCache();
-          this._itemListRepository.loadPage(1);
-        } else {
-          // an existing item instead just requires updating the entity
-          // in the items list if present (e.g. flags might have been changed)
-          this._itemListRepository.updateEntity({
-            id: item.id,
-            title: item.title,
-            description: item.description,
-            facetId: item.facetId,
-            groupId: item.groupId,
-            sortKey: item.sortKey,
-            flags: item.flags,
-            timeCreated: item.timeCreated,
-            creatorId: item.creatorId,
-            timeModified: item.timeModified,
-            userId: item.userId,
-          } as ItemInfo);
-        }
-
-        // this.metadata.markAsPristine();
+        this._itemListRepository.reset();
 
         // reload to force change in page URL
         if (!item.id) {
