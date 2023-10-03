@@ -40,14 +40,23 @@ interface PartDefViewModel {
   styleUrls: ['./item-query.component.css'],
 })
 export class ItemQueryComponent implements OnInit, AfterViewInit {
-  private _lastQueries?: string[];
-
   public form: FormGroup;
-  public query: FormControl<string | null>;
+
+  @Input()
+  public get query(): string | undefined | null {
+    return this.queryCtl.value;
+  }
+  public set query(value: string | undefined | null) {
+    this.queryCtl.setValue(value || null);
+    this.queryCtl.markAsDirty();
+    this.queryCtl.updateValueAndValidity();
+  }
+
+  public queryCtl: FormControl<string | null>;
   public history: FormControl<string | null>;
   public partDef: FormControl<string | null>;
 
-  @ViewChild('queryctl', { static: false })
+  @ViewChild('queryta', { static: false })
   public queryElement?: ElementRef<HTMLElement>;
 
   /**
@@ -74,11 +83,11 @@ export class ItemQueryComponent implements OnInit, AfterViewInit {
     // events
     this.querySubmit = new EventEmitter<string>();
     // form
-    this.query = formBuilder.control(null, Validators.required);
+    this.queryCtl = formBuilder.control(null, Validators.required);
     this.history = formBuilder.control(null);
     this.partDef = formBuilder.control(null);
     this.form = formBuilder.group({
-      query: this.query,
+      queryCtl: this.queryCtl,
       history: this.history,
       partDef: this.partDef,
     });
@@ -158,7 +167,7 @@ export class ItemQueryComponent implements OnInit, AfterViewInit {
     if (!query) {
       return;
     }
-    this.query.setValue(query);
+    this.queryCtl.setValue(query);
     this.focusQuery();
   }
 
@@ -166,7 +175,7 @@ export class ItemQueryComponent implements OnInit, AfterViewInit {
     if (this.form.invalid) {
       return;
     }
-    this.querySubmit.emit(this.query.value!);
+    this.querySubmit.emit(this.queryCtl.value!);
   }
 
   public pinTypeIdToString(id: number): string {

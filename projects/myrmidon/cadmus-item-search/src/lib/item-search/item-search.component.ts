@@ -4,13 +4,12 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
+import { DataPage } from '@myrmidon/ng-tools';
 import { DialogService } from '@myrmidon/ng-mat-tools';
 import { AuthJwtService, User } from '@myrmidon/auth-jwt-login';
 import { ItemInfo } from '@myrmidon/cadmus-core';
 import { UserLevelService } from '@myrmidon/cadmus-api';
 import { AppProps, AppRepository } from '@myrmidon/cadmus-state';
-
-import { PaginationData } from '@ngneat/elf-pagination';
 
 import { ItemSearchRepository } from '../state/item-search.repository';
 
@@ -20,11 +19,11 @@ import { ItemSearchRepository } from '../state/item-search.repository';
   styleUrls: ['./item-search.component.css'],
 })
 export class ItemSearchComponent implements OnInit {
-  public query$: Observable<string | undefined>;
-  public pagination$: Observable<PaginationData & { data: ItemInfo[] }>;
   public user?: User;
   public userLevel: number;
-  public loading$: Observable<boolean>;
+  public loading$: Observable<boolean | undefined>;
+  public query$: Observable<string | undefined>;
+  public page$: Observable<DataPage<ItemInfo>>;
   public error$: Observable<string | undefined>;
   public lastQueries$: Observable<string[]>;
   public app: AppProps;
@@ -38,7 +37,7 @@ export class ItemSearchComponent implements OnInit {
     appRepository: AppRepository
   ) {
     this.userLevel = 0;
-    this.pagination$ = this._repository.pagination$;
+    this.page$ = this._repository.page$;
     this.query$ = this._repository.query$;
     this.lastQueries$ = this._repository.lastQueries$;
     this.error$ = this._repository.error$;
@@ -53,16 +52,15 @@ export class ItemSearchComponent implements OnInit {
     });
   }
 
-  public pageChange(event: PageEvent): void {
-    this._repository.loadPage(event.pageIndex + 1, event.pageSize);
+  public onPageChange(event: PageEvent): void {
+    this._repository.setPage(event.pageIndex + 1, event.pageSize);
   }
 
   public submitQuery(query: string): void {
     if (!query) {
       return;
     }
-    this._repository.addQuery(query);
-    this._repository.setQuery(query);
+    this._repository.search(query);
   }
 
   public editItem(item: ItemInfo): void {
@@ -76,7 +74,6 @@ export class ItemSearchComponent implements OnInit {
 
     this._dialogService
       .confirm('Confirm Deletion', `Delete item "${item.title}"?`)
-      .pipe(take(1))
       .subscribe((yes: boolean) => {
         if (!yes) {
           return;
@@ -85,7 +82,7 @@ export class ItemSearchComponent implements OnInit {
       });
   }
 
-  public clearCache(): void {
-    this._repository.clearCache();
+  public reset(): void {
+    this._repository.reset();
   }
 }

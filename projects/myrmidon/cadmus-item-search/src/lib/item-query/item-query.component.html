@@ -6,10 +6,10 @@
         <mat-form-field appearance="fill" class="full-width">
           <mat-label>query</mat-label>
           <textarea
-            #queryctl
+            #queryta
             matInput
             rows="3"
-            formControlName="query"
+            [formControl]="queryCtl"
             spellcheck="false"
             cdkTextareaAutosize
             cdkAutosizeMinRows="2"
@@ -17,7 +17,10 @@
             (keydown.enter)="submitQuery(); (false)"
           ></textarea>
           <mat-error
-            *ngIf="query.hasError('required') && (query.dirty || query.touched)"
+            *ngIf="
+              queryCtl.hasError('required') &&
+              (queryCtl.dirty || queryCtl.touched)
+            "
             >enter a query</mat-error
           >
         </mat-form-field>
@@ -26,7 +29,7 @@
           color="warn"
           mat-icon-button
           matTooltip="Clear query"
-          (click)="query.reset()"
+          (click)="queryCtl.reset()"
         >
           <mat-icon>clear</mat-icon>
         </button>
@@ -79,7 +82,7 @@
                 [value]="def.typeId"
                 [matTooltip]="def.description"
               >
-                {{ def.name }} ({{ def.typeId?.startsWith("fr.") ? "F" : "P" }})
+                {{ def.name }} ({{ def.typeId.startsWith("fr.") ? "F" : "P" }})
               </mat-option>
             </mat-select>
             &nbsp;
