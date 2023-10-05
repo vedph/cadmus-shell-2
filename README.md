@@ -1,14 +1,14 @@
 # Cadmus Shell
 
-This is the second iteration of [Cadmus](https://myrmex.github.io/overview/cadmus) frontend refactoring.
+This is the second iteration of [Cadmus](https://myrmex.github.io/overview/cadmus) frontend refactoring. This app is used as a shell for developing core UI components and generic part editors.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.4, and upgraded since then up to version 14. For version 15, which implies dropping a number of obsolete libraries, the repository has been cloned into this one. Development will continue on this repository, while others are kept for backwards compatibility only. Historical versions are listed here:
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.4, and upgraded since then up to version 14. For version 15, which implies dropping a number of obsolete libraries, the repository has been cloned into this one. Development continues on this repository, while the older ones are kept for backwards compatibility only. Historical versions are listed here:
 
 1. [original shell app](https://github.com/vedph/cadmus_shell): this was a draft.
 2. [version 1](https://github.com/vedph/cadmus-shell): this is a production version. It was upgraded up to Angular 14.
 3. version 2 is this version. It is still the same repository, with a few core changes:
 
-- [Akita](https://github.com/salesforce/akita) has been replaced by [ELF](https://ngneat.github.io/elf/). This implies changing the store model behind each editor and list. New documentation will follow on this. This change was required by Akita obsolescence. Further, ELF has the advantage of being more modern and framework-independent.
+- [Akita](https://github.com/salesforce/akita) has been replaced by [ELF](https://ngneat.github.io/elf/). This implies changing the store model behind each editor and list. New documentation will follow on this. This change was required by Akita obsolescence. Further, ELF has the advantage of being more modern and framework-independent. In a later refactoring, any dependencies from third party status management libraries like ELF have been removed.
 - the dirty change mechanism has been refactored and now uses [this solution](https://github.com/vedph/ngx-dirty-check).
 - Angular Material has been upgraded to 15, which implies a number of style adjustments.
 - `@angular/flex-layout`, which has been obsoleted, has been removed and replaced by pure CSS with some media queries where required.
@@ -23,6 +23,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2023-10-05:
+  - updated Angular.
+  - updated packages (`@myrmidon/cadmus-graph-ui-ex`).
 - ⚠️ 2023-10-03: removed ELF dependencies. For trivial repositories like this, we can dispose of more powerful libraries and just use vanilla Angular. This makes the UI more robust and easier to use for newcomers.
   - updated Angular and packages.
   - refactored `@myrmidon/cadmus-graph-ui` (bumped to 6.0.0) to replace ELF with simpler repository from `@myrmidon/paged-data-browsers`.
@@ -69,7 +72,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ### 6.0.0
 
-- 2023-05-22: breaking changes for parts using the new [asserted composite ID](https://github.com/vedph/cadmus-bricks-shell/blob/master/projects/myrmidon/cadmus-refs-asserted-ids/README.md#asserted-composite-id):
+- ⚠️ 2023-05-22: breaking changes for parts using the new [asserted composite ID](https://github.com/vedph/cadmus-bricks-shell/blob/master/projects/myrmidon/cadmus-refs-asserted-ids/README.md#asserted-composite-id):
   - refactored _pin links part_ and _pin links fragment_ (`@myrmidon/cadmus-part-general-ui`, `@myrmidon/cadmus-part-general-pg`: bump version to 6.0.0): links are now of type `AssertedCompositeId` (from bricks).
   - refactored related entity ID for _historical events part_: ID now is an `AssertedCompositeId` rather than a string.
   - refactored comments for _comments part and fragment_: `externalIds` (an array of items of type `AssertedId`) now is `links`, an array of items of type `AssertedCompositeId`.
