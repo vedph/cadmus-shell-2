@@ -1,4 +1,4 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { HttpEventType } from '@angular/common/http';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 import {
@@ -53,7 +53,9 @@ export class ThesaurusImportComponent {
   public uploading: boolean = false;
   public result?: UploadResult;
 
+  @Output()
   public uploadStart: EventEmitter<void>;
+  @Output()
   public uploadEnd: EventEmitter<boolean>;
 
   constructor(
