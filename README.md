@@ -23,6 +23,18 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2023-10-31:
+  - updated Angular and packages.
+  - fixed missing `@Output` decorator in an event in a thesaurus list component.
+  - removed legacy options (hash navigation) from router config:
+
+```ts
+RouterModule.forRoot(routes, {
+  initialNavigation: 'enabledBlocking',
+  useHash: true,
+}),
+```
+
 - 2023-10-05:
   - updated Angular.
   - updated packages (`@myrmidon/cadmus-graph-ui-ex`).
