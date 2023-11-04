@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
 import { Observable } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 
@@ -19,5 +18,11 @@ export class FlagService {
     return this._http
       .get<FlagDefinition[]>(`${this._env.get('apiUrl')}flags`)
       .pipe(retry(3), catchError(this._error.handleError));
+  }
+
+  public addFlags(flags: FlagDefinition[]): Observable<void> {
+    return this._http
+      .post<void>(`${this._env.get('apiUrl')}flags`, flags)
+      .pipe(catchError(this._error.handleError));
   }
 }

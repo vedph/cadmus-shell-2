@@ -23,6 +23,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2023-11-04: added `addFlags` to API service.
+
 - 2023-10-31:
   - updated Angular and packages.
   - fixed missing `@Output` decorator in an event in a thesaurus list component.
