@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -39,8 +39,6 @@ import { MatTreeModule } from '@angular/material/tree';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
 // vendor
-import { Actions } from '@ngneat/effects-ng';
-
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { MarkdownModule } from 'ngx-markdown';
 
@@ -70,19 +68,6 @@ import { CadmusProfileCoreModule } from 'projects/myrmidon/cadmus-profile-core/s
 import { CadmusStateModule } from 'projects/myrmidon/cadmus-state/src/public-api';
 import { CadmusUiModule } from 'projects/myrmidon/cadmus-ui/src/public-api';
 import { CadmusUiPgModule } from 'projects/myrmidon/cadmus-ui-pg/src/public-api';
-// import { CadmusGraphPgModule } from 'projects/myrmidon/cadmus-graph-pg/src/public-api';
-// import { CadmusGraphUiModule } from 'projects/myrmidon/cadmus-graph-ui/src/public-api';
-// import { CadmusItemEditorModule } from 'projects/myrmidon/cadmus-item-editor/src/public-api';
-// import { CadmusItemListModule } from 'projects/myrmidon/cadmus-item-list/src/public-api';
-// import { CadmusItemSearchModule } from 'projects/myrmidon/cadmus-item-search/src/public-api';
-// import { CadmusLayerDemoModule } from 'projects/myrmidon/cadmus-layer-demo/src/public-api';
-// import { CadmusPartGeneralPgModule } from 'projects/myrmidon/cadmus-part-general-pg/src/public-api';
-// import { CadmusPartGeneralUiModule } from 'projects/myrmidon/cadmus-part-general-ui/src/public-api';
-// import { CadmusPartPhilologyUiModule } from 'projects/myrmidon/cadmus-part-philology-ui/src/public-api';
-// import { CadmusPartPhilologyPgModule } from 'projects/myrmidon/cadmus-part-philology-pg/src/public-api';
-// import { CadmusThesaurusEditorModule } from 'projects/myrmidon/cadmus-thesaurus-editor/src/public-api';
-// import { CadmusThesaurusListModule } from 'projects/myrmidon/cadmus-thesaurus-list/src/public-api';
-// import { CadmusThesaurusUiModule } from 'projects/myrmidon/cadmus-thesaurus-ui/src/public-api';
 
 // locals
 import { AppRoutingModule } from './app-routing.module';
@@ -169,19 +154,6 @@ import { ITEM_BROWSER_KEYS } from './item-browser-keys';
     CadmusStateModule,
     CadmusUiModule,
     CadmusUiPgModule,
-    // CadmusGraphPgModule,
-    // CadmusGraphUiModule,
-    // CadmusItemEditorModule,
-    // CadmusItemListModule,
-    // CadmusItemSearchModule,
-    // CadmusLayerDemoModule,
-    // CadmusPartGeneralUiModule,
-    // CadmusPartGeneralPgModule,
-    // CadmusPartPhilologyUiModule,
-    // CadmusPartPhilologyPgModule,
-    // CadmusThesaurusEditorModule,
-    // CadmusThesaurusListModule,
-    // CadmusThesaurusUiModule,
   ],
   providers: [
     // environment service

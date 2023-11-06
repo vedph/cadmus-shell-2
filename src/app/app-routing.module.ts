@@ -105,14 +105,6 @@ const routes: Routes = [
     canActivate: [EditorGuardService],
   },
   // cadmus - graph
-  // {
-  //   path: 'graph',
-  //   loadChildren: () =>
-  //     import('@myrmidon/cadmus-graph-pg').then(
-  //       (module) => module.CadmusGraphPgModule
-  //     ),
-  //   canActivate: [AuthJwtGuardService],
-  // },
   {
     path: 'graph',
     loadChildren: () =>
@@ -130,6 +122,14 @@ const routes: Routes = [
       ),
     canActivate: [AuthJwtGuardService],
   },
+  // cadmus - flags
+  {
+    path: 'flags',
+    loadChildren: () =>
+      import('@myrmidon/cadmus-flags-pg').then(
+        (module) => module.CadmusFlagsPgModule
+      ),
+  },
   // home
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
@@ -138,9 +138,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes),
-  ],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

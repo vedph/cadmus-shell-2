@@ -36,17 +36,29 @@
     <button type="button" mat-button routerLink="/graph" *ngIf="logged">
       Graph
     </button>
-    <!-- thesauri menu -->
-    <button
-      type="button"
-      mat-button
-      routerLink="/thesauri"
-      *ngIf="
-        user && (user.roles.includes('admin') || user.roles.includes('editor'))
-      "
-    >
-      Thesauri
+    <!-- profile menu -->
+    <button type="button" mat-button [matMenuTriggerFor]="profileMenu">
+      Profile
     </button>
+    <mat-menu #profileMenu>
+      <a
+        mat-menu-item
+        routerLink="/flags"
+        *ngIf="user && user.roles.includes('admin')"
+      >
+        Flags
+      </a>
+      <a
+        mat-menu-item
+        routerLink="/thesauri"
+        *ngIf="
+          user &&
+          (user.roles.includes('admin') || user.roles.includes('editor'))
+        "
+      >
+        Thesauri
+      </a>
+    </mat-menu>
 
     <!-- demo menu -->
     <button type="button" mat-button [matMenuTriggerFor]="demoMenu">
@@ -87,13 +99,16 @@
       </button> -->
 
       <!-- user menu -->
-      <button mat-button [matMenuTriggerFor]="userMenu">User</button>
+      <button type="button" mat-button [matMenuTriggerFor]="userMenu">
+        User
+      </button>
       <mat-menu #userMenu>
         <a mat-menu-item routerLink="/reset-password">Reset password</a>
       </mat-menu>
 
       <!-- admin menu -->
       <button
+        type="button"
         *ngIf="user && user.roles.includes('admin')"
         mat-button
         [matMenuTriggerFor]="adminMenu"

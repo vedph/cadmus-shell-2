@@ -23,6 +23,19 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2023-11-06: added flags editor route and page. To opt in to use a flags editor, just add libraries `@myrmidon/cadmus-flags-ui` and `@myrmidon/cadmus-flags-pg` to your app, and this route to your app routes, adding a corresponding menu entry to your UI (flags editing is reserved to admin users only):
+
+```ts
+// cadmus - flags
+{
+  path: 'flags',
+  loadChildren: () =>
+    import('@myrmidon/cadmus-flags-pg').then(
+      (module) => module.CadmusFlagsPgModule
+    ),
+},
+```
+
 - 2023-11-04: added `addFlags` to API service.
 
 - 2023-10-31:

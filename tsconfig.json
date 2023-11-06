@@ -15,6 +15,9 @@
         "dist/myrmidon/cadmus-core/myrmidon-cadmus-core",
         "dist/myrmidon/cadmus-core"
       ],
+      "@myrmidon/cadmus-flags-pg": [
+        "dist/myrmidon/cadmus-flags-pg"
+      ],
       "@myrmidon/cadmus-flags-ui": [
         "dist/myrmidon/cadmus-flags-ui"
       ],
