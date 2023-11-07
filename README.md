@@ -23,7 +23,10 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
-- 2023-11-06: added flags editor route and page. To opt in to use a flags editor, just add libraries `@myrmidon/cadmus-flags-ui` and `@myrmidon/cadmus-flags-pg` to your app, and this route to your app routes, adding a corresponding menu entry to your UI (flags editing is reserved to admin users only):
+- 2023-11-06: added **flags editor** route and page. To opt in to use a flags editor:
+
+1. `npm i @myrmidon/cadmus-flags-ui @myrmidon/cadmus-flags-pg --force`
+2. add this route to your app routes:
 
 ```ts
 // cadmus - flags
@@ -34,6 +37,31 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
       (module) => module.CadmusFlagsPgModule
     ),
 },
+```
+
+3. add a menu for that route in `app.component.html` (flags editing is reserved to admin users only), e.g. (including thesauri and flags in the same menu):
+
+```html
+<!-- profile menu -->
+<mat-menu #profileMenu>
+  <a
+    mat-menu-item
+    routerLink="/flags"
+    *ngIf="user && user.roles.includes('admin')"
+  >
+    Flags
+  </a>
+  <a
+    mat-menu-item
+    routerLink="/thesauri"
+    *ngIf="
+      user &&
+      (user.roles.includes('admin') || user.roles.includes('editor'))
+    "
+  >
+    Thesauri
+  </a>
+</mat-menu>
 ```
 
 - 2023-11-04: added `addFlags` to API service.
