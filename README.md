@@ -43,6 +43,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ```html
 <!-- profile menu -->
+<button type="button" mat-button [matMenuTriggerFor]="profileMenu">
+  Profile
+</button>
 <mat-menu #profileMenu>
   <a
     mat-menu-item
