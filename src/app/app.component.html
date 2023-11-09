@@ -37,28 +37,15 @@
       Graph
     </button>
     <!-- profile menu -->
-    <button type="button" mat-button [matMenuTriggerFor]="profileMenu">
-      Profile
-    </button>
-    <mat-menu #profileMenu>
-      <a
-        mat-menu-item
-        routerLink="/flags"
-        *ngIf="user && user.roles.includes('admin')"
-      >
-        Flags
-      </a>
-      <a
-        mat-menu-item
-        routerLink="/thesauri"
-        *ngIf="
-          user &&
-          (user.roles.includes('admin') || user.roles.includes('editor'))
-        "
-      >
-        Thesauri
-      </a>
-    </mat-menu>
+    <ng-container *ngIf="user && user.roles.includes('admin')">
+      <button type="button" mat-button [matMenuTriggerFor]="profileMenu">
+        Profile
+      </button>
+      <mat-menu #profileMenu>
+        <a mat-menu-item routerLink="/flags"> Flags </a>
+        <a mat-menu-item routerLink="/thesauri"> Thesauri </a>
+      </mat-menu>
+    </ng-container>
 
     <!-- demo menu -->
     <button type="button" mat-button [matMenuTriggerFor]="demoMenu">

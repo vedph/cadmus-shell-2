@@ -39,7 +39,6 @@
             "scripts": [],
             "sourceMap": {
               "scripts": true,
-              "styles": true,
               "hidden": false,
               "vendor": true
             }
@@ -81,10 +80,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "cadmus-shell:build:production"
+              "buildTarget": "cadmus-shell:build:production"
             },
             "development": {
-              "browserTarget": "cadmus-shell:build:development"
+              "buildTarget": "cadmus-shell:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -92,7 +91,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "cadmus-shell:build"
+            "buildTarget": "cadmus-shell:build"
           }
         },
         "test": {

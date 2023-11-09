@@ -19,10 +19,13 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 1. `npm run build-lib`;
 2. update version in `env.js` (and Docker files), and then `ng build --configuration=production`;
-3. `docker build . -t vedph2020/cadmus-shell:6.0.2 -t vedph2020/cadmus-shell:latest` (replace with the current version).
+3. `docker build . -t vedph2020/cadmus-shell:7.0.0 -t vedph2020/cadmus-shell:latest` (replace with the current version).
 
 ## History
 
+### 7.0.0
+
+- 2023-11-09: ⚠️ upgraded to Angular 17.
 - 2023-11-06: added **flags editor** route and page. To opt in to use a flags editor:
 
 1. `npm i @myrmidon/cadmus-flags-ui @myrmidon/cadmus-flags-pg --force`
@@ -43,28 +46,15 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ```html
 <!-- profile menu -->
-<button type="button" mat-button [matMenuTriggerFor]="profileMenu">
-  Profile
-</button>
-<mat-menu #profileMenu>
-  <a
-    mat-menu-item
-    routerLink="/flags"
-    *ngIf="user && user.roles.includes('admin')"
-  >
-    Flags
-  </a>
-  <a
-    mat-menu-item
-    routerLink="/thesauri"
-    *ngIf="
-      user &&
-      (user.roles.includes('admin') || user.roles.includes('editor'))
-    "
-  >
-    Thesauri
-  </a>
-</mat-menu>
+<ng-container *ngIf="user && user.roles.includes('admin')">
+  <button type="button" mat-button [matMenuTriggerFor]="profileMenu">
+    Profile
+  </button>
+  <mat-menu #profileMenu>
+    <a mat-menu-item routerLink="/flags"> Flags </a>
+    <a mat-menu-item routerLink="/thesauri"> Thesauri </a>
+  </mat-menu>
+</ng-container>
 ```
 
 - 2023-11-04: added `addFlags` to API service.
