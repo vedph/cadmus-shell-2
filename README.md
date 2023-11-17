@@ -23,6 +23,11 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2023-11-17:
+  - more load methods added to app state (`@myrmidon/cadmus-state`).
+  - update app state flags on flags saved (`@myrmidon/cadmus-flags-ui`).
+  - update app state thesauri on thesauri saved (`@myrmidon/cadmus-thesaurus-editor`).
+
 ### 7.0.0
 
 - 2023-11-09: ⚠️ upgraded to Angular 17.

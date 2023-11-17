@@ -47,14 +47,17 @@ export class FlagListRepository {
     return this._flags$.value?.length || 0;
   }
 
-  public save(): void {
-    if (!this._flagService) {
-      return;
-    }
-    this._loading$.next(true);
-    this._flagService.addFlags(this._flags$.value).subscribe((_) => {
-      this._loading$.next(false);
-      this.reset();
+  public save(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this._flagService) {
+        resolve();
+        return;
+      }
+      this._loading$.next(true);
+      this._flagService.addFlags(this._flags$.value).subscribe((_) => {
+        this._loading$.next(false);
+        resolve();
+      });
     });
   }
 

@@ -15,9 +15,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 
-import { CadmusApiModule } from '@myrmidon/cadmus-api';
 import { NgMatToolsModule } from '@myrmidon/ng-mat-tools';
 import { NgToolsModule } from '@myrmidon/ng-tools';
+
+import { CadmusApiModule } from '@myrmidon/cadmus-api';
+import { CadmusStateModule } from '@myrmidon/cadmus-state';
 
 import { FlagDefinitionEditorComponent } from './components/flag-definition-editor/flag-definition-editor.component';
 import { FlagListComponent } from './components/flag-list/flag-list.component';
@@ -44,6 +46,7 @@ import { FlagBitPipe } from './pipes/flag-bit.pipe';
     MatTooltipModule,
     // Cadmus
     CadmusApiModule,
+    CadmusStateModule,
     NgToolsModule,
     NgMatToolsModule,
   ],

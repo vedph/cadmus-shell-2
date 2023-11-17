@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 
 import { FlagDefinition } from '@myrmidon/cadmus-core';
 import { DialogService } from '@myrmidon/ng-mat-tools';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AppRepository } from '@myrmidon/cadmus-state';
 
 import { FlagListRepository } from './flag-list.repository';
 import { Observable } from 'rxjs';
@@ -31,7 +33,9 @@ export class FlagListComponent {
 
   constructor(
     private _repository: FlagListRepository,
-    private _dialogService: DialogService
+    private _appRepository: AppRepository,
+    private _dialogService: DialogService,
+    private _snackbar: MatSnackBar
   ) {
     this.flags$ = _repository.flags$;
     this.editedFlag$ = _repository.activeFlag$;
@@ -70,6 +74,11 @@ export class FlagListComponent {
   }
 
   public save(): void {
-    this._repository.save();
+    this._repository.save().then(() => {
+      this._snackbar.open('Flags saved', 'OK', {
+        duration: 1500,
+      });
+      this._appRepository.loadFlags();
+    });
   }
 }

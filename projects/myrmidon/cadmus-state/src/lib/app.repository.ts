@@ -14,7 +14,7 @@ import {
 } from '@myrmidon/cadmus-api';
 
 /**
- * App state ELF repository.
+ * App state repository.
  */
 @Injectable({ providedIn: 'root' })
 export class AppRepository {
@@ -118,6 +118,31 @@ export class AppRepository {
         this._previewJKeys$.next(result.jKeys);
         this._previewFKeys$.next(result.fKeys);
         this._previewCKeys$.next(result.cKeys);
+      },
+    });
+  }
+
+  /**
+   * Load the model types and item browsers thesauri.
+   */
+  public loadThesauri(): void {
+    this._thesaurusService
+      .getThesauriSet(['model-types@en', 'item-browsers@en'])
+      .subscribe({
+        next: (thesauri) => {
+          this._typeThesaurus$.next(thesauri['model-types']);
+          this._itemBrowserThesaurus$.next(thesauri['item-browsers']);
+        },
+      });
+  }
+
+  /**
+   * Load the flags definitions.
+   */
+  public loadFlags(): void {
+    this._flagService.getFlags().subscribe({
+      next: (flags) => {
+        this._flags$.next(flags);
       },
     });
   }
