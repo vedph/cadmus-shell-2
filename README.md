@@ -23,6 +23,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2023-11-21:
+  - added optional `settings` to `PartDefinition` and honored the optionality of other properties in it. This way, your editor can now access part definition settings for editors via `AppRepository`. Affected libraries: `@myrmidon/cadmus-api`, `@myrmidon/cadmus-core`, `@myrmidon/cadmus-item-editor`, `@myrmidon/cadmus-item-search`.
 - 2023-11-17:
   - more load methods added to app state (`@myrmidon/cadmus-state`).
   - update app state flags on flags saved (`@myrmidon/cadmus-flags-ui`).

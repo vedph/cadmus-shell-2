@@ -472,7 +472,7 @@ export class ItemService {
     // group the part definitions by their groupKey sorting by sortKey
     const groupedDefs = this.groupBy(
       partDefs.slice().sort((a, b) => {
-        return a.sortKey.localeCompare(b.sortKey);
+        return (a.sortKey || '').localeCompare(b.sortKey || '');
       }),
       'groupKey'
     );

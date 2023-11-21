@@ -106,17 +106,17 @@ export class ItemQueryComponent implements OnInit, AfterViewInit {
     // for each facet:
     facets.map((facet) => {
       // for each part definition in facet:
-      facet.partDefinitions.map((partDef) => {
+      facet.partDefinitions.map((partDef: PartDefinition) => {
         // add it to the part defs if not already present
         const typeId = this.getTypeId(partDef);
         if (!partDefs.find((d) => d.typeId === typeId)) {
           partDefs.push({
             typeId,
             name: partDef.name,
-            description: partDef.description,
-            colorKey: partDef.colorKey,
-            groupKey: partDef.groupKey,
-            sortKey: partDef.sortKey,
+            description: partDef.description || '',
+            colorKey: partDef.colorKey || '',
+            groupKey: partDef.groupKey || '',
+            sortKey: partDef.sortKey || '',
           });
         }
       });

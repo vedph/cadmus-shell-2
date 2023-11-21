@@ -125,7 +125,7 @@ export class EditedItemRepository {
     }
     // sort by sort key
     defs.sort((a, b) => {
-      return a.sortKey.localeCompare(b.sortKey);
+      return (a.sortKey || '').localeCompare(b.sortKey || '');
     });
     return defs;
   }

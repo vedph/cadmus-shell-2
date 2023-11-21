@@ -216,11 +216,12 @@ export interface ThesaurusFilter {
  */
 export interface PartDefinition extends PartTypeIds {
   name: string;
-  description: string;
-  isRequired: boolean;
-  colorKey: string;
-  groupKey: string;
-  sortKey: string;
+  description?: string;
+  isRequired?: boolean;
+  colorKey?: string;
+  groupKey?: string;
+  sortKey?: string;
+  settings?: string;
 }
 
 /**
