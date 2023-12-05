@@ -53,7 +53,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ```html
 <!-- profile menu -->
-<ng-container *ngIf="user && user.roles.includes('admin')">
+<ng-container *ngIf="user && (user.roles.includes('admin') || user.roles.includes('editor'))">
   <button type="button" mat-button [matMenuTriggerFor]="profileMenu">
     Profile
   </button>
