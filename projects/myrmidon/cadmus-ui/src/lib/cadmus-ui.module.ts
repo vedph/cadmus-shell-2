@@ -14,8 +14,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 
-// Monaco
-import { MonacoEditorModule } from 'ngx-monaco-editor';
+// vendor
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 
 // Cadmus
 import { CadmusCoreModule } from '@myrmidon/cadmus-core';

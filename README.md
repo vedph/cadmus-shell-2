@@ -23,6 +23,10 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2024-03-21:
+  - updated Angular and packages.
+  - ⚠️ replaced `ngx-monaco-editor` with [ngx-monaco-editor-v2](https://github.com/miki995/ngx-monaco-editor-v2).
+  - updated version for `@myrmidon/cadmus-ui` (6.0.1), `@myrmidon/cadmus-part-general-ui` (7.0.1), `@myrmidon/cadmus-part-philology-ui` (6.0.1) affected by Monaco editor change.
 - 2023-11-21:
   - added optional `settings` to `PartDefinition` and honored the optionality of other properties in it. This way, your editor can now access part definition settings for editors via `AppRepository`. Affected libraries: `@myrmidon/cadmus-api`, `@myrmidon/cadmus-core`, `@myrmidon/cadmus-item-editor`, `@myrmidon/cadmus-item-search`.
 - 2023-11-17:

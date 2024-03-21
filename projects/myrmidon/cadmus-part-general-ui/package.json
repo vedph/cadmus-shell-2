@@ -1,6 +1,6 @@
 {
   "name": "@myrmidon/cadmus-part-general-ui",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "Cadmus - generic parts.",
   "keywords": [
     "Cadmus"
@@ -15,7 +15,8 @@
   },
   "peerDependencies": {
     "@angular/common": "^17.0.0",
-    "@angular/core": "^17.0.0"
+    "@angular/core": "^17.0.0",
+    "ngx-monaco-editor-v2": "^17.0.0"
   },
   "dependencies": {
     "tslib": "^2.5.0"

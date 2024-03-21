@@ -39,8 +39,8 @@ import { MatTreeModule } from '@angular/material/tree';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
 // vendor
-import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { MarkdownModule } from 'ngx-markdown';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 
 // myrmidon
 import { EnvServiceProvider, NgToolsModule } from '@myrmidon/ng-tools';

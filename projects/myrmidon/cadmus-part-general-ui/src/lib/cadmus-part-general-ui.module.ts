@@ -19,8 +19,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { MonacoEditorModule } from 'ngx-monaco-editor';
+// vendor
 import { MarkdownModule } from 'ngx-markdown';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 
 import { NgToolsModule } from '@myrmidon/ng-tools';
 import { NgMatToolsModule } from '@myrmidon/ng-mat-tools';

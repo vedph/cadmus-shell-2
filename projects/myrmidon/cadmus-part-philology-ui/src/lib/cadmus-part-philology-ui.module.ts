@@ -17,8 +17,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
-import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { MarkdownModule } from 'ngx-markdown';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 
 import { NgMatToolsModule } from '@myrmidon/ng-mat-tools';
 import { NgToolsModule } from '@myrmidon/ng-tools';
