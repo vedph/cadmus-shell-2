@@ -39,7 +39,7 @@ import { WitnessesFragmentComponent } from './witnesses-fragment/witnesses-fragm
     FormsModule,
     ReactiveFormsModule,
     MonacoEditorModule,
-    MarkdownModule,
+    MarkdownModule.forChild(),
     // material
     MatButtonModule,
     MatCardModule,

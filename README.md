@@ -23,6 +23,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## History
 
+- 2024-03-23:
+  - ⚠️ removed rangy replaced with vanilla JS (`@myrmidon/cadmus-core` bumped to major version 7.0.0). This removes a legacy depenency which also caused issues in newer Angular 17-based apps.
+  - added forChild to MarkdownModule in general and philology parts (`@myrmidon/cadmus-part-general-ui`, `@myrmidon/cadmus-part-philology-ui`).
 - 2024-03-21:
   - updated Angular and packages.
   - ⚠️ replaced `ngx-monaco-editor` with [ngx-monaco-editor-v2](https://github.com/miki995/ngx-monaco-editor-v2).

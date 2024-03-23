@@ -1,14 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import * as rangy from 'rangy';
-
 import { TokenPoint } from '../token-point';
 import { TokenLocation } from '../token-location';
 import { TokenTextLayerLine, TextCoords } from '../models';
-
-// requires rangy:
-// npm install --save rangy
-// npm install --save @types/rangy
 
 interface TextRange {
   start: number;
@@ -16,7 +10,7 @@ interface TextRange {
 }
 
 /**
- * The selected range of text. This reflects rangy's Range useful properties;
+ * The selected range of text. This reflects Range useful properties;
  * in fact, you can just pass a Range to any method requiring this parameter type,
  * but this adds a level of indirection useful in testing.
  */
@@ -894,11 +888,10 @@ export class TextLayerService {
 
   /**
    * Get the currently selected range in the browser's document.
-   * This uses the rangy library.
    */
   public getSelectedRange(): Range | null {
-    const sel = rangy.getSelection();
-    if (sel.isCollapsed) {
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed) {
       return null;
     }
     return sel.getRangeAt(0);

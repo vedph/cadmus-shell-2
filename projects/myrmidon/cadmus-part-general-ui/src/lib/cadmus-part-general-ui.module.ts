@@ -68,7 +68,7 @@ import { RelatedEntityComponent } from './related-entity/related-entity.componen
     FormsModule,
     ReactiveFormsModule,
     MonacoEditorModule,
-    MarkdownModule,
+    MarkdownModule.forChild(),
     // material
     DragDropModule,
     MatBadgeModule,
